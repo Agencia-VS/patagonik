@@ -24,16 +24,18 @@ import sys
 PLACEHOLDER = "@@{}@@"
 
 
-def load(src: pathlib.Path):
+def load(src: pathlib.Path, assets: pathlib.Path):
     shell = (src / "shell.html").read_text(encoding="utf-8")
     template = (src / "template.html").read_text(encoding="utf-8")
-    index = json.loads((src / "assets" / "index.json").read_text(encoding="utf-8"))
+    index = json.loads((assets / "index.json").read_text(encoding="utf-8"))
     ext_resources = json.loads((src / "ext_resources.json").read_text(encoding="utf-8"))
     return shell, template, index, ext_resources
 
 
-def build(src: pathlib.Path, out: pathlib.Path, prune: bool = True) -> None:
-    shell, template, index, ext_resources = load(src)
+def build(src: pathlib.Path, out: pathlib.Path, prune: bool = True,
+          assets: pathlib.Path | None = None) -> None:
+    assets = assets or (src / "assets")
+    shell, template, index, ext_resources = load(src, assets)
 
     referenced = {u for u in index if u in template}
     # ext_resources map React/ReactDOM URLs onto manifest uuids; the runtime
@@ -54,7 +56,7 @@ def build(src: pathlib.Path, out: pathlib.Path, prune: bool = True) -> None:
     total_raw = 0
     for uuid in sorted(pack):
         entry = index[uuid]
-        raw = (src / "assets" / entry["file"]).read_bytes()
+        raw = (assets / entry["file"]).read_bytes()
         total_raw += len(raw)
         payload = gzip.compress(raw, 9) if entry["compressed"] else raw
         manifest[uuid] = {
@@ -96,8 +98,11 @@ def main() -> None:
                     default=pathlib.Path("dist/PatagoniK_Landing.html"))
     ap.add_argument("--no-prune", action="store_true",
                     help="pack every asset, even ones the template never names")
+    ap.add_argument("--assets", type=pathlib.Path, default=None,
+                    help="asset directory to pack from (default src/assets, the "
+                         "originals; pass dist/assets-web for the optimized set)")
     args = ap.parse_args()
-    build(args.src, args.out, prune=not args.no_prune)
+    build(args.src, args.out, prune=not args.no_prune, assets=args.assets)
 
 
 if __name__ == "__main__":

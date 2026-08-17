@@ -4006,7 +4006,10 @@ class Component extends DCLogic {
       a.setAttribute('href', this.routeHref(path));
       const active = path === this.currentRoute;
       a.setAttribute('aria-current', active ? 'page' : 'false');
-      a.style.opacity = active ? '1' : '';
+      /* El subrayado marca la entrada del menú, no la marca de la cabecera:
+         el logo también es un enlace de ruta y quedaría subrayado en la
+         portada, que es justamente donde siempre está. */
+      if (!a.hasAttribute('data-menu-link')) return;
       a.style.textDecoration = active ? 'underline' : '';
       a.style.textUnderlineOffset = active ? '5px' : '';
     });
