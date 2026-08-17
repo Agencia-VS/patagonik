@@ -1,0 +1,23 @@
+{
+  "name": "patagonik",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agencia-VS/patagonik.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Agencia-VS/patagonik/issues"
+  },
+  "homepage": "https://github.com/Agencia-VS/patagonik#readme",
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}
