@@ -573,7 +573,6 @@
       <a data-menu-link="" data-t="menu.essence" href="#esencia" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Nuestra esencia</a>
       <a data-menu-link="" data-t="menu.reviews" href="#resenas" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Reseñas</a>
       <a data-menu-link="" data-t="menu.tours" href="#experiencias" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Experiencias</a>
-      <a data-menu-link="" data-t="menu.find" href="#selector" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Encuentra tu experiencia</a>
       <a data-menu-link="" data-t="menu.quote" href="#cotiza" style="font-family:Georgia,'Times New Roman',serif; font-weight:400; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#D6BE9C; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Cotiza tu viaje ↗</a>
       <a data-menu-link="" data-t="menu.why" href="#nosotros" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Por qué nosotros</a>
       <a data-menu-link="" data-t="menu.faq" href="#faq" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">Preguntas frecuentes</a>
@@ -881,7 +880,23 @@
   </section>
 
   
-  <section id="selector" data-nav="light" data-screen-label="04 Selector de experiencia" style="padding:clamp(64px,11vw,118px) clamp(22px,6vw,96px); background:#F5F2EC;">
+
+  <!--
+    C2 — Selector de experiencia y cotización, en una sola sección.
+
+    Antes eran dos: #selector (fondo claro, "¿Qué Patagonia quieres vivir?") y
+    #cotiza (foto de cascada, "Cuéntanos lo esencial"), con dos encabezados,
+    dos apariciones y dos etiquetas de pantalla. Ahora hay un solo <section>
+    con un encabezado y un recorrido continuo: elegir arriba, cotizar abajo.
+
+    #selector sobrevive como <div> envolviendo el quiz: hay una quincena de
+    reglas CSS que lo referencian por id y así siguen aplicando sin tener que
+    reescribirlas una por una. El bloque pk-quote-merge-v48 neutraliza sólo lo
+    que ya no corresponde (padding y fondo de sección).
+  -->
+  <section id="cotiza" data-nav="dark" data-screen-label="04 Encuentra tu experiencia y cotiza" style="padding:clamp(66px,12vw,124px) clamp(22px,6vw,96px); background:#232725 url('520901d8-6275-5dca-ac7e-4a8196eb1529') center center / cover no-repeat; color:#F5F2EC; position:relative; overflow:hidden; isolation:isolate;">
+    <div aria-hidden="true" id="pk-quote-overlay" style="position:absolute; inset:0; z-index:0; background:linear-gradient(180deg, rgba(35,39,37,.34) 0%, rgba(35,39,37,.22) 42%, rgba(35,39,37,.38) 100%);"></div>
+
     <div style="max-width:1180px; margin:0 auto;">
       <div data-reveal="" style="max-width:760px; opacity:0; transform:translateY(26px); transition:opacity .9s ease, transform .9s ease;">
         <p data-t="quiz.kicker" style="margin:0 0 12px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#6B7A5E;">Encuentra tu experiencia</p>
@@ -889,6 +904,7 @@
         <p data-t="quiz.intro" style="margin:18px 0 0; max-width:58ch; font-size:15px; line-height:1.72; font-weight:300; color:rgba(43,43,43,.68);">Responde tres preguntas y te mostraremos las experiencias que mejor se ajustan a tu viaje.</p>
       </div>
 
+      <div id="selector">
       <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(16px,2vw,24px); margin-top:clamp(34px,6vw,56px);" id="pk-quiz-grid">
         <div data-reveal="" style="padding:clamp(22px,3vw,30px); border:1px solid rgba(43,43,43,.10); background:#FFFDF9; opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s ease;">
           <span style="display:block; margin-bottom:10px; font-size:10px; letter-spacing:.2em; color:#6B7A5E;">01</span>
@@ -927,71 +943,69 @@
         <p data-t="quiz.resultKicker" style="margin:0 0 10px; font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:rgba(245,242,236,.64);">Nuestra recomendación</p>
         <h3 data-t="quiz.resultTitle" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(26px,4vw,42px);">Estas experiencias calzan contigo</h3>
         <div id="pk-quiz-recs" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;"></div>
-        <a href="#cotiza" id="pk-quiz-cta" style="display:inline-flex; align-items:center; gap:10px; margin-top:24px; padding:14px 18px; border-radius:999px; background:#F5F2EC; color:#4F5D45; font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:600;">
+        <a href="#pk-quote-form" id="pk-quiz-cta" style="display:inline-flex; align-items:center; gap:10px; margin-top:24px; padding:14px 18px; border-radius:999px; background:#F5F2EC; color:#4F5D45; font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:600;">
           <span data-t="quiz.cta">Cotizar estas experiencias</span><span aria-hidden="true">↗</span>
         </a>
       </div>
-    </div>
-  </section>
-
-  <section id="cotiza" data-nav="dark" data-screen-label="06 Cotización" style="padding:clamp(66px,12vw,124px) clamp(22px,6vw,96px); background:#232725 url('520901d8-6275-5dca-ac7e-4a8196eb1529') center center / cover no-repeat; color:#F5F2EC; position:relative; overflow:hidden; isolation:isolate;">
-    <div aria-hidden="true" id="pk-quote-overlay" style="position:absolute; inset:0; z-index:0; background:linear-gradient(180deg, rgba(35,39,37,.34) 0%, rgba(35,39,37,.22) 42%, rgba(35,39,37,.38) 100%);"></div>
-
-<div style="max-width:1180px; margin:0 auto; display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(34px,7vw,84px); align-items:start;" id="pk-quote-layout">
-      <div data-reveal="" style="opacity:0; transform:translateY(26px); transition:opacity .9s ease, transform .9s ease;">
-        <p data-t="quote.kicker" style="margin:0 0 12px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#A8B39A;">Planifica tu viaje</p>
-        <h2 data-t="quote.title" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(34px,6vw,60px); line-height:1.02;">Cuéntanos lo esencial.</h2>
-        <div id="pk-quote-steps-v47" aria-label="Cómo funciona" style="display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,242,236,.72);">
-          <span>Elige</span><span aria-hidden="true" style="opacity:.45;">·</span>
-          <span>Cotiza</span><span aria-hidden="true" style="opacity:.45;">·</span>
-          <span>Vive la Patagonia</span>
-        </div>
-        <p data-t="quote.intro" style="margin:18px 0 0; max-width:42ch; font-size:15px; line-height:1.72; color:rgba(245,242,236,.68); font-weight:300;">Completas cuatro datos y continuas directo por WhatsApp con el mensaje listo.</p>
       </div>
 
-      <form id="pk-quote-form" data-quote-form style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-        <label style="display:flex; flex-direction:column; gap:8px;">
-          <span data-t="quote.date" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Fecha del viaje</span>
-          <input name="fecha" type="date" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:rgba(255,255,255,.04); color:#F5F2EC; font:inherit;">
-        </label>
-        <label style="display:flex; flex-direction:column; gap:8px;">
-          <span data-t="quote.pax" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Pasajeros</span>
-          <input name="pax" type="number" min="1" value="2" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:rgba(255,255,255,.04); color:#F5F2EC; font:inherit;">
-        </label>
-        <label style="display:flex; flex-direction:column; gap:8px; grid-column:1/-1;">
-          <span data-t="quote.experience" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Experiencia de interés</span>
-          <select name="experiencia" id="pk-quote-experience" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:#232725; color:#F5F2EC; font:inherit;">
-            <option value="" data-t="quote.choose">Elegir experiencia</option>
-            <option>Mirador Base Torres</option>
-            <option>Valle del Francés</option>
-            <option>Glaciar Grey en navegación</option>
-            <option>Excursiones especiales</option>
-            <option>Excursiones de avistamiento de fauna</option>
-            <option>Chorrillo Los Salmones</option>
-            <option>Aonikenk + Laguna Azul</option>
-            <option>Navegación Balmaceda & Serrano</option>
-            <option>Full Day Perspectivas + Cueva del Milodón</option>
-            <option>Laguna Cebolla + Avistamiento de Fauna</option>
-            <option>Lazo – Weber</option>
-            <option>Trekking Escénico Torres del Paine</option>
-            <option>Mirador Ferrier</option>
-            <option>Paso La Feria – Weber</option>
-            <option>Full Day Perito Moreno</option>
-          </select>
-        </label>
-        <label style="display:flex; flex-direction:column; gap:8px; grid-column:1/-1;">
-          <span data-t="quote.mode" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Modalidad</span>
-          <select name="modalidad" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:#232725; color:#F5F2EC; font:inherit;">
-            <option value="No sé / necesito recomendación" data-t="quote.unsure">No sé / necesito recomendación</option>
-            <option value="Privado" data-t="quote.private">Privado</option>
-            <option value="Compartido" data-t="quote.shared">Compartido</option>
-          </select>
-        </label>
-        <button type="submit" style="grid-column:1/-1; min-height:56px; margin-top:6px; border:0; border-radius:999px; background:#EDE7DA; color:#4F5D45; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer;">
-          <span data-t="quote.submit">Continuar por WhatsApp</span> ↗
-        </button>
-        <p data-t="quote.note" style="grid-column:1/-1; margin:0; font-size:11px; line-height:1.6; color:rgba(245,242,236,.48);">El formulario no reserva ni cobra. Solo prepara tu consulta para que podamos responderte con disponibilidad y valor.</p>
-      </form>
+  <div style="max-width:1180px; margin:0 auto; display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(34px,7vw,84px); align-items:start;" id="pk-quote-layout">
+        <div data-reveal="" style="opacity:0; transform:translateY(26px); transition:opacity .9s ease, transform .9s ease;">
+          <p data-t="quote.kicker" style="margin:0 0 12px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#A8B39A;">Planifica tu viaje</p>
+          <h3 data-t="quote.title" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(34px,6vw,60px); line-height:1.02;">Cuéntanos lo esencial.</h3>
+          <div id="pk-quote-steps-v47" aria-label="Cómo funciona" style="display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,242,236,.72);">
+            <span>Elige</span><span aria-hidden="true" style="opacity:.45;">·</span>
+            <span>Cotiza</span><span aria-hidden="true" style="opacity:.45;">·</span>
+            <span>Vive la Patagonia</span>
+          </div>
+          <p data-t="quote.intro" style="margin:18px 0 0; max-width:42ch; font-size:15px; line-height:1.72; color:rgba(245,242,236,.68); font-weight:300;">Completas cuatro datos y continuas directo por WhatsApp con el mensaje listo.</p>
+        </div>
+
+        <form id="pk-quote-form" data-quote-form style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <label style="display:flex; flex-direction:column; gap:8px;">
+            <span data-t="quote.date" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Fecha del viaje</span>
+            <input name="fecha" type="date" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:rgba(255,255,255,.04); color:#F5F2EC; font:inherit;">
+          </label>
+          <label style="display:flex; flex-direction:column; gap:8px;">
+            <span data-t="quote.pax" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Pasajeros</span>
+            <input name="pax" type="number" min="1" value="2" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:rgba(255,255,255,.04); color:#F5F2EC; font:inherit;">
+          </label>
+          <label style="display:flex; flex-direction:column; gap:8px; grid-column:1/-1;">
+            <span data-t="quote.experience" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Experiencia de interés</span>
+            <select name="experiencia" id="pk-quote-experience" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:#232725; color:#F5F2EC; font:inherit;">
+              <option value="" data-t="quote.choose">Elegir experiencia</option>
+              <option>Mirador Base Torres</option>
+              <option>Valle del Francés</option>
+              <option>Glaciar Grey en navegación</option>
+              <option>Excursiones especiales</option>
+              <option>Excursiones de avistamiento de fauna</option>
+              <option>Chorrillo Los Salmones</option>
+              <option>Aonikenk + Laguna Azul</option>
+              <option>Navegación Balmaceda & Serrano</option>
+              <option>Full Day Perspectivas + Cueva del Milodón</option>
+              <option>Laguna Cebolla + Avistamiento de Fauna</option>
+              <option>Lazo – Weber</option>
+              <option>Trekking Escénico Torres del Paine</option>
+              <option>Mirador Ferrier</option>
+              <option>Paso La Feria – Weber</option>
+              <option>Full Day Perito Moreno</option>
+              <option>Astrofotografía</option>
+            </select>
+          </label>
+          <label style="display:flex; flex-direction:column; gap:8px; grid-column:1/-1;">
+            <span data-t="quote.mode" style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,236,.58);">Modalidad</span>
+            <select name="modalidad" style="min-height:50px; padding:0 14px; border:1px solid rgba(245,242,236,.18); background:#232725; color:#F5F2EC; font:inherit;">
+              <option value="No sé / necesito recomendación" data-t="quote.unsure">No sé / necesito recomendación</option>
+              <option value="Privado" data-t="quote.private">Privado</option>
+              <option value="Compartido" data-t="quote.shared">Compartido</option>
+            </select>
+          </label>
+          <button type="submit" style="grid-column:1/-1; min-height:56px; margin-top:6px; border:0; border-radius:999px; background:#EDE7DA; color:#4F5D45; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer;">
+            <span data-t="quote.submit">Continuar por WhatsApp</span> ↗
+          </button>
+          <p data-t="quote.note" style="grid-column:1/-1; margin:0; font-size:11px; line-height:1.6; color:rgba(245,242,236,.48);">El formulario no reserva ni cobra. Solo prepara tu consulta para que podamos responderte con disponibilidad y valor.</p>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -3017,6 +3031,84 @@
     }
   </style>
 
+  <style id="pk-quote-merge-v48">
+    /*
+      C2 — #selector dejó de ser una sección y pasó a ser un div dentro de
+      #cotiza. Las reglas antiguas siguen dándole padding y fondo propios de
+      sección, así que se anulan aquí; dos ids ganan en especificidad a las
+      declaraciones de un id, incluidas las que llevan !important.
+    */
+    /*
+      El quiz venía con tratamiento "editorial" (tarjetas transparentes con
+      filete superior y texto oscuro) diseñado para el fondo crema de la
+      antigua sección. Sobre la foto de la cascada eso queda ilegible, así que
+      el bloque adopta el mismo panel translúcido que ya usan el formulario y
+      su columna de texto: es el lenguaje que la sección ya tenía para poner
+      contenido encima de la foto.
+    */
+    #cotiza #selector {
+      margin: clamp(30px, 5vw, 52px) 0 0 !important;
+      padding: clamp(20px, 3.2vw, 34px) !important;
+      background: rgba(24,30,27,.43) !important;
+      border: 1px solid rgba(245,242,236,.14) !important;
+      box-shadow: 0 18px 54px rgba(0,0,0,.12);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    /* Dentro del panel el texto ya hereda el claro de #cotiza; lo que hay que
+       corregir son los filetes y bordes, calculados sobre fondo claro. */
+    #cotiza #pk-quiz-grid > div {
+      border-top-color: rgba(245,242,236,.20) !important;
+    }
+    #cotiza #pk-quiz-grid button[data-quiz-option] {
+      color: #F5F2EC !important;
+      border-color: rgba(245,242,236,.28) !important;
+    }
+    #cotiza #pk-quiz-grid button[data-quiz-option]:hover {
+      border-color: rgba(245,242,236,.5) !important;
+    }
+    /* El estado elegido ya trae verde sólido y texto claro: se deja intacto. */
+
+    /* El encabezado del quiz venía pensado para fondo crema. Sobre la foto de
+       la cascada se lee igual que el bloque de cotización, que ya iba en
+       oscuro con un realce claro detrás. */
+    #cotiza [data-t="quiz.kicker"],
+    #cotiza [data-t="quiz.title"],
+    #cotiza [data-t="quiz.intro"] {
+      color: #18211C !important;
+      text-shadow: 0 1px 1px rgba(255,255,255,.18);
+    }
+    #cotiza [data-t="quiz.kicker"] {
+      color: rgba(24,33,28,.78) !important;
+    }
+
+    /* quote.title bajó de h2 a h3 para dejar un solo encabezado por sección;
+       la regla de tipografía del catálogo apuntaba a "#cotiza h2". */
+    #cotiza h3[data-t="quote.title"] {
+      font-family: var(--pk-catalog-serif) !important;
+      font-size: clamp(26px, 4.4vw, 44px);
+      font-weight: 300;
+      line-height: 1.06;
+      margin: 0;
+    }
+
+    /* Separación entre el paso 1 (elegir) y el paso 2 (cotizar). */
+    #cotiza #pk-quote-layout {
+      margin-top: clamp(38px, 6vw, 68px);
+      padding-top: clamp(30px, 5vw, 54px);
+      border-top: 1px solid rgba(245,242,236,.18);
+    }
+
+    @media (max-width: 760px) {
+      #cotiza #selector { margin-top: clamp(22px, 6vw, 34px) !important; }
+      #cotiza #pk-quote-layout {
+        margin-top: clamp(26px, 7vw, 40px);
+        padding-top: clamp(22px, 6vw, 34px);
+      }
+    }
+  </style>
+
 </x-dc>
 <script type="text/x-dc" data-dc-script="" data-props="{
   &quot;$preview&quot;: { &quot;width&quot;: 1440, &quot;height&quot;: 900 },
@@ -4020,6 +4112,12 @@ class Component extends DCLogic {
       };
       this.on(qform, 'focusin', start);
       this.on(qform, 'change', start);
+
+      /* Si el visitante elige la experiencia a mano, el quiz deja de pisarla. */
+      const expSel = this.one('#pk-quote-experience');
+      if (expSel) {
+        this.on(expSel, 'change', () => { delete expSel.dataset.pkAuto; });
+      }
       this.on(qform, 'submit', (e) => {
         e.preventDefault();
         const fd = new FormData(qform);
@@ -4032,7 +4130,9 @@ class Component extends DCLogic {
         const lines = lang === 'en'
           ? ['Hi PatagoniK, I would like a quote.', 'Date: ' + (fecha || 'to be confirmed'), 'Guests: ' + (pax || 'to be confirmed'), 'Experience: ' + (experiencia || 'I need a recommendation'), 'Modality: ' + (modalidad || 'to be confirmed')]
           : lang === 'pt'
-            ? ['Olá PatagoniK, gostaria de fazer uma cotação.', 'Data: ' + (fecha || 'a confirmar'), 'Passageiros: ' + (pax || 'a confirmar'), 'Experiência: ' + (experiencia || 'preciso de recomendação'), 'Modalidade: ' + (modalidade || 'a confirmar')]
+            /* Decía `modalidade` (sin declarar): enviar el formulario en
+               portugués lanzaba ReferenceError y no se abría WhatsApp. */
+            ? ['Olá PatagoniK, gostaria de fazer uma cotação.', 'Data: ' + (fecha || 'a confirmar'), 'Passageiros: ' + (pax || 'a confirmar'), 'Experiência: ' + (experiencia || 'preciso de recomendação'), 'Modalidade: ' + (modalidad || 'a confirmar')]
             : ['Hola PatagoniK, me gustaría cotizar una experiencia.', 'Fecha: ' + (fecha || 'por confirmar'), 'Pasajeros: ' + (pax || 'por confirmar'), 'Experiencia: ' + (experiencia || 'necesito recomendación'), 'Modalidad: ' + (modalidad || 'por confirmar')];
 
         this.trackEvent('quote_submit', { experience: experiencia || 'sin_seleccionar', modality: modalidad || 'sin_seleccionar' });
@@ -4041,17 +4141,37 @@ class Component extends DCLogic {
       });
     }
 
+    /* Ahora el quiz y el formulario viven en la misma sección, así que el CTA
+       ya no navega a otra parte: sólo baja al formulario, que llega con la
+       experiencia recomendada ya elegida (ver prefillQuoteExperience). */
     const quizCta = this.one('#pk-quiz-cta');
     if (quizCta) {
-      this.on(quizCta, 'click', () => {
-        const sel = this.one('#pk-quote-experience');
-        if (sel && this.quizRecommendations && this.quizRecommendations[0]) {
-          const first = this.quizRecommendations[0];
-          const match = Array.from(sel.options).find(o => o.textContent.trim() === first);
-          if (match) sel.value = match.value || match.textContent;
+      this.on(quizCta, 'click', (e) => {
+        e.preventDefault();
+        this.prefillQuoteExperience();
+        const form = this.one('#pk-quote-form');
+        if (form && form.scrollIntoView) {
+          form.scrollIntoView({ behavior: this.reduced ? 'auto' : 'smooth', block: 'center' });
         }
+        const sel = this.one('#pk-quote-experience');
+        if (sel) setTimeout(() => { try { sel.focus({ preventScroll: true }); } catch (err) {} }, 320);
       });
     }
+  }
+
+  /* C2 — puente quiz → formulario: la primera recomendación queda
+     preseleccionada en #pk-quote-experience para no preguntar dos veces lo
+     mismo. Sólo se pisa la selección si el usuario aún no eligió a mano. */
+  prefillQuoteExperience(force) {
+    const sel = this.one('#pk-quote-experience');
+    const first = (this.quizRecommendations || [])[0];
+    if (!sel || !first) return;
+    if (!force && sel.value && sel.dataset.pkAuto !== '1') return;
+    const match = Array.from(sel.options).find(o => o.textContent.trim() === first);
+    if (!match) return;
+    sel.value = match.value || match.textContent;
+    sel.dataset.pkAuto = '1';
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   renderQuizResult() {
@@ -4089,6 +4209,8 @@ class Component extends DCLogic {
       list.appendChild(span);
     });
     wrap.style.display = 'block';
+    /* En cuanto hay recomendación, el formulario de abajo ya la trae puesta. */
+    this.prefillQuoteExperience();
     this.trackEvent('quiz_complete', { interest:s.interest, level:s.level, days:s.days, recommendation:recs[0] });
   }
 
@@ -4555,9 +4677,9 @@ class Component extends DCLogic {
 
 setupSectionSmoothIn() {
   const selectors = [
-    '#selector > div',
-    '#como > div',
-    '#cotiza #pk-quote-layout',
+    /* C2: la sección fusionada aparece una sola vez. Antes había dos entradas
+       (#selector y #pk-quote-layout) y por tanto dos revelados encadenados. */
+    '#cotiza > div:not(#pk-quote-overlay)',
     '#nosotros > div',
     '#resenas > div',
     '#faq > div',
@@ -4589,8 +4711,7 @@ setupSectionSmoothIn() {
 
 setupVisualCleanupV47() {
   const selectors = [
-    '#selector > div',
-    '#cotiza #pk-quote-layout',
+    '#cotiza > div:not(#pk-quote-overlay)',
     '#nosotros > div',
     '#resenas > div',
     '#faq > div',
