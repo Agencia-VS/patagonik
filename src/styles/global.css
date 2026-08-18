@@ -1,0 +1,72 @@
+/*
+  Tokens de la marca, extraídos de los valores que el bundle repetía a mano en
+  cada bloque pk-*-vNN. Aquí viven una vez.
+
+  Lo que NO se ha portado todavía: las ~30 capas de <style id="pk-*-vNN"> del
+  bundle, que son parches acumulados peleándose entre sí con !important. Se
+  reconstruyen por componente cuando lleguen las fotos, no se copian.
+*/
+:root {
+  --pk-cream: #f5f2ec;
+  --pk-ink: #2b2b2b;
+  --pk-ink-soft: rgba(43, 43, 43, 0.68);
+  --pk-green: #6b7a5e;
+  --pk-green-deep: #4f5d45;
+  --pk-dark: #232725;
+  --pk-dark-alt: #22282c;
+  --pk-sand: #d6be9c;
+
+  --pk-serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
+  --pk-sans: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --pk-measure: 1180px;
+  --pk-gutter: clamp(22px, 6vw, 96px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--pk-cream);
+  color: var(--pk-ink);
+  font-family: var(--pk-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--pk-serif);
+  font-weight: 300;
+  line-height: 1.05;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.pk-shell {
+  max-width: var(--pk-measure);
+  margin-inline: auto;
+  padding-inline: var(--pk-gutter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

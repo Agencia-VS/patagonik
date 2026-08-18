@@ -1,0 +1,127 @@
+{
+  "order": 4,
+  "slug": "excursiones-especiales",
+  "image": "exp-04",
+  "content": {
+    "es": {
+      "cardTitle": "Excursiones especiales",
+      "cardSummary": "Diseñamos rutas privadas y flexibles según tus ideas, horarios, intereses y ritmo de viaje.",
+      "cardDetail": "Experiencias a medida",
+      "title": "Excursiones especiales",
+      "lead": "Experiencias diseñadas a tu medida en la Patagonia.",
+      "body": "Para viajeros que buscan algo distinto a las rutas tradicionales: combinaciones de paisajes, horarios especiales, fotografía, fauna, caminatas, experiencias familiares, salidas para grupos o recorridos más tranquilos o exigentes.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Horario a coordinar según ruta, duración, luz disponible y objetivo de la experiencia."
+        ],
+        [
+          "Duración",
+          "A definir"
+        ],
+        [
+          "Dificultad",
+          "Según ruta"
+        ],
+        [
+          "Horario",
+          "Flexible"
+        ],
+        [
+          "Diseño",
+          "100% personalizado"
+        ]
+      ],
+      "includes": [
+        "Diseño de ruta",
+        "Planificación logística",
+        "Orientación según intereses y fechas"
+      ],
+      "excludes": [
+        "Servicios externos no incluidos en la propuesta final"
+      ],
+      "modality": "Privada y Tailor-made.",
+      "note": "Tú nos cuentas la idea; PatagoniK crea la ruta contigo."
+    },
+    "en": {
+      "cardTitle": "Special excursions",
+      "cardSummary": "Diseñamos rutas privadas y flexibles según tus ideas, horarios, intereses y ritmo de viaje.",
+      "cardDetail": "Tailor-made experiences",
+      "title": "Special excursions",
+      "lead": "Experiences designed to your measure in Patagonia.",
+      "body": "For travellers looking for something beyond the classic routes: combinations of landscapes, special timings, photography, wildlife, hikes, family experiences, group departures or gentler — or more demanding — itineraries.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Time to be arranged according to route, duration, available light and the goal of the experience."
+        ],
+        [
+          "Duration",
+          "To be defined"
+        ],
+        [
+          "Difficulty",
+          "Depending on route"
+        ],
+        [
+          "Schedule",
+          "Flexible"
+        ],
+        [
+          "Design",
+          "100% personalised"
+        ]
+      ],
+      "includes": [
+        "Route design",
+        "Logistics planning",
+        "Guidance based on interests and dates"
+      ],
+      "excludes": [
+        "External services not included in the final proposal"
+      ],
+      "modality": "Private and tailor-made.",
+      "note": "You tell us the idea; PatagoniK builds the route with you."
+    },
+    "pt": {
+      "cardTitle": "Excursões especiais",
+      "cardSummary": "Diseñamos rutas privadas y flexibles según tus ideas, horarios, intereses y ritmo de viaje.",
+      "cardDetail": "Experiências sob medida",
+      "title": "Excursões especiais",
+      "lead": "Experiências desenhadas sob medida na Patagônia.",
+      "body": "Para viajantes que buscam algo diferente das rotas tradicionais: combinações de paisagens, horários especiais, fotografia, fauna, caminhadas, experiências em família, saídas para grupos ou percursos mais tranquilos ou mais exigentes.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Horário a combinar conforme rota, duração, luz disponível e objetivo da experiência."
+        ],
+        [
+          "Duração",
+          "A definir"
+        ],
+        [
+          "Dificuldade",
+          "Conforme a rota"
+        ],
+        [
+          "Horário",
+          "Flexível"
+        ],
+        [
+          "Planejamento",
+          "100% personalizado"
+        ]
+      ],
+      "includes": [
+        "Desenho de rota",
+        "Planejamento logístico",
+        "Orientação conforme interesses e datas"
+      ],
+      "excludes": [
+        "Serviços externos não incluídos na proposta final"
+      ],
+      "modality": "Privada e sob medida.",
+      "note": "Você nos conta a ideia; a PatagoniK cria a rota com você."
+    }
+  }
+}

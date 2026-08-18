@@ -1,0 +1,133 @@
+{
+  "order": 8,
+  "slug": "balmaceda-serrano",
+  "image": "exp-08",
+  "content": {
+    "es": {
+      "cardTitle": "Navegación Balmaceda & Serrano",
+      "cardSummary": "Navega el Fiordo Última Esperanza entre montañas y bosques, con una caminata suave hacia el Glaciar Serrano.",
+      "cardDetail": "Medio día / día completo",
+      "cardCategory": "Navegación · glaciares",
+      "title": "Navegación Balmaceda & Serrano",
+      "lead": "La Patagonia desde sus aguas más antiguas.",
+      "body": "Navegación por el Fiordo Última Esperanza entre montañas, cascadas y bosques nativos. El recorrido permite observar el Glaciar Balmaceda y desembarcar en Puerto Toro para una caminata suave hacia el entorno del Glaciar Serrano.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "07:00 aprox. desde Puerto Natales · retorno de jornada completa alrededor de las 17:30."
+        ],
+        [
+          "Duración",
+          "Medio día / día completo"
+        ],
+        [
+          "Caminata",
+          "2 km"
+        ],
+        [
+          "Nivel",
+          "Bajo"
+        ],
+        [
+          "Entorno",
+          "Fiordo y glaciares"
+        ]
+      ],
+      "includes": [
+        "Navegación ida y vuelta",
+        "Guía durante la travesía",
+        "Caminata hacia Glaciar Serrano"
+      ],
+      "excludes": [
+        "Alimentación según programa",
+        "Seguro personal de viaje"
+      ],
+      "modality": "Servicio compartido.",
+      "note": "Aquí el paisaje no se recorre: se contempla en movimiento."
+    },
+    "en": {
+      "cardTitle": "Balmaceda & Serrano Navigation",
+      "cardSummary": "Navega el Fiordo Última Esperanza entre montañas y bosques, con una caminata suave hacia el Glaciar Serrano.",
+      "cardDetail": "Half day / full day",
+      "cardCategory": "Navigation · glaciers",
+      "title": "Balmaceda & Serrano Navigation",
+      "lead": "Patagonia seen from its oldest waters.",
+      "body": "Sailing the Última Esperanza Fjord among mountains, waterfalls and native forest. The route lets you see the Balmaceda Glacier and disembark at Puerto Toro for a gentle walk towards the Serrano Glacier.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "07:00 approx. from Puerto Natales · full-day return around 17:30."
+        ],
+        [
+          "Duration",
+          "Half day / full day"
+        ],
+        [
+          "Walk",
+          "2 km"
+        ],
+        [
+          "Level",
+          "Low"
+        ],
+        [
+          "Setting",
+          "Fjord and glaciers"
+        ]
+      ],
+      "includes": [
+        "Return sailing",
+        "Guide throughout the crossing",
+        "Walk to the Serrano Glacier"
+      ],
+      "excludes": [
+        "Meals depending on the programme",
+        "Personal travel insurance"
+      ],
+      "modality": "Shared service.",
+      "note": "Here the landscape is not covered on foot: it is watched in motion."
+    },
+    "pt": {
+      "cardTitle": "Navegação Balmaceda & Serrano",
+      "cardSummary": "Navega el Fiordo Última Esperanza entre montañas y bosques, con una caminata suave hacia el Glaciar Serrano.",
+      "cardDetail": "Meio dia / dia inteiro",
+      "cardCategory": "Navegação · geleiras",
+      "title": "Navegação Balmaceda & Serrano",
+      "lead": "A Patagônia a partir de suas águas mais antigas.",
+      "body": "Navegação pelo Fiorde Última Esperanza entre montanhas, cachoeiras e bosques nativos. O percurso permite observar a Geleira Balmaceda e desembarcar em Puerto Toro para uma caminhada suave rumo ao entorno da Geleira Serrano.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "07:00 aprox. de Puerto Natales · retorno de jornada completa por volta das 17:30."
+        ],
+        [
+          "Duração",
+          "Meio dia / dia inteiro"
+        ],
+        [
+          "Caminhada",
+          "2 km"
+        ],
+        [
+          "Nível",
+          "Baixo"
+        ],
+        [
+          "Ambiente",
+          "Fiorde e geleiras"
+        ]
+      ],
+      "includes": [
+        "Navegação ida e volta",
+        "Guia durante a travessia",
+        "Caminhada até a Geleira Serrano"
+      ],
+      "excludes": [
+        "Alimentação conforme o programa",
+        "Seguro pessoal de viagem"
+      ],
+      "modality": "Serviço compartilhado.",
+      "note": "Aqui a paisagem não se percorre: contempla-se em movimento."
+    }
+  }
+}

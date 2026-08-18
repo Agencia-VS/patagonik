@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@/content.config';
+import { useTranslations } from '@/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const testimonials = (await getCollection('testimonials')).sort((a, b) => a.data.order - b.data.order);
+const LANG_NAME: Record<Locale, Record<Locale, string>> = {
+  es: { es: 'español', en: 'inglés', pt: 'portugués' },
+  en: { es: 'Spanish', en: 'English', pt: 'Portuguese' },
+  pt: { es: 'espanhol', en: 'inglês', pt: 'português' },
+};
+---
+
+<section class="pk-shell pk-about">
+  <p class="pk-kicker">{t('esc.kicker')}</p>
+  <h1>{t('esc.title.main')} {t('esc.title.sub')}</h1>
+  <p class="pk-lede">{t('hero.sub')}</p>
+
+  <h2>{t('diff.1.t')}</h2>
+  <p>{t('diff.1.b')}</p>
+
+  <h2 class="pk-about__reviews">{t('reviews.title')}</h2>
+  <ul class="pk-reviews">
+    {testimonials.map((item) => (
+      <li>
+        <blockquote>{item.data.quote}</blockquote>
+        <p class="pk-reviews__by">
+          {item.data.author}{item.data.origin ? ` · ${item.data.origin}` : ''}
+          {/*
+            Las reseñas son palabras de una persona real, así que no se
+            traducen: se marca en qué idioma se escribieron y se muestran tal
+            cual. Si el negocio quiere versiones traducidas, son una decisión
+            editorial suya, no una del build.
+          */}
+          {item.data.lang !== locale && (
+            <span class="pk-reviews__lang">
+              · {t('reviews.originalLang').replace('{lang}', LANG_NAME[locale][item.data.lang])}
+            </span>
+          )}
+        </p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .pk-about {
+    padding-block: clamp(40px, 7vw, 80px);
+    max-width: 860px;
+  }
+  .pk-kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pk-green);
+    margin: 0 0 0.7rem;
+  }
+  .pk-about h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+  }
+  .pk-about h2 {
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    margin-top: 2.4rem;
+  }
+  .pk-lede,
+  .pk-about p {
+    line-height: 1.72;
+    color: var(--pk-ink-soft);
+  }
+  .pk-reviews {
+    list-style: none;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .pk-reviews blockquote {
+    margin: 0;
+    font-family: var(--pk-serif);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .pk-reviews__by {
+    margin: 0.6rem 0 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(43, 43, 43, 0.5);
+  }
+  .pk-reviews__lang {
+    text-transform: none;
+    letter-spacing: 0;
+    font-style: italic;
+  }
+</style>

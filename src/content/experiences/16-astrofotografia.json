@@ -1,0 +1,139 @@
+{
+  "order": 16,
+  "slug": "astrofotografia",
+  "image": "exp-16",
+  "content": {
+    "es": {
+      "cardTitle": "Astrofotografía",
+      "cardSummary": "Salida nocturna para observar y fotografiar el cielo patagónico, con tiempo para contemplar la Vía Láctea y el paisaje.",
+      "cardDetail": "Nocturna · 3 a 5 h · Baja",
+      "cardCategory": "Cielo austral · noche · fotografía",
+      "title": "Astrofotografía",
+      "lead": "Una salida nocturna para contemplar y fotografiar el cielo austral de la Patagonia.",
+      "body": "Experiencia pensada para quienes quieren vivir la Patagonia de noche. Según las condiciones meteorológicas y la fase lunar, se elige un punto con baja contaminación lumínica para observar el cielo, reconocer constelaciones, contemplar la Vía Láctea y realizar fotografía nocturna del paisaje. Puede enfocarse en contemplación, aprendizaje básico o en una salida más orientada a crear imágenes.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Horario variable según la época del año, normalmente después del atardecer."
+        ],
+        [
+          "Duración",
+          "3 a 5 h aprox."
+        ],
+        [
+          "Horario",
+          "Nocturno"
+        ],
+        [
+          "Nivel",
+          "Bajo"
+        ],
+        [
+          "Condiciones",
+          "Sujeta a nubosidad, viento y visibilidad del cielo"
+        ]
+      ],
+      "includes": [
+        "Planificación según clima y fase lunar",
+        "Guía / anfitrión",
+        "Paradas para contemplación y fotografía",
+        "Asistencia básica para fotografía nocturna según experiencia del grupo"
+      ],
+      "excludes": [
+        "Cámara fotográfica y equipo personal",
+        "Vestuario técnico personal",
+        "Snacks o bebidas no indicados"
+      ],
+      "modality": "Privada o Tailor-made.",
+      "note": "Ideal para quienes buscan una Patagonia distinta: silenciosa, oscura y llena de estrellas."
+    },
+    "en": {
+      "cardTitle": "Astrofotografía",
+      "cardSummary": "Salida nocturna para observar y fotografiar el cielo patagónico, con tiempo para contemplar la Vía Láctea y el paisaje.",
+      "cardDetail": "Nocturna · 3 a 5 h · Baja",
+      "cardCategory": "Cielo austral · noche · fotografía",
+      "title": "Astrophotography",
+      "lead": "A night outing to contemplate and photograph Patagonia's southern sky.",
+      "body": "An experience for those who want to live Patagonia by night. Depending on the weather and the moon phase, we choose a spot with low light pollution to watch the sky, identify constellations, take in the Milky Way and shoot night landscape photography. It can lean towards contemplation, towards learning the basics, or towards an outing more focused on creating images.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Time varies with the season, usually after sunset."
+        ],
+        [
+          "Duration",
+          "3 to 5 h approx."
+        ],
+        [
+          "Schedule",
+          "At night"
+        ],
+        [
+          "Level",
+          "Low"
+        ],
+        [
+          "Conditions",
+          "Subject to cloud cover, wind and sky visibility"
+        ]
+      ],
+      "includes": [
+        "Planning around weather and moon phase",
+        "Guide / host",
+        "Stops for contemplation and photography",
+        "Basic night-photography assistance depending on the group's experience"
+      ],
+      "excludes": [
+        "Camera and personal equipment",
+        "Personal technical clothing",
+        "Snacks or drinks not listed"
+      ],
+      "modality": "Private or tailor-made.",
+      "note": "Ideal for those after a different Patagonia: silent, dark and full of stars."
+    },
+    "pt": {
+      "cardTitle": "Astrofotografía",
+      "cardSummary": "Salida nocturna para observar y fotografiar el cielo patagónico, con tiempo para contemplar la Vía Láctea y el paisaje.",
+      "cardDetail": "Nocturna · 3 a 5 h · Baja",
+      "cardCategory": "Cielo austral · noche · fotografía",
+      "title": "Astrofotografia",
+      "lead": "Uma saída noturna para contemplar e fotografar o céu austral da Patagônia.",
+      "body": "Experiência pensada para quem quer viver a Patagônia à noite. Conforme as condições meteorológicas e a fase da lua, escolhe-se um ponto com baixa poluição luminosa para observar o céu, reconhecer constelações, contemplar a Via Láctea e fazer fotografia noturna da paisagem. Pode focar em contemplação, aprendizado básico ou em uma saída mais voltada a criar imagens.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Horário variável conforme a época do ano, normalmente depois do pôr do sol."
+        ],
+        [
+          "Duração",
+          "3 a 5 h aprox."
+        ],
+        [
+          "Horário",
+          "Noturno"
+        ],
+        [
+          "Nível",
+          "Baixo"
+        ],
+        [
+          "Condições",
+          "Sujeita a nebulosidade, vento e visibilidade do céu"
+        ]
+      ],
+      "includes": [
+        "Planejamento conforme clima e fase da lua",
+        "Guia / anfitrião",
+        "Paradas para contemplação e fotografia",
+        "Assistência básica para fotografia noturna conforme a experiência do grupo"
+      ],
+      "excludes": [
+        "Câmera fotográfica e equipamento pessoal",
+        "Vestuário técnico pessoal",
+        "Lanches ou bebidas não indicados"
+      ],
+      "modality": "Privada ou sob medida.",
+      "note": "Ideal para quem busca uma Patagônia diferente: silenciosa, escura e cheia de estrelas."
+    }
+  }
+}

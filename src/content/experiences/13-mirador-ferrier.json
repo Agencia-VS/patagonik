@@ -1,0 +1,142 @@
+{
+  "order": 13,
+  "slug": "mirador-ferrier",
+  "image": "exp-13",
+  "content": {
+    "es": {
+      "cardTitle": "Mirador Ferrier",
+      "cardSummary": "Ascenso intenso por bosque nativo hasta una de las panorámicas más amplias y menos intervenidas del sector Grey.",
+      "cardDetail": "3,5–5 h · 6 km · Exigente",
+      "cardCategory": "Bosque · altura · panorámicas",
+      "title": "Mirador Ferrier",
+      "lead": "Una subida, una vista que lo cambia todo.",
+      "body": "Ascenso sostenido por bosque nativo y terreno de montaña en el sector Grey. A medida que se gana altura se abren vistas hacia Lago Grey, Lago Pehoé, valles profundos y, en días despejados, parte del Campo de Hielo Sur.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales · horario se confirma según clima, estado del sendero y temporada."
+        ],
+        [
+          "Caminata",
+          "3,5 a 5 h"
+        ],
+        [
+          "Distancia",
+          "6 km"
+        ],
+        [
+          "Desnivel",
+          "+650 m"
+        ],
+        [
+          "Nivel",
+          "Medio–alto / alto"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guía certificado",
+        "Bastones de trekking",
+        "Microcrampones en invierno"
+      ],
+      "excludes": [
+        "Entrada al Parque Nacional",
+        "Alimentación",
+        "Seguro personal",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "No es una caminata larga, pero sí una que se siente en cada paso."
+    },
+    "en": {
+      "cardTitle": "Ferrier Viewpoint",
+      "cardSummary": "Ascenso intenso por bosque nativo hasta una de las panorámicas más amplias y menos intervenidas del sector Grey.",
+      "cardDetail": "3.5–5 h · 6 km · Challenging",
+      "cardCategory": "Forest · altitude · panoramas",
+      "title": "Ferrier Viewpoint",
+      "lead": "One climb, and a view that changes everything.",
+      "body": "A sustained ascent through native forest and mountain terrain in the Grey sector. As you gain height the views open towards Lake Grey, Lake Pehoé, deep valleys and, on clear days, part of the Southern Ice Field.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales · time confirmed according to weather, trail condition and season."
+        ],
+        [
+          "Walk",
+          "3.5 to 5 h"
+        ],
+        [
+          "Distance",
+          "6 km"
+        ],
+        [
+          "Elevation gain",
+          "+650 m"
+        ],
+        [
+          "Level",
+          "Medium–high / high"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Certified guide",
+        "Trekking poles",
+        "Microspikes in winter"
+      ],
+      "excludes": [
+        "National Park entrance fee",
+        "Meals",
+        "Personal insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "Not a long walk, but one you feel in every step."
+    },
+    "pt": {
+      "cardTitle": "Mirador Ferrier",
+      "cardSummary": "Ascenso intenso por bosque nativo hasta una de las panorámicas más amplias y menos intervenidas del sector Grey.",
+      "cardDetail": "3,5–5 h · 6 km · Exigente",
+      "cardCategory": "Bosque · altitude · panoramas",
+      "title": "Mirante Ferrier",
+      "lead": "Uma subida, uma vista que muda tudo.",
+      "body": "Subida contínua por bosque nativo e terreno de montanha no setor Grey. À medida que se ganha altura, abrem-se vistas para o Lago Grey, o Lago Pehoé, vales profundos e, em dias claros, parte do Campo de Gelo Sul.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales · horário confirmado conforme clima, estado da trilha e temporada."
+        ],
+        [
+          "Caminhada",
+          "3,5 a 5 h"
+        ],
+        [
+          "Distância",
+          "6 km"
+        ],
+        [
+          "Desnível",
+          "+650 m"
+        ],
+        [
+          "Nível",
+          "Médio–alto / alto"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guia certificado",
+        "Bastões de trekking",
+        "Micro grampons no inverno"
+      ],
+      "excludes": [
+        "Entrada do Parque Nacional",
+        "Alimentação",
+        "Seguro pessoal",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Não é uma caminhada longa, mas é uma que se sente a cada passo."
+    }
+  }
+}

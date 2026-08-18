@@ -1,4 +1,11 @@
 node_modules/
 package-lock.json
 *.tmp.mjs
-dist/assets-web/
+
+# Astro
+dist/
+.astro/
+.vercel/
+
+# Copias optimizadas de imágenes del bundle (se regeneran)
+design/dist/assets-web/

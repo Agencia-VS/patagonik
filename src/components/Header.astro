@@ -1,0 +1,128 @@
+---
+import type { Locale } from '@/content.config';
+import { useTranslations, whatsappUrl, WHATSAPP_INTRO } from '@/i18n';
+import { LOCALES, homePath, routePath } from '@/i18n/routes';
+
+interface Props {
+  locale: Locale;
+  alternates: Record<Locale, string>;
+}
+const { locale, alternates } = Astro.props;
+const t = useTranslations(locale);
+
+const LANG_LABEL: Record<Locale, string> = { es: 'Español', en: 'English', pt: 'Português' };
+
+const nav = [
+  { href: routePath('experiences', locale), label: t('menu.tours') },
+  { href: routePath('about', locale), label: t('menu.about') },
+  { href: routePath('faq', locale), label: t('menu.faq') },
+];
+---
+
+<a class="pk-skip" href="#contenido">{t('nav.skip')}</a>
+
+<header class="pk-header">
+  <div class="pk-header__inner pk-shell">
+    <a class="pk-logo" href={homePath(locale)}>PatagoniK</a>
+
+    <nav aria-label={t('menu.tours')}>
+      <ul class="pk-nav">
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {/*
+      El selector de idioma pasa a ser navegación real: cada opción es un
+      enlace a la misma página en el otro idioma. En el bundle era un botón que
+      reescribía el DOM, así que no había nada que compartir ni indexar.
+    */}
+    <nav class="pk-lang" aria-label={t('nav.language')}>
+      <ul>
+        {LOCALES.map((alt) => (
+          <li>
+            <a href={alternates[alt]} hreflang={alt} aria-current={alt === locale ? 'true' : undefined}>
+              {LANG_LABEL[alt]}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="pk-cta" href={whatsappUrl(WHATSAPP_INTRO[locale])} target="_blank" rel="noopener">
+      {t('cta')}
+    </a>
+  </div>
+</header>
+
+<style>
+  .pk-skip {
+    position: absolute;
+    left: -9999px;
+  }
+  .pk-skip:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    background: var(--pk-cream);
+    padding: 0.6rem 1rem;
+  }
+  .pk-header {
+    background: var(--pk-dark);
+    color: var(--pk-cream);
+  }
+  .pk-header__inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 32px);
+    min-height: 68px;
+    flex-wrap: wrap;
+  }
+  .pk-logo {
+    font-family: var(--pk-serif);
+    font-size: 1.25rem;
+    letter-spacing: 0.17em;
+    text-decoration: none;
+  }
+  .pk-nav,
+  .pk-lang ul {
+    display: flex;
+    gap: clamp(10px, 2vw, 22px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pk-nav a,
+  .pk-lang a {
+    font-size: 0.82rem;
+    text-decoration: none;
+    opacity: 0.78;
+  }
+  .pk-nav a:hover,
+  .pk-lang a:hover,
+  .pk-nav a[aria-current],
+  .pk-lang a[aria-current] {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+  .pk-lang {
+    margin-left: auto;
+  }
+  .pk-cta {
+    background: var(--pk-sand);
+    color: var(--pk-ink);
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 0.7rem 1.1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+</style>

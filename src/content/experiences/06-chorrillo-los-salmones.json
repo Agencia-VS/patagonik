@@ -1,0 +1,139 @@
+{
+  "order": 6,
+  "slug": "chorrillo-los-salmones",
+  "image": "exp-06",
+  "content": {
+    "es": {
+      "cardTitle": "Chorrillo Los Salmones",
+      "cardSummary": "Caminata íntima junto al Río Pingo, bosque nativo, agua y observación de flora y fauna lejos de las zonas más transitadas.",
+      "cardDetail": "Día completo · 9 km · Fácil",
+      "cardCategory": "Trekking · bosque · flora",
+      "title": "Chorrillo Los Salmones",
+      "lead": "Un ritmo distinto dentro del parque.",
+      "body": "Caminata junto al Río Pingo en un entorno más protegido, donde el bosque nativo, el agua y la observación de flora y fauna crean una experiencia íntima y contemplativa, lejos de las zonas más transitadas.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales · hora exacta se confirma según clima, ruta y condiciones del sector Grey."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Distancia",
+          "9 km"
+        ],
+        [
+          "Nivel",
+          "Fácil"
+        ],
+        [
+          "Sector",
+          "Grey / Río Pingo"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Bastones de trekking",
+        "Guía certificado"
+      ],
+      "excludes": [
+        "Entrada al parque",
+        "Alimentación",
+        "Seguro personal",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "Aquí el paisaje no se impone: se observa en detalle."
+    },
+    "en": {
+      "cardTitle": "Chorrillo Los Salmones",
+      "cardSummary": "Caminata íntima junto al Río Pingo, bosque nativo, agua y observación de flora y fauna lejos de las zonas más transitadas.",
+      "cardDetail": "Full day · 9 km · Easy",
+      "cardCategory": "Hike · forest · flora",
+      "title": "Chorrillo Los Salmones",
+      "lead": "A different rhythm inside the park.",
+      "body": "A walk along the Pingo River in a more sheltered setting, where native forest, water and the observation of flora and fauna create an intimate, contemplative experience, far from the busier areas.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales · exact time confirmed according to weather, route and conditions in the Grey sector."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Distance",
+          "9 km"
+        ],
+        [
+          "Level",
+          "Easy"
+        ],
+        [
+          "Sector",
+          "Grey / Pingo River"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Trekking poles",
+        "Certified guide"
+      ],
+      "excludes": [
+        "Park entrance fee",
+        "Meals",
+        "Personal insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "Here the landscape does not impose itself: it is observed in detail."
+    },
+    "pt": {
+      "cardTitle": "Chorrillo Los Salmones",
+      "cardSummary": "Caminata íntima junto al Río Pingo, bosque nativo, agua y observación de flora y fauna lejos de las zonas más transitadas.",
+      "cardDetail": "Dia inteiro · 9 km · Fácil",
+      "cardCategory": "Trilha · bosque · flora",
+      "title": "Chorrillo Los Salmones",
+      "lead": "Um ritmo diferente dentro do parque.",
+      "body": "Caminhada junto ao Rio Pingo em um ambiente mais protegido, onde o bosque nativo, a água e a observação de flora e fauna criam uma experiência íntima e contemplativa, longe das zonas mais movimentadas.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales · horário exato confirmado conforme clima, rota e condições do setor Grey."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Distância",
+          "9 km"
+        ],
+        [
+          "Nível",
+          "Fácil"
+        ],
+        [
+          "Setor",
+          "Grey / Rio Pingo"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Bastões de trekking",
+        "Guia certificado"
+      ],
+      "excludes": [
+        "Entrada do parque",
+        "Alimentação",
+        "Seguro pessoal",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Aqui a paisagem não se impõe: observa-se em detalhe."
+    }
+  }
+}

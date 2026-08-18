@@ -1,0 +1,130 @@
+{
+  "order": 3,
+  "slug": "glaciar-grey-navegacion",
+  "image": "exp-03",
+  "content": {
+    "es": {
+      "cardTitle": "Glaciar Grey en navegación",
+      "cardSummary": "Navegación por Lago Grey entre témpanos, montañas y vegetación, acercándonos a distintas caras del glaciar.",
+      "cardDetail": "Medio día · 5 h",
+      "title": "Glaciar Grey en navegación",
+      "lead": "Una aproximación al hielo entre témpanos, montañas y Lago Grey.",
+      "body": "La navegación recorre el Lago Grey y permite acercarse a distintas caras del glaciar. Para llegar al embarque se realiza una caminata previa por el sector Pingo, bosque de lengas y Playa Grey.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Opción 1: pick-up 06:30 · Opción 2: pick-up 09:30 desde hoteles de Puerto Natales, según navegación elegida."
+        ],
+        [
+          "Navegación",
+          "Aprox. 3 h"
+        ],
+        [
+          "Acceso a pie",
+          "1,5 km / 35–40 min aprox."
+        ],
+        [
+          "Nivel",
+          "Bajo"
+        ],
+        [
+          "Operación",
+          "Sujeta a clima y zarpes"
+        ]
+      ],
+      "includes": [
+        "Anfitrión español / inglés a bordo",
+        "1 bebestible por persona"
+      ],
+      "excludes": [
+        "Traslado desde Puerto Natales",
+        "Entrada al Parque Nacional",
+        "Alimentación"
+      ],
+      "modality": "Servicio de navegación sujeto a disponibilidad y condiciones climáticas.",
+      "note": "Una forma distinta de dimensionar el Campo de Hielo Patagónico Sur."
+    },
+    "en": {
+      "cardTitle": "Grey Glacier by boat",
+      "cardSummary": "Navegación por Lago Grey entre témpanos, montañas y vegetación, acercándonos a distintas caras del glaciar.",
+      "cardDetail": "Half day · 5 h",
+      "title": "Grey Glacier by boat",
+      "lead": "An approach to the ice among icebergs, mountains and Lake Grey.",
+      "body": "The boat trip crosses Lake Grey and brings you close to different faces of the glacier. Reaching the pier involves a walk through the Pingo sector, lenga forest and Grey Beach.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Option 1: pick-up 06:30 · Option 2: pick-up 09:30 from hotels in Puerto Natales, depending on the sailing chosen."
+        ],
+        [
+          "Sailing",
+          "Approx. 3 h"
+        ],
+        [
+          "Walking access",
+          "1.5 km / 35–40 min approx."
+        ],
+        [
+          "Level",
+          "Low"
+        ],
+        [
+          "Operation",
+          "Subject to weather and departures"
+        ]
+      ],
+      "includes": [
+        "Spanish / English host on board",
+        "One drink per person"
+      ],
+      "excludes": [
+        "Transfer from Puerto Natales",
+        "National Park entrance fee",
+        "Meals"
+      ],
+      "modality": "Boat service subject to availability and weather conditions.",
+      "note": "A different way to take in the scale of the Southern Patagonian Ice Field."
+    },
+    "pt": {
+      "cardTitle": "Glaciar Grey em navegação",
+      "cardSummary": "Navegación por Lago Grey entre témpanos, montañas y vegetación, acercándonos a distintas caras del glaciar.",
+      "cardDetail": "Meio dia · 5 h",
+      "title": "Geleira Grey em navegação",
+      "lead": "Uma aproximação ao gelo entre icebergs, montanhas e o Lago Grey.",
+      "body": "A navegação percorre o Lago Grey e permite chegar perto de diferentes faces da geleira. Para o embarque faz-se uma caminhada prévia pelo setor Pingo, bosque de lengas e Praia Grey.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Opção 1: pick-up 06:30 · Opção 2: pick-up 09:30 nos hotéis de Puerto Natales, conforme a navegação escolhida."
+        ],
+        [
+          "Navegação",
+          "Aprox. 3 h"
+        ],
+        [
+          "Acesso a pé",
+          "1,5 km / 35–40 min aprox."
+        ],
+        [
+          "Nível",
+          "Baixo"
+        ],
+        [
+          "Operação",
+          "Sujeita a clima e saídas"
+        ]
+      ],
+      "includes": [
+        "Anfitrião espanhol / inglês a bordo",
+        "1 bebida por pessoa"
+      ],
+      "excludes": [
+        "Traslado desde Puerto Natales",
+        "Entrada do Parque Nacional",
+        "Alimentação"
+      ],
+      "modality": "Serviço de navegação sujeito a disponibilidade e condições climáticas.",
+      "note": "Uma forma diferente de dimensionar o Campo de Gelo Patagônico Sul."
+    }
+  }
+}

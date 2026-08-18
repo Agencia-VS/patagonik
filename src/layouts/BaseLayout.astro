@@ -1,0 +1,53 @@
+---
+import type { Locale } from '@/content.config';
+import { HTML_LANG } from '@/i18n';
+import { LOCALES, DEFAULT_LOCALE, localePrefix } from '@/i18n/routes';
+import '@/styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** Ruta de esta misma página en cada idioma, para hreflang. */
+  alternates: Record<Locale, string>;
+}
+
+const { locale, title, description, alternates } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={HTML_LANG[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    {/*
+      Lo que el bundle no podía tener: los tres idiomas compartían una sola URL
+      y se conmutaban por JS, así que para un buscador sólo existía el español.
+      Con una URL por idioma se pueden declarar como alternativas entre sí.
+    */}
+    {
+      LOCALES.map((alt) => (
+        <link rel="alternate" hreflang={HTML_LANG[alt]} href={new URL(alternates[alt], Astro.site)} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates[DEFAULT_LOCALE], Astro.site)} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <slot name="head" />
+  </head>
+  <body>
+    <slot name="header" />
+    <main id="contenido">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>

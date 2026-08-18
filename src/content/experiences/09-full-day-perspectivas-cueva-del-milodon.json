@@ -1,0 +1,136 @@
+{
+  "order": 9,
+  "slug": "full-day-perspectivas-cueva-del-milodon",
+  "image": "exp-09",
+  "content": {
+    "es": {
+      "cardTitle": "Full Day Perspectivas + Cueva del Milodón",
+      "cardSummary": "Una jornada panorámica por miradores, lagos, cascadas y Cueva del Milodón, con tiempo para observar y disfrutar.",
+      "cardDetail": "Día completo · Fácil",
+      "cardCategory": "Miradores · fauna · historia",
+      "title": "Full Day Perspectivas + Cueva del Milodón",
+      "lead": "Paisajes, historia y una jornada para disfrutar sin prisas.",
+      "body": "Recorrido panorámico por Torres del Paine con paradas en miradores emblemáticos, Cascada Paine, Salto Grande, Lago Pehoé y sector Grey, finalizando con la visita a la Cueva del Milodón.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "08:00 aprox. desde alojamiento en Puerto Natales · retorno estimado entre 18:00 y 19:00."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Nivel",
+          "Fácil"
+        ],
+        [
+          "Temporada",
+          "Todo el año"
+        ],
+        [
+          "Caminatas",
+          "Opcionales / baja intensidad"
+        ]
+      ],
+      "includes": [
+        "Transporte desde Puerto Natales",
+        "Guía certificado"
+      ],
+      "excludes": [
+        "Entrada a Torres del Paine",
+        "Entrada a Cueva del Milodón",
+        "Alimentación",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "Una experiencia completa para descubrir distintas caras de la Patagonia en un solo día."
+    },
+    "en": {
+      "cardTitle": "Full Day Perspectivas + Milodón Cave",
+      "cardSummary": "Una jornada panorámica por miradores, lagos, cascadas y Cueva del Milodón, con tiempo para observar y disfrutar.",
+      "cardDetail": "Full day · Easy",
+      "cardCategory": "Viewpoints · wildlife · history",
+      "title": "Full Day Perspectivas + Milodón Cave",
+      "lead": "Landscapes, history and a day to enjoy without rushing.",
+      "body": "A panoramic route through Torres del Paine with stops at the emblematic viewpoints, Paine Waterfall, Salto Grande, Lake Pehoé and the Grey sector, ending with a visit to the Milodón Cave.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "08:00 approx. from your accommodation in Puerto Natales · estimated return between 18:00 and 19:00."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Level",
+          "Easy"
+        ],
+        [
+          "Season",
+          "All year round"
+        ],
+        [
+          "Hikes",
+          "Optional / low intensity"
+        ]
+      ],
+      "includes": [
+        "Transport from Puerto Natales",
+        "Certified guide"
+      ],
+      "excludes": [
+        "Torres del Paine entrance fee",
+        "Milodón Cave entrance fee",
+        "Meals",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "A complete experience to discover different faces of Patagonia in a single day."
+    },
+    "pt": {
+      "cardTitle": "Full Day Perspectivas + Cueva del Milodón",
+      "cardSummary": "Una jornada panorámica por miradores, lagos, cascadas y Cueva del Milodón, con tiempo para observar y disfrutar.",
+      "cardDetail": "Dia inteiro · Fácil",
+      "cardCategory": "Mirantes · fauna · história",
+      "title": "Full Day Perspectivas + Cueva del Milodón",
+      "lead": "Paisagens, história e um dia para aproveitar sem pressa.",
+      "body": "Percurso panorâmico por Torres del Paine com paradas em mirantes emblemáticos, Cascata Paine, Salto Grande, Lago Pehoé e setor Grey, finalizando com a visita à Cueva del Milodón.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "08:00 aprox. da hospedagem em Puerto Natales · retorno estimado entre 18:00 e 19:00."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Nível",
+          "Fácil"
+        ],
+        [
+          "Temporada",
+          "O ano todo"
+        ],
+        [
+          "Caminhadas",
+          "Opcionais / baixa intensidade"
+        ]
+      ],
+      "includes": [
+        "Transporte desde Puerto Natales",
+        "Guia certificado"
+      ],
+      "excludes": [
+        "Entrada de Torres del Paine",
+        "Entrada da Cueva del Milodón",
+        "Alimentação",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Uma experiência completa para descobrir diferentes faces da Patagônia em um só dia."
+    }
+  }
+}

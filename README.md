@@ -1,131 +1,74 @@
-# PatagoniK — landing
+# PatagoniK
 
-Fuente editable de la landing de PatagoniK y las herramientas para volver a
-empaquetarla como un bundle de Claude Design.
-
-## Por qué el repo está partido así
-
-La landing venía como un único HTML de **21 MB**, que es lo que impedía
-importarla de vuelta a una sesión de Design. Casi nada de ese peso era código:
-el HTML real son ~315 kB y el resto eran imágenes incrustadas en base64, más
-varias que ya no usaba nadie.
-
-Un bundle de Design es un HTML con cuatro islas de datos en el `<body>`:
-
-| isla | contenido |
-|------|-----------|
-| `__bundler/manifest` | `{uuid: {mime, compressed, data}}` — los binarios en base64 |
-| `__bundler/ext_resources` | React / ReactDOM mapeados a uuids del manifest |
-| `__bundler/page_order` | páginas anidadas (aquí, vacío) |
-| `__bundler/template` | el documento HTML entero, como string JSON |
-
-Al abrirlo, el cargador convierte cada entrada del manifest en una `blob:` URL
-y hace `template.split(uuid).join(url)`. Por eso el template se refiere a las
-imágenes por uuid pelado, y por eso se puede desempaquetar y volver a armar sin
-tocar el cargador.
+Sitio de PatagoniK en **Astro + TypeScript**, desplegado en **Vercel**.
 
 ```
 src/
-  template.html        el documento (aquí se edita todo)
-  shell.html           el cargador original, intacto, con marcadores @@ISLA@@
-  ext_resources.json
-  assets/              originales + index.json (uuid -> archivo, mime, compresión)
-tools/
-  unpack.py            bundle -> src/
-  build.py             src/ -> bundle
-  optimize_images.py   src/assets -> dist/assets-web (copias al tamaño real de uso)
-  verify.mjs           humo: que arranque y pinte
-  test-*.mjs           criterios de aceptación C1–C4 en navegador
-dist/
-  PatagoniK_Landing.html   el bundle listo para importar
+  content/
+    experiences/     16 experiencias, una por archivo, con es/en/pt dentro
+    testimonials/    reseñas reales de pasajeros
+  content.config.ts  schema zod de ambas colecciones
+  i18n/
+    routes.ts        segmentos de URL por idioma (única fuente de verdad)
+    index.ts         t(), fallback a español y aviso en desarrollo
+    ui.generated.json  ← lo reescribe el exportador; no editar a mano
+    ui.overrides.json  ← textos propios de esta versión; gana sobre lo generado
+  layouts/           BaseLayout: canonical, hreflang, Open Graph
+  components/        Header, Footer, ExperienceCard + páginas
+  pages/[...path].astro   una sola ruta genera las 57 páginas
+scripts/
+  check-i18n.mjs     rompe el build si una clave llega al HTML sin resolver
+design/              el bundle de Claude Design: fuente de la que se migró
 ```
 
-## Uso
+## Comandos
 
 ```bash
-python3 tools/optimize_images.py                       # sólo si cambiaron las fotos
-python3 tools/build.py --assets dist/assets-web        # -> dist/PatagoniK_Landing.html
-
-node tools/verify.mjs dist/PatagoniK_Landing.html      # humo
-node tools/test-routes.mjs                             # C1
-node tools/test-merged-section.mjs                     # C2
-node tools/test-carousel.mjs                           # C3
-node tools/test-modal-i18n.mjs                         # C4
+npm run dev       # servidor local
+npm run build     # build + comprobación de i18n
+npm run check     # astro check + tsc
+npm run content:export   # re-vuelca el contenido desde design/src/template.html
 ```
 
-`build.py` empaqueta **sólo** los assets que el template todavía nombra, así que
-borrar un `<image-slot>` basta para que sus bytes desaparezcan del build.
+## Cómo está montado el multi-idioma
 
-Para partir de un bundle nuevo exportado desde Design:
-`python3 tools/unpack.py <bundle.html> --out src`.
+Español en la raíz, inglés y portugués con prefijo, y **el segmento traducido**:
 
-## Peso
+| | es | en | pt |
+|---|---|---|---|
+| inicio | `/` | `/en/` | `/pt/` |
+| quiénes somos | `/quienes-somos` | `/en/about-us` | `/pt/quem-somos` |
+| preguntas | `/preguntas-frecuentes` | `/en/faq` | `/pt/perguntas-frequentes` |
+| experiencia | `/experiencias/:slug` | `/en/experiences/:slug` | `/pt/experiencias/:slug` |
 
-| | antes | ahora |
-|---|---|---|
-| bundle | 21.0 MB | **4.7 MB** |
-| imágenes | 15.5 MB | 3.2 MB |
-| assets muertos | 2.1 MB | 0 |
-| fondos duplicados | 1.9 MB | 0 |
-| HTML | 315 kB | 316 kB |
+Los segmentos salen de `src/i18n/routes.ts`; cambiarlos ahí cambia las URLs y
+el `hreflang` a la vez, que es lo que evita que se desincronicen.
 
-Los originales se quedan en `src/assets/` y no se tocan; `optimize_images.py`
-escribe copias aparte, así que se puede volver a correr sin recomprimir sobre
-lo ya comprimido. Los tamaños salen de lo que la página realmente pinta: una
-foto de experiencia se ve a 340×250 en la tarjeta y a 571×1058 en el modal, y
-es el modal el que manda.
+En el bundle los tres idiomas compartían una sola URL y se conmutaban por JS,
+así que un buscador sólo veía la versión en español. Ahora cada idioma es una
+página indexable y el selector de idioma es navegación real.
 
-## i18n
+## Reglas del contenido
 
-Sistema propio por atributos, sin librería:
+- **Una experiencia = un archivo.** Antes su texto vivía repartido en tres
+  sitios (el DOM para el español de la tarjeta, `EXPERIENCE_DATA` para el
+  detalle, `EXPERIENCE_I18N` para en/pt).
+- **El schema exige paridad de forma** entre idiomas: mismo número de `facts`,
+  `includes` y `excludes`. Una traducción incompleta rompe el build en vez de
+  publicar una ficha coherente a medias.
+- **Las reseñas no se traducen.** Son palabras de una persona real; se guarda
+  el idioma en que se escribieron y la página lo indica cuando no coincide con
+  el del visitante.
 
-- `data-t="clave"` traduce el `textContent` del nodo.
-- `data-t-attr="aria-label:clave"` traduce atributos (añadido para el modal).
-- `cacheSpanish()` guarda el español original y es **incremental**: se le puede
-  pasar un root para indexar sólo lo recién inyectado.
-- `applyLang(root)` aplica el idioma a un subárbol.
+## Pendiente
 
-**Regla del proyecto: todo nodo que entre al DOM después del arranque necesita
-su pasada de traducción.** Vale para las vistas del router y para cualquier
-cosa que se monte dinámicamente.
-
-El detalle de experiencia es la excepción al patrón: no se traduce por atributos
-porque se arma desde datos. `EXPERIENCE_DATA` es el español y
-`EXPERIENCE_I18N.en` / `.pt` lo cubren con la misma forma (mismos facts en el
-mismo orden, listas del mismo largo). Si agregas una experiencia, agrégala en
-los tres idiomas o el modal caerá al español sólo para ella.
-
-> Las traducciones en/pt de las 16 experiencias se redactaron en este trabajo:
-> el diccionario sólo tenía las claves de tarjeta. Conviene revisarlas con el
-> equipo comercial antes de usarlas en campañas.
-
-## Rutas
-
-`/` · `/tabs/quienes-somos` (esencia + por qué nosotros + reseñas) · `/tabs/faq`
-
-History API cuando la página se sirve por http(s); si no —`file://`, o un
-hosting sin rewrites donde recargar `/tabs/faq` daría 404— cae solo a hash
-(`#/tabs/faq`). Los enlaces llevan `href` real en los dos modos.
-
-**Si se publica con History API, el hosting tiene que servir el mismo HTML en
-`/tabs/*`** (rewrite tipo SPA). Sin eso funciona la navegación interna pero no
-recargar ni entrar directo por URL.
-
-Las vistas viven como texto inerte en `<script type="text/html"
-data-route-view="...">`, **fuera de `<x-dc>`**. No es capricho: dentro, el
-runtime de Design reconstruye el DOM recorriendo `childNodes`, y el contenido de
-un `<template>` vive en su `DocumentFragment`, así que llegaba vacío al
-navegador.
-
-## Detalles que conviene no re-descubrir
-
-- `#tours` **no** era un scroll horizontal: era una sección de 300vh pineada
-  donde el scroll de la página manejaba un `transform`. Ahora sí es un
-  `overflow-x` normal con scroll-snap.
-- Un bundle self-contained decodifica todas sus imágenes al arrancar, así que
-  `loading="lazy"` no ahorra bytes. Lo que sí ahorra es que haya menos imágenes
-  y más chicas — y que las vistas de ruta no entren al DOM hasta que se visitan.
-- Los bloques `<style id="pk-*-vNN">` son capas de parches acumuladas y muchos
-  usan `!important`. Al añadir uno nuevo hay que ponerlo al final y, para ganarle
-  a una regla por id, usar dos ids (`#cotiza #selector`) en vez de subir la
-  escalera de `!important`.
+- **Fotos.** `src/components/ExperienceCard.astro` tiene el hueco marcado con
+  `data-image`; cuando lleguen, entra `<Image>` de `astro:assets` y genera
+  `srcset` y formatos modernos.
+- **Puesta a punto visual.** Las páginas montan contenido y estructura reales,
+  pero las ~30 capas `<style id="pk-*-vNN">` del bundle no se han portado: son
+  parches acumulados peleándose con `!important`. Se reconstruyen por
+  componente, no se copian.
+- **`site` en `astro.config.mjs`** apunta a `https://patagonik.cl` como
+  marcador — de ahí salen canonical y hreflang.
+- **GA4**: en el bundle `GA4_ID` estaba vacío.

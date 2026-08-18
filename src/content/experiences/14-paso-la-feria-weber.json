@@ -1,0 +1,139 @@
+{
+  "order": 14,
+  "slug": "paso-la-feria-weber",
+  "image": "exp-14",
+  "content": {
+    "es": {
+      "cardTitle": "Paso La Feria – Weber",
+      "cardSummary": "Travesía de 14 km por estepa y lagunas, pensada para entender el territorio a través del movimiento.",
+      "cardDetail": "Día completo · 14 km · Moderado",
+      "cardCategory": "Travesía · territorio · contemplación",
+      "title": "Paso La Feria – Weber",
+      "lead": "Conectar el paisaje a través del movimiento.",
+      "body": "Travesía continua por estepa abierta, lagunas y suaves ondulaciones. La ruta propone leer el territorio mientras se avanza, con el Mirador Toro y el sector Weber marcando el cierre natural del recorrido.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales · horario se confirma según logística, viento y condiciones de la travesía."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Distancia",
+          "14 km"
+        ],
+        [
+          "Desnivel",
+          "Suave / progresivo"
+        ],
+        [
+          "Nivel",
+          "Moderado"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guía certificado",
+        "Bastones de trekking"
+      ],
+      "excludes": [
+        "Entrada al parque",
+        "Alimentación",
+        "Seguro personal de viaje",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "Aquí no se trata de llegar, sino de entender el camino."
+    },
+    "en": {
+      "cardTitle": "Paso La Feria – Weber",
+      "cardSummary": "Travesía de 14 km por estepa y lagunas, pensada para entender el territorio a través del movimiento.",
+      "cardDetail": "Full day · 14 km · Moderate",
+      "cardCategory": "Traverse · territory · contemplation",
+      "title": "Paso La Feria – Weber",
+      "lead": "Connecting the landscape through movement.",
+      "body": "A continuous traverse across open steppe, lagoons and gentle undulations. The route invites you to read the territory as you move, with the Toro Viewpoint and the Weber sector marking its natural close.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales · time confirmed according to logistics, wind and conditions on the traverse."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Distance",
+          "14 km"
+        ],
+        [
+          "Elevation gain",
+          "Gentle / progressive"
+        ],
+        [
+          "Level",
+          "Moderate"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Certified guide",
+        "Trekking poles"
+      ],
+      "excludes": [
+        "Park entrance fee",
+        "Meals",
+        "Personal travel insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "Here it is not about arriving, but about understanding the way."
+    },
+    "pt": {
+      "cardTitle": "Paso La Feria – Weber",
+      "cardSummary": "Travesía de 14 km por estepa y lagunas, pensada para entender el territorio a través del movimiento.",
+      "cardDetail": "Dia inteiro · 14 km · Moderado",
+      "cardCategory": "Travessia · território · contemplação",
+      "title": "Paso La Feria – Weber",
+      "lead": "Conectar a paisagem através do movimento.",
+      "body": "Travessia contínua por estepe aberta, lagoas e suaves ondulações. A rota propõe ler o território enquanto se avança, com o Mirante Toro e o setor Weber marcando o fecho natural do percurso.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales · horário confirmado conforme logística, vento e condições da travessia."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Distância",
+          "14 km"
+        ],
+        [
+          "Desnível",
+          "Suave / progressivo"
+        ],
+        [
+          "Nível",
+          "Moderado"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guia certificado",
+        "Bastões de trekking"
+      ],
+      "excludes": [
+        "Entrada do parque",
+        "Alimentação",
+        "Seguro pessoal de viagem",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Aqui não se trata de chegar, mas de entender o caminho."
+    }
+  }
+}

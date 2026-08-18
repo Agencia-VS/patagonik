@@ -1,0 +1,127 @@
+{
+  "order": 2,
+  "slug": "valle-del-frances",
+  "image": "exp-02",
+  "content": {
+    "es": {
+      "cardTitle": "Valle del Francés",
+      "cardSummary": "Uno de los grandes anfiteatros naturales del parque, entre bosques, ríos, glaciares colgantes y paredes de granito.",
+      "cardDetail": "Día completo · 12 h",
+      "title": "Valle del Francés",
+      "lead": "Uno de los grandes anfiteatros naturales del Circuito W.",
+      "body": "La caminata se interna entre bosques, ríos y vistas hacia glaciares colgantes y paredes de granito. Según clima y energía del grupo, el recorrido puede avanzar hacia miradores interiores antes de continuar hacia Paine Grande.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "06:45 aprox. desde Terminal Rodoviario de Puerto Natales · conexión con catamarán de las 10:30 en Pudeto."
+        ],
+        [
+          "Duración",
+          "7 a 9 h aprox."
+        ],
+        [
+          "Distancia",
+          "18 a 23 km según programa"
+        ],
+        [
+          "Nivel",
+          "Medio–alto"
+        ],
+        [
+          "Entorno",
+          "Bosque, ríos y glaciares colgantes"
+        ]
+      ],
+      "includes": [
+        "Planificación de ruta según programa",
+        "Acompañamiento de guía cuando se contrata servicio guiado"
+      ],
+      "excludes": [
+        "Servicios de refugio o camping no contratados",
+        "Entradas y servicios externos no indicados"
+      ],
+      "modality": "Puede integrarse a Circuito W o diseñarse como jornada guiada según logística y disponibilidad.",
+      "note": "Una jornada para caminar dentro del corazón montañoso del parque."
+    },
+    "en": {
+      "cardTitle": "French Valley",
+      "cardSummary": "Uno de los grandes anfiteatros naturales del parque, entre bosques, ríos, glaciares colgantes y paredes de granito.",
+      "cardDetail": "Full day · 12 h",
+      "title": "French Valley",
+      "lead": "One of the great natural amphitheatres of the W Circuit.",
+      "body": "The hike works its way through forest, rivers and views towards hanging glaciers and granite walls. Depending on the weather and the group's energy, the route can push on to the inner viewpoints before continuing towards Paine Grande.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "06:45 approx. from Puerto Natales bus terminal · connecting with the 10:30 catamaran at Pudeto."
+        ],
+        [
+          "Duration",
+          "7 to 9 h approx."
+        ],
+        [
+          "Distance",
+          "18 to 23 km depending on the programme"
+        ],
+        [
+          "Level",
+          "Medium–high"
+        ],
+        [
+          "Setting",
+          "Forest, rivers and hanging glaciers"
+        ]
+      ],
+      "includes": [
+        "Route planning according to the programme",
+        "Guide accompaniment when a guided service is booked"
+      ],
+      "excludes": [
+        "Refuge or camping services not booked",
+        "Entrance fees and external services not listed"
+      ],
+      "modality": "Can be built into the W Circuit or designed as a guided day depending on logistics and availability.",
+      "note": "A day to walk inside the mountain heart of the park."
+    },
+    "pt": {
+      "cardTitle": "Vale do Francês",
+      "cardSummary": "Uno de los grandes anfiteatros naturales del parque, entre bosques, ríos, glaciares colgantes y paredes de granito.",
+      "cardDetail": "Dia inteiro · 12 h",
+      "title": "Vale do Francês",
+      "lead": "Um dos grandes anfiteatros naturais do Circuito W.",
+      "body": "A caminhada avança entre bosques, rios e vistas para geleiras suspensas e paredes de granito. Conforme o clima e a energia do grupo, o percurso pode seguir até os mirantes interiores antes de continuar rumo a Paine Grande.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "06:45 aprox. do Terminal Rodoviário de Puerto Natales · conexão com o catamarã das 10:30 em Pudeto."
+        ],
+        [
+          "Duração",
+          "7 a 9 h aprox."
+        ],
+        [
+          "Distância",
+          "18 a 23 km conforme o programa"
+        ],
+        [
+          "Nível",
+          "Médio–alto"
+        ],
+        [
+          "Ambiente",
+          "Bosque, rios e geleiras suspensas"
+        ]
+      ],
+      "includes": [
+        "Planejamento de rota conforme o programa",
+        "Acompanhamento de guia quando há serviço guiado contratado"
+      ],
+      "excludes": [
+        "Serviços de refúgio ou camping não contratados",
+        "Entradas e serviços externos não indicados"
+      ],
+      "modality": "Pode integrar o Circuito W ou ser desenhada como jornada guiada conforme logística e disponibilidade.",
+      "note": "Uma jornada para caminhar dentro do coração montanhoso do parque."
+    }
+  }
+}

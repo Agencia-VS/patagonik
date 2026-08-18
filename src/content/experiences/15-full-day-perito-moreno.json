@@ -1,0 +1,139 @@
+{
+  "order": 15,
+  "slug": "full-day-perito-moreno",
+  "image": "exp-15",
+  "content": {
+    "es": {
+      "cardTitle": "Full Day Perito Moreno",
+      "cardSummary": "Jornada a Argentina para recorrer las pasarelas y contemplar una de las grandes paredes de hielo de la Patagonia.",
+      "cardDetail": "Día completo · aprox. 16 h",
+      "cardCategory": "Glaciar · Argentina · contemplación",
+      "title": "Full Day Perito Moreno",
+      "lead": "Un encuentro con el hielo vivo de la Patagonia.",
+      "body": "Jornada desde Puerto Natales hacia Argentina para recorrer las pasarelas panorámicas del Glaciar Perito Moreno. Los miradores permiten observar la pared de hielo desde distintas alturas y ángulos, con posibilidad de presenciar desprendimientos naturales.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Presentación 06:15 · salida 06:30 desde Puerto Natales · retorno aproximado 22:30."
+        ],
+        [
+          "Duración",
+          "Aprox. 16 h"
+        ],
+        [
+          "Caminatas",
+          "Libres por pasarelas"
+        ],
+        [
+          "Nivel",
+          "Bajo"
+        ],
+        [
+          "Destino",
+          "Parque Nacional Los Glaciares"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guía durante la visita en Argentina"
+      ],
+      "excludes": [
+        "Entrada al Parque Nacional Los Glaciares",
+        "Alimentación",
+        "Navegación opcional",
+        "Seguro personal",
+        "Propinas"
+      ],
+      "modality": "Compartida o privada.",
+      "note": "No es solo ver un glaciar: es presenciar la fuerza viva de la naturaleza."
+    },
+    "en": {
+      "cardTitle": "Full Day Perito Moreno",
+      "cardSummary": "Jornada a Argentina para recorrer las pasarelas y contemplar una de las grandes paredes de hielo de la Patagonia.",
+      "cardDetail": "Full day · approx. 16 h",
+      "cardCategory": "Glacier · Argentina · contemplation",
+      "title": "Full Day Perito Moreno",
+      "lead": "An encounter with Patagonia's living ice.",
+      "body": "A day trip from Puerto Natales into Argentina to walk the panoramic boardwalks of the Perito Moreno Glacier. The viewpoints let you watch the ice wall from different heights and angles, with the chance of witnessing natural calvings.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Check-in 06:15 · departure 06:30 from Puerto Natales · return approximately 22:30."
+        ],
+        [
+          "Duration",
+          "Approx. 16 h"
+        ],
+        [
+          "Hikes",
+          "Free, along boardwalks"
+        ],
+        [
+          "Level",
+          "Low"
+        ],
+        [
+          "Destination",
+          "Los Glaciares National Park"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Guide during the visit in Argentina"
+      ],
+      "excludes": [
+        "Los Glaciares National Park entrance fee",
+        "Meals",
+        "Optional boat trip",
+        "Personal insurance",
+        "Tips"
+      ],
+      "modality": "Shared or private.",
+      "note": "It is not just seeing a glacier: it is witnessing the living force of nature."
+    },
+    "pt": {
+      "cardTitle": "Full Day Perito Moreno",
+      "cardSummary": "Jornada a Argentina para recorrer las pasarelas y contemplar una de las grandes paredes de hielo de la Patagonia.",
+      "cardDetail": "Dia inteiro · aprox. 16 h",
+      "cardCategory": "Geleira · Argentina · contemplação",
+      "title": "Full Day Perito Moreno",
+      "lead": "Um encontro com o gelo vivo da Patagônia.",
+      "body": "Jornada de Puerto Natales rumo à Argentina para percorrer as passarelas panorâmicas da Geleira Perito Moreno. Os mirantes permitem observar a parede de gelo de diferentes alturas e ângulos, com a possibilidade de presenciar desprendimentos naturais.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Apresentação 06:15 · saída 06:30 de Puerto Natales · retorno aproximado 22:30."
+        ],
+        [
+          "Duração",
+          "Aprox. 16 h"
+        ],
+        [
+          "Caminhadas",
+          "Livres pelas passarelas"
+        ],
+        [
+          "Nível",
+          "Baixo"
+        ],
+        [
+          "Destino",
+          "Parque Nacional Los Glaciares"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guia durante a visita na Argentina"
+      ],
+      "excludes": [
+        "Entrada do Parque Nacional Los Glaciares",
+        "Alimentação",
+        "Navegação opcional",
+        "Seguro pessoal",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada ou privada.",
+      "note": "Não é só ver uma geleira: é presenciar a força viva da natureza."
+    }
+  }
+}
