@@ -13,7 +13,14 @@ interface Props {
 }
 
 const { locale, title, description, alternates } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+/*
+  Astro normaliza el pathname con barra final, pero los hreflang de abajo se
+  construyen desde routes.ts sin ella. Si no se unifican, el canonical de una
+  página y el hreflang que la señala son URLs distintas y un buscador puede
+  tratarlas como dos páginas. Se normaliza sin barra, salvo la raíz.
+*/
+const selfPath = Astro.url.pathname.replace(/(.)\/$/, '$1');
+const canonical = new URL(selfPath, Astro.site);
 ---
 
 <!doctype html>

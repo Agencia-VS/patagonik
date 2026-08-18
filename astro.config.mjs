@@ -14,8 +14,10 @@ import vercel from '@astrojs/vercel';
  * redirección de / a /es/.
  */
 export default defineConfig({
-  site: 'https://patagonik.cl', // TODO: dominio real — de aquí salen canonical y sitemap
+  site: 'https://patagoniknatales.com',
   adapter: vercel({ imageService: true }),
+  // Una sola forma de cada URL: sin barra final, igual que los hreflang.
+  trailingSlash: 'never',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en', 'pt'],
