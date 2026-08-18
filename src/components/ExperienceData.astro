@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@/content.config';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+/*
+  Datos que el modal de detalle necesita en el navegador.
+
+  En el bundle vivían en un objeto EXPERIENCE_DATA en español más un overlay
+  EXPERIENCE_I18N, y el modal los mezclaba en tiempo de ejecución. Aquí la
+  página ya está en un idioma, así que se sirve sólo ese: menos peso y una
+  cosa menos que se pueda desincronizar.
+*/
+const experiences = await getCollection('experiences');
+const data = Object.fromEntries(
+  experiences.map((entry) => {
+    const c = entry.data.content[locale];
+    return [
+      String(entry.data.order),
+      {
+        title: c.title,
+        lead: c.lead,
+        body: c.body,
+        facts: c.facts,
+        includes: c.includes,
+        excludes: c.excludes,
+        modality: c.modality,
+        note: c.note,
+      },
+    ];
+  }),
+);
+
+const LABELS: Record<Locale, { modality: string; wa: string }> = {
+  es: { modality: 'Modalidad:', wa: 'Hola, quiero información sobre {t} con PatagoniK.' },
+  en: { modality: 'Format:', wa: 'Hi, I would like information about {t} with PatagoniK.' },
+  pt: { modality: 'Modalidade:', wa: 'Olá, gostaria de informações sobre {t} com a PatagoniK.' },
+};
+---
+
+<script is:inline set:html={`
+  window.__PK_EXPERIENCES = ${JSON.stringify(data)};
+  window.__PK_LABELS = {
+    modality: ${JSON.stringify(LABELS[locale].modality)},
+    wa: function (t) { return ${JSON.stringify(LABELS[locale].wa)}.replace('{t}', t); }
+  };
+`} />

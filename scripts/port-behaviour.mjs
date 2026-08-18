@@ -53,7 +53,9 @@ const DROP = [
   'applyRouteMeta', 'syncRouteLinks', 'setupExperienceRouting',
   'syncExperienceHash', 'clearExperienceHash',
   'setLang', 'applyLang', 'cacheSpanish', 'parseAttrKeys',
-  'experienceContent', 'renderExperience', 'openExperience', 'closeExperience',
+  // El mapa de la experiencia queda fuera del proyecto por decisión de
+  // producto. Se va entero, incluida la carga de Leaflet desde unpkg.
+  'ensureLeaflet', 'getExperienceMapData', 'setupExperienceMap', 'setupMiniExperienceMap',
 ];
 
 let out = js;
@@ -70,6 +72,28 @@ for (const name of DROP) {
 for (const name of dropped) {
   out = out.replace(new RegExp(`\\n\\s*this\\.${name}\\([^)]*\\);`, 'g'), '');
 }
+/*
+ * El modal de detalle se conserva, pero deja de leer EXPERIENCE_DATA: los
+ * datos los inyecta Astro desde la content collection, ya en el idioma de la
+ * página, así que aquí no hay que mezclar idiomas.
+ */
+out = out.replace(
+  /  experienceContent\(key, lang\) \{[\s\S]*?\n  \}/,
+  `  experienceContent(key) {
+    return (window.__PK_EXPERIENCES || {})[String(key)] || null;
+  }`,
+);
+out = out.replace(/this\.experienceContent\(key, this\.lang\)/g, 'this.experienceContent(key)');
+out = out.replace(/EXPERIENCE_DATA\[key\]\.title \|\| key/g, '(d && d.title) || key');
+out = out.replace(
+  /const labels = EXPERIENCE_LABELS\[this\.lang\] \|\| EXPERIENCE_LABELS\.es;/,
+  'const labels = window.__PK_LABELS || { modality: \'Modalidad:\', wa: (t) => t };',
+);
+// Llamadas a cosas ya retiradas dentro de métodos que sí se conservan.
+out = out.replace(/\n\s*this\.setupMiniExperienceMap\(key\);/g, '');
+out = out.replace(/\n\s*if \(!opts\.skipHashSync\) this\.syncExperienceHash\(key\);/g, '');
+out = out.replace(/\n\s*if \(!skipHashSync\) this\.clearExperienceHash\(\);/g, '');
+
 // El selector de idioma y los enlaces de ruta pasan a ser enlaces reales:
 // Astro sirve una URL por idioma y por página, así que estos manejadores de
 // click sobran y encima interceptarían la navegación.

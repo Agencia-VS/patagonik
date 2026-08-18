@@ -10,6 +10,8 @@ import About from '@/components/design/AboutSections.astro';
 import Faq from '@/components/design/FaqSection.astro';
 import ExperienceDetail from '@/components/pages/ExperienceDetail.astro';
 import ExperiencesIndex from '@/components/pages/ExperiencesIndex.astro';
+import ExperienceData from '@/components/ExperienceData.astro';
+import ExperienceModal from '@/components/design/ExperienceModal.astro';
 import { useTranslations } from '@/i18n';
 
 /**
@@ -83,6 +85,8 @@ const meta = META[kind]!;
 <BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates}>
   <Header slot="header" locale={locale} />
   {kind === 'home' && <Home locale={locale} />}
+  {kind === 'home' && <ExperienceModal locale={locale} />}
+  {kind === 'home' && <ExperienceData locale={locale} />}
   {kind === 'about' && <About locale={locale} />}
   {kind === 'faq' && <Faq locale={locale} />}
   {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} />}
