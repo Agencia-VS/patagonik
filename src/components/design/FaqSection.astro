@@ -1,0 +1,44 @@
+---
+import type { Locale } from '@/content.config';
+import { useTranslations } from '@/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section id="faq" data-nav="light" data-screen-label="09 Preguntas frecuentes" style="padding:clamp(64px,11vw,112px) clamp(22px,6vw,96px); background:#F5F2EC;">
+      <div style="max-width:960px; margin:0 auto;">
+        <div data-reveal="" style="opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s ease;">
+          <p data-t="faq.kicker" style="margin:0 0 10px; font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:#6B7A5E;">{t('faq.kicker')}</p>
+          <h2 data-t="faq.title" style="margin:0 0 clamp(28px,5vw,44px); font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(32px,5vw,52px); line-height:1.06; color:#2B2B2B;">{t('faq.title')}</h2>
+        </div>
+
+        <div style="border-top:1px solid rgba(43,43,43,.12);">
+          <details style="border-bottom:1px solid rgba(43,43,43,.12); padding:20px 0;">
+            <summary data-t="faq.q1" style="cursor:pointer; font-family:Georgia,'Times New Roman',serif; font-size:20px; color:#2B2B2B;">{t('faq.q1')}</summary>
+            <p data-t="faq.a1" style="margin:12px 0 0; max-width:70ch; font-size:14px; line-height:1.7; color:rgba(43,43,43,.68);">{t('faq.a1')}</p>
+          </details>
+          <details style="border-bottom:1px solid rgba(43,43,43,.12); padding:20px 0;">
+            <summary data-t="faq.q2" style="cursor:pointer; font-family:Georgia,'Times New Roman',serif; font-size:20px; color:#2B2B2B;">{t('faq.q2')}</summary>
+            <p data-t="faq.a2" style="margin:12px 0 0; max-width:70ch; font-size:14px; line-height:1.7; color:rgba(43,43,43,.68);">{t('faq.a2')}</p>
+          </details>
+          <details style="border-bottom:1px solid rgba(43,43,43,.12); padding:20px 0;">
+            <summary data-t="faq.q3" style="cursor:pointer; font-family:Georgia,'Times New Roman',serif; font-size:20px; color:#2B2B2B;">{t('faq.q3')}</summary>
+            <p data-t="faq.a3" style="margin:12px 0 0; max-width:70ch; font-size:14px; line-height:1.7; color:rgba(43,43,43,.68);">{t('faq.a3')}</p>
+          </details>
+          <details style="border-bottom:1px solid rgba(43,43,43,.12); padding:20px 0;">
+            <summary data-t="faq.q4" style="cursor:pointer; font-family:Georgia,'Times New Roman',serif; font-size:20px; color:#2B2B2B;">{t('faq.q4')}</summary>
+            <p data-t="faq.a4" style="margin:12px 0 0; max-width:70ch; font-size:14px; line-height:1.7; color:rgba(43,43,43,.68);">{t('faq.a4')}</p>
+          </details>
+          <details style="border-bottom:1px solid rgba(43,43,43,.12); padding:20px 0;">
+            <summary data-t="faq.q5" style="cursor:pointer; font-family:Georgia,'Times New Roman',serif; font-size:20px; color:#2B2B2B;">{t('faq.q5')}</summary>
+            <p data-t="faq.a5" style="margin:12px 0 0; max-width:70ch; font-size:14px; line-height:1.7; color:rgba(43,43,43,.68);">{t('faq.a5')}</p>
+          </details>
+          <details style="border-bottom:1px solid rgba(43,43,43,.12); padding:20px 0;">
+            <summary data-t="faq.q6" style="cursor:pointer; font-family:Georgia,'Times New Roman',serif; font-size:20px; color:#2B2B2B;">{t('faq.q6')}</summary>
+            <p data-t="faq.a6" style="margin:12px 0 0; max-width:70ch; font-size:14px; line-height:1.7; color:rgba(43,43,43,.68);">{t('faq.a6')}</p>
+          </details>
+        </div>
+      </div>
+    </section>
