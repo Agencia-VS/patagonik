@@ -27,8 +27,13 @@ mkdirSync('public/images', { recursive: true });
 // nítida sin imagen.
 const slotOf = new Map();
 const slotsOf = new Map();
-for (const m of template.matchAll(/<image-slot[^>]*\bid="([^"]*)"[^>]*\bsrc="([0-9a-f-]{36})"/g)) {
-  const [, id, uuid] = m;
+/* El src viene en dos formas: uuid pelado (lo que resolvía el cargador del
+   bundle) y ruta del proyecto de Design, "v20/img/<uuid>.webp". */
+const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+for (const m of template.matchAll(/<image-slot[^>]*\bid="([^"]*)"[^>]*\bsrc="([^"]+)"/g)) {
+  const id = m[1];
+  const uuid = m[2].match(UUID)?.[0];
+  if (!uuid) continue;
   if (!slotOf.has(uuid)) slotOf.set(uuid, id);
   if (!slotsOf.has(uuid)) slotsOf.set(uuid, []);
   slotsOf.get(uuid).push(id);

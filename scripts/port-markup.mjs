@@ -96,7 +96,14 @@ function convertImageSlots(html) {
       const id = attrs.match(/\bid="([^"]*)"/)?.[1];
       const fit = attrs.match(/\bfit="([^"]*)"/)?.[1] ?? 'cover';
       const src = id ? assetMap[id] : undefined;
-      // Los huecos sin foto (el vídeo del hero) se quedan vacíos.
+      const declared = attrs.match(/\bsrc="([^"]*)"/)?.[1];
+      /* Un hueco sin src es intencionado (el vídeo del hero). Pero un slot que
+         SÍ declara imagen y no encuentra ruta es un fallo silencioso: así se
+         quedó "Nuestra Esencia" sin foto, porque su src venía como
+         v20/img/<uuid>.webp y el mapa sólo reconocía el uuid pelado. */
+      if (!src && declared) {
+        throw new Error(`image-slot "${id}" declara src="${declared}" pero no hay imagen en el mapa`);
+      }
       if (!src) return `<image-slot${attrs}></image-slot>`;
       n++;
       const keep = attrs.replace(/\s*\bsrc="[^"]*"/, '').replace(/\s*\bplaceholder="[^"]*"/, '');

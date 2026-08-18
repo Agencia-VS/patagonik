@@ -64,9 +64,33 @@ def ui_dict(src: str, lang: str) -> dict:
     return {k: v.replace("\\'", "'").replace('\\\\', '\\') for k, v in pairs}
 
 
+def mask_non_markup(src: str) -> str:
+    """Sustituye por espacios el cuerpo de <style>/<script> y los comentarios.
+
+    Sin esto, buscar 'data-t="clave">texto<' con una expresión regular entra
+    dentro del CSS: una regla como
+
+        #resenas div:has(> span[data-t="social.figure"]) { padding: 0 }
+
+    hace que la clave social.figure se "traduzca" al propio bloque de CSS, y
+    eso acaba impreso en la página. Las posiciones se conservan para que los
+    índices sigan valiendo.
+    """
+    def blank(m):
+        # <script type="text/html"> son las vistas de ruta: eso SÍ es marcado y
+        # lleva dentro los textos en español de #esencia, #resenas y #faq.
+        if 'text/html' in m.group(1):
+            return m.group(0)
+        return m.group(1) + ' ' * len(m.group(3)) + m.group(4)
+
+    src = re.sub(r'(<(script|style)\b[^>]*>)([\s\S]*?)(</\2>)', blank, src)
+    return re.sub(r'<!--[\s\S]*?-->', lambda m: ' ' * len(m.group(0)), src)
+
+
 def spanish_ui(src: str) -> dict:
     """El español no está en I18N: es el textContent que el DOM trae de serie y
     que cacheSpanish() memoriza como fallback. Se recupera de ahí."""
+    src = mask_non_markup(src)
     out: dict[str, str] = {}
     for m in re.finditer(r'data-t="([^"]+)"[^>]*>([^<]*)<', src):
         key, text = m.group(1), html.unescape(m.group(2)).strip()
@@ -141,6 +165,11 @@ def main() -> None:
     print(f'experiencias escritas: {len(data)} -> {args.out}')
     print(f'claves UI: es={len(ui_only(es_ui))} en={len(ui_only(ui["en"]))} '
           f'pt={len(ui_only(ui["pt"]))} -> {args.ui_out}/ui.generated.json')
+    for lang, table in (('es', es_ui), ('en', ui['en']), ('pt', ui['pt'])):
+        for key, value in table.items():
+            if re.search(r'!important|:has\(|\{\s*\w+\s*:', value):
+                problems.append(f'{lang}.{key}: el texto parece CSS, no una traducción')
+
     if problems:
         print('\nPROBLEMAS:')
         for p in problems:
