@@ -3,7 +3,7 @@
 
   Comportamientos del diseño original de PatagoniK, adaptados para correr sin
   el runtime de Claude Design. Métodos retirados por innecesarios en Astro:
-  setupRouter, readRoute, normalizeRoute, detectRouteBase, routeHref, navigateTo, renderRoute, mountRouteView, unmountRouteView, applyRouteMeta, syncRouteLinks, setupExperienceRouting, syncExperienceHash, clearExperienceHash, setLang, applyLang, cacheSpanish, parseAttrKeys, experienceContent, renderExperience, openExperience, closeExperience.
+  setupRouter, readRoute, normalizeRoute, detectRouteBase, routeHref, navigateTo, renderRoute, mountRouteView, unmountRouteView, applyRouteMeta, syncRouteLinks, setupExperienceRouting, syncExperienceHash, clearExperienceHash, setLang, applyLang, cacheSpanish, parseAttrKeys, ensureLeaflet, getExperienceMapData, setupExperienceMap, setupMiniExperienceMap.
 */
 const ARROW_REST = '#9C998F';
 const ARROW_HOVER = '#6E6259';
@@ -120,6 +120,7 @@ class PatagonikUI {
         e.preventDefault();
         e.stopPropagation();
         if (this.mobileExpSuppressClickUntil && Date.now() < this.mobileExpSuppressClickUntil) return;
+        this.openExperience(expCard);
         return;
       }
 
@@ -127,12 +128,14 @@ class PatagonikUI {
       if (expClose) {
         e.preventDefault();
         e.stopPropagation();
+        this.closeExperience();
         return;
       }
 
       const expModal = this.one('#pk-exp-modal');
       if (expModal && e.target === expModal) {
         e.preventDefault();
+        this.closeExperience();
         return;
       }
 
@@ -156,6 +159,7 @@ class PatagonikUI {
       if (e.key === 'Escape') {
         this.setLangMenu(false);
         this.setMenu(false);
+        this.closeExperience();
       }
     });
 
@@ -189,10 +193,125 @@ class PatagonikUI {
   /* El contenido del modal no lleva data-t: se arma desde datos, así que la
      traducción se resuelve aquí y no en setLang(). Devuelve el español si al
      idioma activo le falta la experiencia, para no dejar el panel vacío. */
+  experienceContent(key) {
+    return (window.__PK_EXPERIENCES || {})[String(key)] || null;
+  }
+
+  openExperience(card, opts) {
+    opts = opts || {};
+    if (!card) return;
+    const key = String(card.getAttribute('data-exp-detail') || '');
+    this.currentExperienceKey = key;
+    const d = this.experienceContent(key);
+    if (d) this.trackEvent('view_experience', { experience: (d && d.title) || key });
+    const modal = this.one('#pk-exp-modal');
+    const panel = this.one('#pk-exp-panel');
+    if (!d || !modal || !panel) return;
+
+    this.lastExperienceFocus = card;
+    this.experienceCard = card;
+    this.renderExperience(key);
+
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    try { document.body.style.overflow = 'hidden'; } catch (e) {}
+    panel.scrollTop = 0;
+
+    const close = document.getElementById('pk-exp-close');
+    if (close) setTimeout(() => close.focus(), 30);
+  }
 
   /* Rellena el panel en el idioma activo. Se llama al abrir y de nuevo desde
      setLang(), para que cambiar de idioma con el modal abierto lo actualice
      en vez de dejarlo en el idioma con el que se abrió. */
+  renderExperience(key) {
+    key = String(key == null ? this.currentExperienceKey : key);
+    const d = this.experienceContent(key);
+    if (!d) return;
+    const card = this.experienceCard;
+    const labels = window.__PK_LABELS || { modality: 'Modalidad:', wa: (t) => t };
+
+    const q = (id) => document.getElementById(id);
+
+    const title = q('pk-exp-title');
+    const lead = q('pk-exp-lead');
+    const body = q('pk-exp-body');
+    const modality = q('pk-exp-modality');
+    const note = q('pk-exp-note');
+    if (title) title.textContent = d.title || '';
+    if (lead) lead.textContent = d.lead || '';
+    if (body) body.textContent = d.body || '';
+    if (modality) {
+      modality.textContent = '';
+      const strong = document.createElement('strong');
+      strong.textContent = labels.modality;
+      modality.append(strong, ' ' + (d.modality || ''));
+    }
+    if (note) note.textContent = d.note || '';
+
+    const facts = q('pk-exp-facts');
+    if (facts) {
+      facts.innerHTML = '';
+      (d.facts || []).forEach((pair) => {
+        const box = document.createElement('div');
+        box.style.cssText = 'padding:14px 16px;background:#F5F2EC;';
+        const label = document.createElement('span');
+        label.textContent = pair[0];
+        label.style.cssText = 'display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(43,43,43,.45);margin-bottom:5px;';
+        const value = document.createElement('strong');
+        value.textContent = pair[1];
+        value.style.cssText = 'font-size:13px;font-weight:500;';
+        box.append(label, value);
+        facts.appendChild(box);
+      });
+    }
+
+    const fillList = (id, items) => {
+      const ul = q(id);
+      if (!ul) return;
+      ul.innerHTML = '';
+      (items || []).forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+      if (ul.parentElement) ul.parentElement.style.display = items && items.length ? '' : 'none';
+    };
+    fillList('pk-exp-includes', d.includes);
+    fillList('pk-exp-excludes', d.excludes);
+
+    /* La foto pertenece a la tarjeta, no al idioma: se clona sólo al abrir
+       para no provocar un parpadeo al conmutar de idioma. */
+    const imageWrap = q('pk-exp-image');
+    if (imageWrap && card && imageWrap.getAttribute('data-exp-key') !== key) {
+      imageWrap.innerHTML = '';
+      const source = card.querySelector('image-slot');
+      if (source) {
+        const clone = source.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.setAttribute('fit', 'cover');
+        clone.style.width = '100%';
+        clone.style.height = '100%';
+        imageWrap.appendChild(clone);
+      }
+      imageWrap.setAttribute('data-exp-key', key);
+    }
+
+    const num = String(this.props.whatsappNumber || '56931712780').replace(/[^0-9]/g, '');
+    const wa = q('pk-exp-wa');
+    if (wa) wa.href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(labels.wa(d.title || ''));
+  }
+
+  closeExperience(skipHashSync) {
+    const modal = this.one('#pk-exp-modal');
+    if (!modal || modal.getAttribute('aria-hidden') === 'true') return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    try { document.body.style.overflow = ''; } catch (e) {}
+    if (this.lastExperienceFocus) {
+      try { this.lastExperienceFocus.focus(); } catch (e) {}
+    }
+  }
 
 
 
@@ -359,208 +478,6 @@ class PatagonikUI {
       card.append(image, title, summary, tech, more);
       dest.appendChild(card);
     });
-  }
-
-
-  ensureLeaflet(done) {
-    if (window.L) { done(); return; }
-    if (!document.querySelector('link[data-pk-leaflet]')) {
-      const l = document.createElement('link');
-      l.rel = 'stylesheet';
-      l.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-      l.setAttribute('data-pk-leaflet','1');
-      document.head.appendChild(l);
-    }
-    let s = document.querySelector('script[data-pk-leaflet]');
-    if (!s) {
-      s = document.createElement('script');
-      s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-      s.async = true;
-      s.setAttribute('data-pk-leaflet','1');
-      document.head.appendChild(s);
-    }
-    if (window.L) { done(); return; }
-    s.addEventListener('load', done, { once:true });
-  }
-
-  getExperienceMapData() {
-    /* Trazados refinados visualmente a partir de hitos conocidos y cartografía pública.
-       Para precisión de navegación deben reemplazarse por GPX/KML propios u oficiales. */
-    return {
-      '1': { type:'trail', name:'Base Torres · amanecer / regular', slug:'base-torres-amanecer-regular', color:'#8C5A43', coords:[[-50.9656,-72.8660],[-50.9634,-72.8752],[-50.9606,-72.8845],[-50.9574,-72.8958],[-50.9551,-72.9051],[-50.9511,-72.9167],[-50.9472,-72.9289],[-50.9444,-72.9395],[-50.9427,-72.9497]] },
-      '2': { type:'trail', name:'Valle del Francés', slug:'valle-del-frances', color:'#556B5B', coords:[[-51.0728,-73.0945],[-51.0644,-73.0881],[-51.0555,-73.0832],[-51.0450,-73.0762],[-51.0340,-73.0680],[-51.0240,-73.0604],[-51.0150,-73.0550],[-51.0082,-73.0530],[-50.9995,-73.0500],[-50.9827,-73.0538]] },
-      '3': { type:'nav', name:'Glaciar Grey en navegación', slug:'glaciar-grey-en-navegacion', color:'#4B7FA3', coords:[[-51.1240,-73.1180],[-51.1100,-73.1600],[-51.0950,-73.2050],[-51.0800,-73.2500],[-51.0650,-73.2850],[-51.0520,-73.3050]] },
-      '6': { type:'trail', name:'Chorrillo Los Salmones', slug:'chorrillo-los-salmones', color:'#7C6A50', coords:[[-51.1230,-73.1150],[-51.1200,-73.1260],[-51.1160,-73.1370],[-51.1120,-73.1460],[-51.1090,-73.1530]] },
-      '7': { type:'trail', name:'Aonikenk + Laguna Azul', slug:'aonikenk-laguna-azul', color:'#9C7653', coords:[[-51.0275,-72.7740],[-51.0150,-72.7660],[-51.0020,-72.7600],[-50.9850,-72.7540],[-50.9650,-72.7490],[-50.9450,-72.7440],[-50.9250,-72.7410],[-50.9050,-72.7370],[-50.8790,-72.7353]] },
-      '8': { type:'nav', name:'Navegación Balmaceda & Serrano', slug:'balmaceda-serrano', color:'#3F7696', coords:[[-51.7300,-72.5100],[-51.8000,-72.6500],[-51.9000,-72.8000],[-52.0000,-72.9300],[-52.0800,-73.0500],[-52.1100,-73.1800],[-52.0900,-73.2900]] },
-      '10': { type:'trail', name:'Laguna Cebolla', slug:'laguna-cebolla-avistamiento-de-fauna', color:'#6B7A5E', coords:[[-50.8790,-72.7353],[-50.8720,-72.7440],[-50.8650,-72.7540],[-50.8570,-72.7660],[-50.8500,-72.7780],[-50.8430,-72.7900]] },
-      '11': { type:'trail', name:'Lazo – Weber', slug:'lazo-weber', color:'#7A6349', coords:[[-51.1232,-72.8219],[-51.1250,-72.8400],[-51.1300,-72.8600],[-51.1360,-72.8820],[-51.1420,-72.9050],[-51.1490,-72.9280],[-51.1560,-72.9480],[-51.1618,-72.9612]] },
-      '12': { type:'trail', name:'Trekking Escénico', slug:'trekking-escenico-torres-del-paine', color:'#5D6578', coords:[[-51.0275,-72.7740],[-51.0360,-72.8200],[-51.0450,-72.8700],[-51.0560,-72.9200],[-51.0619,-73.0073],[-51.0483,-73.0123],[-51.0750,-73.0050],[-51.0958,-72.9838]] },
-      '13': { type:'trail', name:'Mirador Ferrier', slug:'mirador-ferrier', color:'#4F5D45', coords:[[-51.1230,-73.1172],[-51.1240,-73.1230],[-51.1250,-73.1300],[-51.1260,-73.1370],[-51.1265,-73.1450],[-51.1265,-73.1544]] },
-      '14': { type:'trail', name:'Paso La Feria – Weber', slug:'paso-la-feria-weber', color:'#6D5B48', coords:[[-51.1220,-72.8350],[-51.1270,-72.8580],[-51.1340,-72.8830],[-51.1420,-72.9100],[-51.1510,-72.9360],[-51.1618,-72.9612]] }
-    };
-  }
-
-  setupExperienceMap() {
-    const el = this.one('#pk-experience-map');
-    if (!el) return;
-    const routes = this.getExperienceMapData();
-
-    this.ensureLeaflet(() => {
-      if (!window.L || el._pkMapReady) return;
-      el._pkMapReady = true;
-      const map = L.map(el, { scrollWheelZoom:false, zoomControl:true }).setView([-51.03,-72.96], 9);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:18, attribution:'&copy; OpenStreetMap contributors' }).addTo(map);
-
-      const trailGroup = L.layerGroup().addTo(map);
-      const navGroup = L.layerGroup().addTo(map);
-      const refGroup = L.layerGroup().addTo(map);
-      const boundaryGroup = L.layerGroup().addTo(map);
-      const layers = {};
-      const allBounds = [];
-
-      /* Límite esquemático del área protegida: sirve para lectura general, no para navegación. */
-      const parkBoundary = [[-50.80,-73.19],[-50.78,-72.88],[-50.83,-72.63],[-50.98,-72.55],[-51.17,-72.63],[-51.31,-72.82],[-51.30,-73.08],[-51.19,-73.29],[-50.98,-73.34],[-50.84,-73.28]];
-      L.polygon(parkBoundary,{color:'#60736A',weight:2,opacity:.8,fillColor:'#8FA58F',fillOpacity:.08,dashArray:'7 6'}).bindTooltip('Parque Nacional Torres del Paine · límite esquemático').addTo(boundaryGroup);
-
-      const refIcon = L.divIcon({className:'', html:'<div class="pk-map-ref-icon"></div>', iconSize:[12,12], iconAnchor:[6,6]});
-      const refs = [
-        {n:'Portería Laguna Amarga',c:[-50.979,-72.781]},
-        {n:'Portería Sarmiento',c:[-51.046,-72.770]},
-        {n:'Portería Serrano',c:[-51.175,-72.962]},
-        {n:'Pudeto',c:[-51.073,-72.983]},
-        {n:'Paine Grande',c:[-51.073,-73.095]},
-        {n:'Sector Grey',c:[-51.123,-73.117]},
-        {n:'Puerto Natales',c:[-51.726,-72.506]},
-        {n:'El Calafate',c:[-50.337,-72.264]}
-      ];
-      refs.forEach(r=>L.marker(r.c,{icon:refIcon}).bindTooltip(r.n).addTo(refGroup));
-
-      /* Conexión lacustre Pudeto – Paine Grande, útil para Valle del Francés. */
-      L.polyline([[-51.073,-72.983],[-51.071,-73.020],[-51.072,-73.060],[-51.073,-73.095]],{color:'#4B7FA3',weight:3,opacity:.7,dashArray:'5 7'}).bindTooltip('Catamarán Pudeto – Paine Grande').addTo(navGroup);
-
-      Object.entries(routes).forEach(([key,r]) => {
-        const grp = r.type==='nav' ? navGroup : trailGroup;
-        const line = L.polyline(r.coords,{color:r.color,weight:r.type==='nav'?4:5,opacity:.86,lineCap:'round',dashArray:r.type==='nav'?'7 7':null}).addTo(grp);
-        const end=r.coords[r.coords.length-1];
-        const marker=L.circleMarker(end,{radius:6,color:'#F5F2EC',weight:2,fillColor:r.color,fillOpacity:1}).addTo(grp);
-        const d=(window.__PK_EXPERIENCES || {})[key] || {};
-        const popup='<div><h3 class="pk-map-popup-title">'+r.name+'</h3><p class="pk-map-popup-copy">'+(d.lead||'Experiencia PatagoniK')+'</p><a class="pk-map-popup-link" href="#experiencia/'+r.slug+'">Ver experiencia →</a></div>';
-        line.bindPopup(popup); marker.bindPopup(popup);
-        layers[key]={line,marker,bounds:L.latLngBounds(r.coords)};
-        r.coords.forEach(c=>allBounds.push(c));
-      });
-
-      L.control.layers(null,{
-        'Senderos PatagoniK':trailGroup,
-        'Navegaciones':navGroup,
-        'Porterías y referencias':refGroup,
-        'Límite del área protegida':boundaryGroup
-      },{collapsed:true}).addTo(map);
-
-      if (allBounds.length) map.fitBounds(allBounds,{padding:[24,24]});
-      const activate=(key)=>{
-        Object.entries(layers).forEach(([k,o])=>o.line.setStyle({weight:k===key?7:(routes[k].type==='nav'?4:5),opacity:k===key?1:.35}));
-        this.q('[data-map-route]').forEach(b=>b.classList.toggle('is-active',b.getAttribute('data-map-route')===key));
-        const o=layers[key];
-        if(o){ map.fitBounds(o.bounds,{padding:[48,48],maxZoom:13}); o.marker.openPopup(); }
-      };
-      this.q('[data-map-route]').forEach(btn=>this.on(btn,'click',()=>activate(btn.getAttribute('data-map-route'))));
-      Object.entries(layers).forEach(([key,o])=>{o.line.on('click',()=>activate(key));o.marker.on('click',()=>activate(key));});
-      const loading=this.one('#pk-map-loading'); if(loading) loading.style.display='none';
-      this.pkGeneralMap=map;
-      setTimeout(()=>map.invalidateSize(),80);
-    });
-  }
-
-  setupMiniExperienceMap(key) {
-    const wrap=this.one('#pk-exp-map-wrap');
-    const el=this.one('#pk-exp-mini-map');
-    if(!wrap||!el) return;
-
-    const views={
-      '1':  {name:'Base Torres',              scale:2.45, x:-7,  y:13},
-      '2':  {name:'Valle del Francés',        scale:2.35, x:17,  y:2},
-      '3':  {name:'Navegación Grey',          scale:2.10, x:31,  y:-1},
-      '6':  {name:'Sector Pingo · Chorrillo', scale:2.20, x:31,  y:-18},
-      '7':  {name:'Aonikenk · Laguna Azul',   scale:2.05, x:-27, y:13},
-      '10': {name:'Sector Laguna Cebolla',    scale:1.80, x:-30, y:18},
-      '11': {name:'Sector Lazo – Weber',      scale:1.65, x:-20, y:-19},
-      '12': {name:'Trekking Escénico',        scale:1.55, x:-5,  y:-5},
-      '13': {name:'Mirador Ferrier',          scale:2.30, x:23,  y:-15},
-      '14': {name:'Sector La Feria – Weber',  scale:1.70, x:-17, y:-17}
-    };
-
-    /*
-      Resaltados sobre la misma cartografía oficial.
-      Solo se dibujan donde el trazado del mapa base se reconoce con suficiente claridad.
-    */
-    const highlights={
-      '1':  {kind:'trail', caption:'Base Torres · sendero oficial',
-              points:[[847,543],[823,525],[801,506],[784,482],[767,454],[749,425],[733,396],[720,368],[706,348],[691,337]]},
-      '2':  {kind:'trail', caption:'Valle del Francés · sendero oficial',
-              points:[[552,695],[568,666],[587,634],[608,605],[629,577],[645,550],[653,520],[653,486],[647,454],[639,422]]},
-      '3':  {kind:'nav', caption:'Glaciar Grey · navegación',
-              points:[[558,785],[536,744],[515,705],[493,664],[472,623],[454,584],[441,553]]},
-      '13': {kind:'trail', caption:'Mirador Ferrier · sendero oficial',
-              points:[[509,784],[493,800],[476,812],[456,823],[435,831]]}
-    };
-
-    const excluded=new Set(['4','5','8','9','15','16']);
-    const v=views[String(key)];
-    const route=highlights[String(key)] || null;
-
-    if(excluded.has(String(key))||!v){
-      wrap.style.display='none';
-      el.innerHTML='';
-      return;
-    }
-
-    wrap.style.display='block';
-    el.innerHTML='';
-
-    const img=document.createElement('img');
-    img.className='pk-official-map-image';
-    img.alt='Mapa oficial del Parque Nacional Torres del Paine';
-    img.src='v20/img/a7e10c1e-ac30-527d-9c3e-a13d5e31cb8c.webp';
-    img.style.transform='translate('+v.x+'%, '+v.y+'%) scale('+v.scale+')';
-
-    el.append(img);
-
-    if(route && route.points && route.points.length>1){
-      const ns='http://www.w3.org/2000/svg';
-      const svg=document.createElementNS(ns,'svg');
-      svg.classList.add('pk-official-map-overlay');
-      svg.setAttribute('viewBox','0 0 1500 1151');
-      svg.setAttribute('aria-hidden','true');
-      svg.style.transform=img.style.transform;
-
-      const pathData=route.points.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ');
-
-      const glow=document.createElementNS(ns,'path');
-      glow.setAttribute('d',pathData);
-      glow.setAttribute('class','pk-official-map-route-glow');
-
-      const line=document.createElementNS(ns,'path');
-      line.setAttribute('d',pathData);
-      line.setAttribute('class','pk-official-map-route-line');
-      line.setAttribute('data-kind',route.kind || 'trail');
-
-      svg.append(glow,line);
-      el.append(svg);
-    }
-
-    const shade=document.createElement('div');
-    shade.className='pk-official-map-shade';
-
-    const marker=document.createElement('div');
-    marker.className='pk-official-map-marker';
-
-    const label=document.createElement('div');
-    label.className='pk-official-map-label';
-    label.textContent=route && route.caption ? route.caption : v.name;
-
-    el.append(shade,marker,label);
   }
 
   setupAnalytics() {

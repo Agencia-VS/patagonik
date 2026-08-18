@@ -88,3 +88,22 @@ body:not([data-page='home']) [data-hdr] [data-bar1],
 body:not([data-page='home']) [data-hdr] [data-bar2] {
   background: currentColor !important;
 }
+
+/*
+  Aire para la primera sección de una página que no es la portada.
+
+  El diseño comprime #esencia a 22px de padding superior (bloque
+  pk-tight-sections), que funcionaba cuando la sección iba entre el hero y las
+  experiencias. Como primer elemento de una página, esos 22px la dejan pegada
+  bajo la cabecera fija: la banda verde arranca a 28px y lo que se ve arriba
+  es una franja crema suelta.
+
+  Hace falta !important y más especificidad porque la regla original lo lleva.
+*/
+body:not([data-page='home']) main > section:first-of-type,
+body:not([data-page='home']) main > :first-child {
+  padding-top: clamp(92px, 12vh, 140px);
+}
+body:not([data-page='home']) main #esencia {
+  padding-top: clamp(92px, 12vh, 140px) !important;
+}

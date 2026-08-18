@@ -18,20 +18,7 @@ const t = useTranslations(locale);
           <p id="pk-exp-lead" style="margin:18px 0 0; font-family:Georgia,'Times New Roman',serif; font-size:clamp(18px,2vw,24px); line-height:1.35; color:#6B7A5E;"></p>
           <p id="pk-exp-body" style="margin:22px 0 0; font-size:15px; line-height:1.72; font-weight:300; color:rgba(43,43,43,.78);"></p>
           <div id="pk-exp-facts" style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin-top:28px; background:rgba(43,43,43,.12); border:1px solid rgba(43,43,43,.12);"></div>
-          <div id="pk-exp-map-wrap" style="display:none; margin-top:28px;">
-            <div style="display:flex; align-items:end; justify-content:space-between; gap:12px; margin-bottom:10px;">
-              <div>
-                <p data-t="exp.modal.maplabel" style="margin:0 0 4px; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(43,43,43,.46);">{t('exp.modal.maplabel')}</p>
-                <h3 data-t="exp.modal.maptitle" style="margin:0; font-family:var(--pk-catalog-serif); font-size:22px; font-weight:400;">{t('exp.modal.maptitle')}</h3>
-              </div>
-              <span style="font-family:var(--pk-catalog-sans); font-size:9px; color:rgba(43,43,43,.45);">CONAF · Torres del Paine</span>
-            </div>
-            <div id="pk-exp-mini-map" style="position:relative; height:300px; border-radius:14px; overflow:hidden; background:#D8D8D0; border:1px solid rgba(43,43,43,.10);"></div>
-            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; margin-top:9px; font-family:var(--pk-catalog-sans); font-size:9px; line-height:1.45; color:rgba(43,43,43,.52);">
-              <span data-t="exp.modal.mapnote">{t('exp.modal.mapnote')}</span>
-              <a data-t="exp.modal.maplink" href="https://parquetorresdelpaine.cl/mapa-oficial/" target="_blank" rel="noopener" style="color:#596B57; text-decoration:underline; text-underline-offset:2px;">{t('exp.modal.maplink')}</a>
-            </div>
-          </div>
+          
           <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px; margin-top:30px;" id="pk-exp-lists">
             <div><p data-t="exp.modal.includes" style="margin:0 0 10px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:rgba(43,43,43,.5);">{t('exp.modal.includes')}</p><ul id="pk-exp-includes" style="margin:0; padding-left:18px; font-size:13px; line-height:1.65;"></ul></div>
             <div><p data-t="exp.modal.excludes" style="margin:0 0 10px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:rgba(43,43,43,.5);">{t('exp.modal.excludes')}</p><ul id="pk-exp-excludes" style="margin:0; padding-left:18px; font-size:13px; line-height:1.65;"></ul></div>

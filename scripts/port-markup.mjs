@@ -203,7 +203,24 @@ function rewriteMenu(html) {
   return [html.replace(nav[0], `${nav[1]}\n      ${generated}\n${rest}${nav[3]}`), true];
 }
 
+/** Quita el bloque del mapa del modal: fuera del alcance del proyecto. */
+function stripMap(html) {
+  const start = html.indexOf('<div id="pk-exp-map-wrap"');
+  if (start === -1) return [html, false];
+  let depth = 0;
+  const re = /<(\/?)div\b[^>]*?(\/?)>/g;
+  re.lastIndex = start;
+  for (let m; (m = re.exec(html)); ) {
+    if (m[2]) continue;
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return [html.slice(0, start) + html.slice(m.index + m[0].length), true];
+  }
+  return [html, false];
+}
+
 function toComponent(name, html, { imports = '' } = {}) {
+  const [stripped, removedMap] = stripMap(html);
+  html = stripped;
   assertBalanced(name, html);
   const [menued, hasMenu] = rewriteMenu(html);
   const [normalized, runtime] = normalizeRuntimeTags(menued);
@@ -253,7 +270,7 @@ ${withText.trim()}
 `;
   mkdirSync('src/components/design', { recursive: true });
   writeFileSync(`src/components/design/${name}.astro`, body);
-  console.log(`${name.padEnd(18)} ${(withText.length / 1000).toFixed(1)} kB  ${imgs} imágenes  ${keys} textos${runtimeNote ? '  [' + runtimeNote + ']' : ''}`);
+  console.log(`${name.padEnd(18)} ${(withText.length / 1000).toFixed(1)} kB  ${imgs} imágenes  ${keys} textos${runtimeNote ? '  [' + runtimeNote + ']' : ''}${removedMap ? '  [mapa retirado]' : ''}`);
 }
 
 // ── secciones ────────────────────────────────────────────────────────────
