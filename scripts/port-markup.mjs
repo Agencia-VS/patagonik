@@ -161,13 +161,66 @@ function assertBalanced(name, rawHtml) {
   if (stack.length) throw new Error(`${name}: sin cerrar -> ${stack.join(', ')}`);
 }
 
+/**
+ * Sustituye la lista de enlaces del menú por una generada desde routes.ts.
+ *
+ * El marcado del diseño trae los href del bundle (/tabs/quienes-somos, y
+ * anclas como #cotiza) y en Astro eso es 404 o sólo funciona en la portada.
+ * Los estilos en línea de cada enlace se conservan tal cual: hay dos
+ * variantes, la normal y la del CTA.
+ */
+function rewriteMenu(html) {
+  const nav = html.match(/(<nav data-menu[^>]*>)([\s\S]*?)(<\/nav>)/);
+  if (!nav) return [html, false];
+
+  const links = [...nav[2].matchAll(/<a [^>]*data-menu-link[^>]*>[\s\S]*?<\/a>/g)];
+  if (!links.length) return [html, false];
+
+  const styleOf = (key) => {
+    const hit = links.find((l) => l[0].includes(`data-t="${key}"`));
+    return hit?.[0].match(/style="([^"]*)"/)?.[1] ?? '';
+  };
+  const plain = styleOf('menu.home');
+  const cta = styleOf('menu.quote');
+
+  const generated = `{MENU.map((item) => (
+        <a
+          data-menu-link
+          href={item.href}
+          aria-current={item.current ? 'page' : undefined}
+          style={item.cta ? ${JSON.stringify(cta)} : ${JSON.stringify(plain)}}
+        >{t(item.key)}</a>
+      ))}`;
+
+  const rest = nav[2].replace(/<a [^>]*data-menu-link[^>]*>[\s\S]*?<\/a>\s*/g, '');
+  return [html.replace(nav[0], `${nav[1]}\n      ${generated}\n${rest}${nav[3]}`), true];
+}
+
 function toComponent(name, html, { imports = '' } = {}) {
   assertBalanced(name, html);
-  const [normalized, runtime] = normalizeRuntimeTags(html);
+  const [menued, hasMenu] = rewriteMenu(html);
+  const [normalized, runtime] = normalizeRuntimeTags(menued);
   const [withImages, imgs] = convertImageSlots(normalized);
   const [withText, keys] = convertTranslations(withImages);
   const runtimeNote = Object.entries(runtime).map(([k, v]) => `${k}×${v}`).join(' ');
   const needsTour = /\btour\(/.test(withText);
+  const menuFrontmatter = hasMenu
+    ? `
+import { homePath, routePath } from '@/i18n/routes';
+
+/* Orden jerárquico: primero navegar, luego conocer, y convertir al final.
+   Los anclas apuntan a la portada para que también funcionen desde /faq. */
+const home = homePath(locale);
+const MENU = [
+  { key: 'menu.home', href: home },
+  { key: 'menu.tours', href: routePath('experiences', locale) },
+  { key: 'menu.about', href: routePath('about', locale) },
+  { key: 'menu.faq', href: routePath('faq', locale) },
+  { key: 'menu.contact', href: home === '/' ? '/#contacto' : home + '#contacto' },
+  { key: 'menu.quote', href: home === '/' ? '/#cotiza' : home + '#cotiza', cta: true },
+].map((item) => ({ ...item, current: item.href === Astro.url.pathname }));
+`
+    : '';
   const body = `---
 import type { Locale } from '@/content.config';
 import { useTranslations } from '@/i18n';
@@ -175,7 +228,7 @@ ${needsTour ? "import { getCollection } from 'astro:content';\n" : ''}${imports}
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-${
+${menuFrontmatter}${
   needsTour
     ? `
 /* Textos de tarjeta: vienen de la colección de experiencias, en el idioma de

@@ -5,6 +5,20 @@ import { useTranslations } from '@/i18n';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+
+import { homePath, routePath } from '@/i18n/routes';
+
+/* Orden jerárquico: primero navegar, luego conocer, y convertir al final.
+   Los anclas apuntan a la portada para que también funcionen desde /faq. */
+const home = homePath(locale);
+const MENU = [
+  { key: 'menu.home', href: home },
+  { key: 'menu.tours', href: routePath('experiences', locale) },
+  { key: 'menu.about', href: routePath('about', locale) },
+  { key: 'menu.faq', href: routePath('faq', locale) },
+  { key: 'menu.contact', href: home === '/' ? '/#contacto' : home + '#contacto' },
+  { key: 'menu.quote', href: home === '/' ? '/#cotiza' : home + '#cotiza', cta: true },
+].map((item) => ({ ...item, current: item.href === Astro.url.pathname }));
 ---
 
 <header data-hdr="" style="position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px clamp(18px, 5vw, 56px); color: #F5F2EC; transition: color .6s ease, background-color .6s ease;">
@@ -37,14 +51,17 @@ const t = useTranslations(locale);
     </div>
   </header>
 <nav data-menu="" aria-label="Secciones" style="position:fixed; z-index:59; top:68px; left:clamp(14px,3vw,34px); width:min(390px,calc(100vw - 28px)); max-height:calc(100svh - 88px); overflow:auto; display:flex; flex-direction:column; padding:18px 20px 16px; border:1px solid rgba(245,242,236,.11); border-radius:18px; background:rgba(36,49,41,.97); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow:0 18px 55px rgba(18,25,21,.28); color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; visibility:hidden; transform:translateY(-10px) scale(.985); transform-origin:top left; transition:opacity .28s ease, transform .36s cubic-bezier(.19,1,.22,1), visibility .28s;">
+      {MENU.map((item) => (
+        <a
+          data-menu-link
+          href={item.href}
+          aria-current={item.current ? 'page' : undefined}
+          style={item.cta ? "font-family:Georgia,'Times New Roman',serif; font-weight:400; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#D6BE9C; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);" : "font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);"}
+        >{t(item.key)}</a>
+      ))}
+
     <div style="display:grid; grid-template-columns:1fr; gap:0;">
-      <a data-menu-link="" data-route-link="" data-t="menu.home" href="/" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">{t('menu.home')}</a>
-      <a data-menu-link="" data-t="menu.tours" href="#experiencias" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">{t('menu.tours')}</a>
-      <a data-menu-link="" data-t="menu.quote" href="#cotiza" style="font-family:Georgia,'Times New Roman',serif; font-weight:400; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#D6BE9C; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">{t('menu.quote')}</a>
-      <a data-menu-link="" data-route-link="" data-t="menu.about" href="/tabs/quienes-somos" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">{t('menu.about')}</a>
-      <a data-menu-link="" data-route-link="" data-t="menu.faq" href="/tabs/faq" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">{t('menu.faq')}</a>
-      <a data-menu-link="" data-t="menu.contact" href="#contacto" style="font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(1.02rem,2.2vw,1.28rem); line-height:1.2; color:#F5F2EC; border-bottom:1px solid rgba(245,242,236,.07); opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .8s cubic-bezier(.19,1,.22,1);">{t('menu.contact')}</a>
-    </div>
+      </div>
 
     <div style="margin-top:14px; padding-top:12px; display:flex; flex-wrap:wrap; gap:14px; border-top:1px solid rgba(245,242,236,.10); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:rgba(245,242,236,.58);">
       <button type="button" data-lang="es" style="appearance:none;background:none;border:0;padding:0;font:inherit;letter-spacing:inherit;color:inherit;cursor:pointer;">Español</button>

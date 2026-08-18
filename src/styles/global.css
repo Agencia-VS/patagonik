@@ -70,3 +70,21 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+/*
+  El logo de la cabecera y el color del menú los resuelve la animación del hero
+  (setupStage) según el scroll. Fuera de la portada no hay hero, así que el
+  logo se quedaba en opacity:0 y la cabecera conservaba el tema oscuro sobre
+  fondo crema — invisible. Aquí se fijan.
+*/
+body:not([data-page='home']) [data-hdr-logo] {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+body:not([data-page='home']) [data-hdr] {
+  color: #2b2b2b !important;
+}
+body:not([data-page='home']) [data-hdr] [data-bar1],
+body:not([data-page='home']) [data-hdr] [data-bar2] {
+  background: currentColor !important;
+}

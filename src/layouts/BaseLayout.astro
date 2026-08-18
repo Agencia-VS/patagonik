@@ -9,13 +9,15 @@ import '@/styles/design.css';
 
 interface Props {
   locale: Locale;
+  /** Qué tipo de página es; la portada se comporta distinto (hero). */
+  page: string;
   title: string;
   description: string;
   /** Ruta de esta misma página en cada idioma, para hreflang. */
   alternates: Record<Locale, string>;
 }
 
-const { locale, title, description, alternates } = Astro.props;
+const { locale, page, title, description, alternates } = Astro.props;
 /*
   Astro normaliza el pathname con barra final, pero los hreflang de abajo se
   construyen desde routes.ts sin ella. Si no se unifican, el canonical de una
@@ -53,7 +55,7 @@ const canonical = new URL(selfPath, Astro.site);
     <meta property="og:url" content={canonical} />
     <slot name="head" />
   </head>
-  <body>
+  <body data-page={page}>
     <slot name="header" />
     <main id="contenido">
       <slot />
