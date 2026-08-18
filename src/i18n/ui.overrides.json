@@ -15,7 +15,12 @@
     "reviews.originalLang": "Reseña escrita en {lang}",
     "exp.modal.modality": "Modalidad:",
     "footer.tagline": "Tours guiados en Torres del Paine y Patagonia chilena.",
-    "esc.kicker": "Conocimiento local"
+    "esc.kicker": "Conocimiento local",
+    "meta.experiences.title": "Experiencias · PatagoniK",
+    "meta.experiences.description": "Las 16 experiencias guiadas de PatagoniK en Torres del Paine y Patagonia chilena: trekkings, navegaciones, avistamiento de fauna y salidas a medida.",
+    "exp.index.kicker": "Nuestras experiencias",
+    "exp.index.title": "Elige cómo quieres vivir la Patagonia",
+    "exp.index.intro": "Dieciséis formas de recorrer el parque, de medio día a jornada completa. Todas con guía local certificado."
   },
   "en": {
     "meta.home.title": "PatagoniK · Guided tours in Torres del Paine",
@@ -32,7 +37,12 @@
     "reviews.title": "What travellers who came with us say",
     "reviews.originalLang": "Review written in {lang}",
     "exp.modal.modality": "Format:",
-    "footer.tagline": "Guided tours in Torres del Paine and Chilean Patagonia."
+    "footer.tagline": "Guided tours in Torres del Paine and Chilean Patagonia.",
+    "meta.experiences.title": "Experiences · PatagoniK",
+    "meta.experiences.description": "PatagoniK's 16 guided experiences in Torres del Paine and Chilean Patagonia: treks, boat trips, wildlife watching and tailor-made outings.",
+    "exp.index.kicker": "Our experiences",
+    "exp.index.title": "Choose how you want to live Patagonia",
+    "exp.index.intro": "Sixteen ways to explore the park, from half a day to a full one. All with a certified local guide."
   },
   "pt": {
     "meta.home.title": "PatagoniK · Passeios guiados em Torres del Paine",
@@ -49,6 +59,11 @@
     "reviews.title": "O que dizem quem viajou com a gente",
     "reviews.originalLang": "Avaliação escrita em {lang}",
     "exp.modal.modality": "Modalidade:",
-    "footer.tagline": "Passeios guiados em Torres del Paine e Patagônia chilena."
+    "footer.tagline": "Passeios guiados em Torres del Paine e Patagônia chilena.",
+    "meta.experiences.title": "Experiências · PatagoniK",
+    "meta.experiences.description": "As 16 experiências guiadas da PatagoniK em Torres del Paine e Patagônia chilena: trekkings, navegações, observação de fauna e saídas sob medida.",
+    "exp.index.kicker": "Nossas experiências",
+    "exp.index.title": "Escolha como quer viver a Patagônia",
+    "exp.index.intro": "Dezesseis formas de percorrer o parque, de meio dia a jornada completa. Todas com guia local certificado."
   }
 }

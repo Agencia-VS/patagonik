@@ -1,0 +1,3056 @@
+/* Generado por scripts/port-design.mjs — no editar a mano.
+   51 bloques <style> del diseño original, en su orden.
+   El orden importa: las capas pk-*-vNN se corrigen unas a otras. */
+
+/* ==================================================================
+   (sin id)
+   ================================================================== */
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/manrope-300-1.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/manrope-300-2.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/manrope-300-3.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/manrope-300-4.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/manrope-300-5.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/manrope-300-6.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/manrope-300-1.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/manrope-300-2.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/manrope-300-3.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/manrope-300-4.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/manrope-300-5.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/manrope-300-6.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/manrope-300-1.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/manrope-300-2.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/manrope-300-3.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/manrope-300-4.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/manrope-300-5.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/manrope-300-6.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/manrope-300-1.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/manrope-300-2.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/manrope-300-3.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/manrope-300-4.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/manrope-300-5.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/manrope-300-6.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==================================================================
+   (sin id)
+   ================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #F5F2EC; overflow-x: clip; }
+  a { color: #6B7A5E; text-decoration: none; }
+  a:hover { color: #4F5D45; }
+  ::selection { background: #6B7A5E; color: #F5F2EC; }
+  @keyframes logoIn { from { opacity: 0; letter-spacing: .1em; } to { opacity: .78; letter-spacing: .01em; } }
+  @keyframes lineDrop { 0% { transform: scaleY(0); transform-origin: top; } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+  @keyframes softPulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *{ animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* ==================================================================
+   pk-v44-updates
+   ================================================================== */
+html { scroll-behavior: smooth; }
+
+  [data-auto-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .95s cubic-bezier(.22,.61,.36,1), transform 1s cubic-bezier(.22,.61,.36,1);
+    will-change: opacity, transform;
+  }
+  [data-auto-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Flechas del carrusel de experiencias (reemplazan al antiguo "Mostrar más":
+     las 16 experiencias están disponibles desde el inicio dentro del track). */
+  .pk-exp-arrow {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    border: 1px solid rgba(245,242,236,.26);
+    background: rgba(25, 29, 27, .68);
+    color: #F5F2EC;
+    font: inherit;
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background-color .3s ease, border-color .3s ease, opacity .3s ease, transform .3s ease;
+  }
+  .pk-exp-arrow:hover:not(:disabled) {
+    background: rgba(38, 45, 40, .88);
+    border-color: rgba(245,242,236,.44);
+  }
+  .pk-exp-arrow:focus-visible {
+    outline: 2px solid #D6BE9C;
+    outline-offset: 3px;
+  }
+  /* En los extremos del recorrido la flecha queda atenuada e inerte, pero no
+     desaparece: si se oculta, el par de botones salta de posición. */
+  .pk-exp-arrow:disabled {
+    opacity: .28;
+    cursor: default;
+  }
+
+  @media (max-width: 760px) {
+    #pk-how-grid > li,
+    #pk-quiz-grid > div,
+    #pk-diff-grid > div,
+    #pk-review-grid > figure,
+    footer#contacto > div > div,
+    #pk-quote-layout > div,
+    #pk-quote-form,
+    #pk-exp-modal blockquote,
+    #pk-exp-modal figure {
+      margin-inline: 8px;
+    }
+
+    #pk-quiz-grid,
+    #pk-quote-layout,
+    #pk-review-grid {
+      gap: 14px !important;
+    }
+
+    #pk-quote-layout {
+      grid-template-columns: 1fr !important;
+    }
+
+    #pk-quote-form {
+      padding-inline: 4px;
+    }
+
+    #pk-quote-form select,
+    #pk-quote-form input {
+      width: 100%;
+      padding-right: 44px !important;
+      box-sizing: border-box;
+    }
+
+    #pk-how-grid > li { padding-inline: 10px !important; }
+    #pk-quiz-grid > div,
+    #pk-diff-grid > div,
+    #pk-review-grid > figure,
+    footer#contacto > div > div {
+      box-sizing: border-box;
+    }
+
+    #pk-diff-grid > div,
+    #pk-review-grid > figure {
+      padding-inline: 4px;
+    }
+
+    #pk-review-grid blockquote { margin-inline: 0; }
+
+    #pk-mobile-exp-track {
+      padding-inline: 6px;
+    }
+  }
+
+/* ==================================================================
+   pk-visual-cleanup-v47
+   ================================================================== */
+/* Más aire y menos sensación de cajas */
+  #selector,
+  #nosotros,
+  #resenas,
+  #faq {
+    padding-top: clamp(82px, 12vw, 132px) !important;
+    padding-bottom: clamp(82px, 12vw, 132px) !important;
+  }
+
+  #selector > div,
+  #nosotros > div,
+  #resenas > div,
+  #faq > div {
+    max-width: 1120px;
+  }
+
+  /* Selector: menos borde, más editorial */
+  #pk-quiz-grid {
+    gap: clamp(24px, 3vw, 42px) !important;
+  }
+
+  #pk-quiz-grid > div {
+    background: transparent !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(43,43,43,.13) !important;
+    padding: 22px 0 0 !important;
+    box-shadow: none !important;
+  }
+
+  #pk-quiz-grid button {
+    background: transparent !important;
+    border-color: rgba(43,43,43,.13) !important;
+  }
+
+  /* Cotización: cajas más livianas */
+  #pk-quote-layout > div:first-child {
+    background: rgba(24,30,27,.43) !important;
+    border-color: rgba(245,242,236,.14) !important;
+    box-shadow: 0 18px 54px rgba(0,0,0,.12) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+
+  #pk-quote-form {
+    background: rgba(24,30,27,.52) !important;
+    border-color: rgba(245,242,236,.14) !important;
+    box-shadow: 0 18px 54px rgba(0,0,0,.13) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+
+  #pk-quote-form input,
+  #pk-quote-form select {
+    background: rgba(20,25,23,.44) !important;
+  }
+
+  /* Por qué nosotros: icono + título + dos líneas */
+  #pk-diff-grid {
+    gap: clamp(42px, 7vw, 76px) !important;
+  }
+  #pk-diff-grid > div {
+    max-width: 31ch;
+  }
+  #pk-diff-grid > div p {
+    max-width: 30ch !important;
+  }
+
+  /* Reseñas: menos densidad */
+  #pk-review-grid {
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+    gap: clamp(16px,2.2vw,26px) !important;
+  }
+
+  #pk-review-grid > figure {
+    min-height: 310px !important;
+    box-shadow: none !important;
+  }
+
+  #google-reviews {
+    display: none;
+  }
+
+  #pk-reviews-more-v47 {
+    appearance:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:46px;
+    margin-top:24px;
+    padding:0 18px;
+    border:1px solid rgba(43,43,43,.14);
+    border-radius:999px;
+    background:transparent;
+    color:#4F5D45;
+    font:inherit;
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:background-color .3s ease,border-color .3s ease,transform .3s ease;
+  }
+  #pk-reviews-more-v47:hover {
+    background:rgba(107,122,94,.07);
+    border-color:rgba(107,122,94,.28);
+    transform:translateY(-1px);
+  }
+
+  /* FAQ un poco más liviano */
+  #faq details {
+    padding: 18px 0 !important;
+  }
+  #faq summary {
+    font-size: clamp(18px,2vw,20px) !important;
+  }
+
+  /* Aparición más suave para bloques de contenido */
+  [data-clean-reveal] {
+    opacity:0;
+    transform:translateY(22px);
+    transition:
+      opacity 1.05s cubic-bezier(.22,.61,.36,1),
+      transform 1.12s cubic-bezier(.22,.61,.36,1);
+    will-change:opacity,transform;
+  }
+  [data-clean-reveal].is-visible {
+    opacity:1;
+    transform:none;
+  }
+
+  @media (max-width:760px) {
+    #selector,
+    #nosotros,
+    #resenas,
+    #faq {
+      padding-left:18px !important;
+      padding-right:18px !important;
+      padding-top:72px !important;
+      padding-bottom:72px !important;
+    }
+
+    #pk-quiz-grid {
+      display:block !important;
+    }
+    #pk-quiz-grid > div {
+      margin:0 6px 30px !important;
+      padding:20px 4px 0 !important;
+    }
+
+    #pk-diff-grid {
+      display:block !important;
+    }
+    #pk-diff-grid > div {
+      margin:0 8px 38px !important;
+      max-width:none !important;
+    }
+
+    #pk-review-grid {
+      display:block !important;
+    }
+    #pk-review-grid > figure {
+      margin:0 8px 18px !important;
+      min-height:auto !important;
+    }
+
+    #google-reviews {
+      margin-left:8px !important;
+      margin-right:8px !important;
+    }
+
+    #pk-quote-layout {
+      padding-inline:2px !important;
+    }
+    #pk-quote-layout > div:first-child,
+    #pk-quote-form {
+      margin-left:8px !important;
+      margin-right:8px !important;
+    }
+
+    footer#contacto > div > div {
+      margin-left:8px !important;
+      margin-right:8px !important;
+    }
+  }
+
+/* ==================================================================
+   pk-exp-modal-responsive
+   ================================================================== */
+@media (max-width: 760px) {
+      #pk-exp-modal { padding:0 !important; align-items:stretch !important; }
+      #pk-exp-panel { width:100% !important; max-height:100svh !important; }
+      #pk-exp-grid { grid-template-columns:1fr !important; }
+      #pk-exp-image { min-height:38svh !important; max-height:46svh; }
+      #pk-exp-lists { grid-template-columns:1fr !important; gap:20px !important; }
+      #pk-exp-facts { grid-template-columns:1fr 1fr !important; }
+    }
+
+/* ==================================================================
+   pk-exp-responsive
+   ================================================================== */
+@media (max-width: 860px) {
+      #tours a[data-hs-card] [data-hs-img] {
+        min-height: 0;
+      }
+      #tours a[data-hs-card] image-slot[id^="pt-exp-6"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-7"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-8"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-9"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-10"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-11"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-12"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-13"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-14"],
+      #tours a[data-hs-card] image-slot[id^="pt-exp-15"] {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+/* ==================================================================
+   pk-review-responsive
+   ================================================================== */
+@media (max-width: 980px) {
+      #pk-review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    }
+    @media (max-width: 620px) {
+      #pk-review-grid { grid-template-columns: 1fr !important; }
+      #pk-review-grid figure { min-height: 0 !important; }
+    }
+
+/* ==================================================================
+   pk-google-reviews-responsive
+   ================================================================== */
+@media (max-width: 900px) {
+      [data-google-review-grid] { grid-template-columns:1fr 1fr !important; }
+      [data-google-review-placeholder]:last-child { grid-column:1 / -1; }
+    }
+    @media (max-width: 620px) {
+      [data-google-review-grid] { grid-template-columns:1fr !important; }
+      [data-google-review-placeholder]:last-child { grid-column:auto; }
+    }
+
+/* ==================================================================
+   pk-conversion-responsive
+   ================================================================== */
+@media (max-width: 900px) {
+      #pk-quiz-grid { grid-template-columns:1fr !important; }
+      #pk-quote-layout { grid-template-columns:1fr !important; }
+    }
+    @media (max-width: 620px) {
+      #pk-quote-form { grid-template-columns:1fr !important; }
+      #pk-quote-form > * { grid-column:1 !important; }
+    }
+    [data-quiz-option].is-selected {
+      background:#4F5D45 !important;
+      border-color:#4F5D45 !important;
+      color:#F5F2EC !important;
+    }
+
+/* ==================================================================
+   pk-mobile-efficiency
+   ================================================================== */
+@media (max-width: 760px) {
+      /* Escritorio queda intacto; en móvil usamos una galería natural y breve. */
+      #tours { display:none !important; }
+      #tours-mobile { display:block !important; }
+
+      #pk-mobile-exp-track {
+        display:flex;
+        gap:14px;
+        overflow-x:auto;
+        padding:0 22px 14px;
+        scroll-snap-type:x mandatory;
+        overscroll-behavior-x:contain;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+      }
+      #pk-mobile-exp-track::-webkit-scrollbar { display:none; }
+
+      #pk-mobile-exp-track [data-exp-detail] {
+        flex:0 0 min(82vw, 340px);
+        width:min(82vw, 340px);
+        height:auto !important;
+        min-height:0 !important;
+        scroll-snap-align:start;
+        cursor:pointer !important;
+        color:#F5F2EC;
+        display:flex !important;
+        flex-direction:column !important;
+      }
+      #pk-mobile-exp-track [data-mobile-exp-image] {
+        position:relative;
+        width:100%;
+        aspect-ratio:4 / 3;
+        height:auto !important;
+        overflow:hidden;
+        background:#111;
+      }
+      #pk-mobile-exp-track image-slot {
+        display:block !important;
+        width:100% !important;
+        height:100% !important;
+      }
+      #pk-mobile-exp-track h3 {
+        margin:10px 0 4px !important;
+        font-size:clamp(21px,6vw,26px) !important;
+        line-height:1.08 !important;
+      }
+      #pk-mobile-exp-track [data-mobile-exp-summary] {
+        margin:4px 0 8px !important;
+        font-size:12px !important;
+        line-height:1.45 !important;
+        color:rgba(245,242,236,.78) !important;
+        display:-webkit-box;
+        -webkit-line-clamp:3;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+      }
+      #pk-mobile-exp-track [data-mobile-exp-tech] {
+        margin:0 !important;
+        font-size:9px !important;
+        line-height:1.5 !important;
+        letter-spacing:.14em !important;
+        text-transform:uppercase;
+        color:rgba(245,242,236,.56) !important;
+      }
+
+      /* Evitar zoom/crop exagerado de las fotos de Nuestra Esencia en teléfono. */
+      #esencia [data-esc-small] [data-par],
+      #esencia [data-esc-stack] [data-par] {
+        inset:0 !important;
+        transform:none !important;
+      }
+      #esencia {
+        padding-top:44px !important;
+        padding-bottom:54px !important;
+      }
+      #esencia [data-esc-grid] {
+        row-gap:24px !important;
+      }
+      #esencia [data-esc-small] { aspect-ratio:3 / 2 !important; max-width:none !important; }
+      #esencia [data-esc-stack] { aspect-ratio:3 / 2 !important; }
+
+      /* Los 3 pasos pasan a una sola fila deslizable. */
+      #como { padding:44px 0 46px !important; }
+      #como > div { padding:0 22px; }
+      #como h2 { margin-bottom:22px !important; }
+      #pk-how-grid {
+        display:flex !important;
+        gap:14px !important;
+        overflow-x:auto;
+        margin-left:-22px !important;
+        margin-right:-22px !important;
+        padding:0 22px 8px !important;
+        scroll-snap-type:x mandatory;
+        scrollbar-width:none;
+      }
+      #pk-how-grid::-webkit-scrollbar { display:none; }
+      #pk-how-grid > li {
+        flex:0 0 min(78vw, 320px);
+        scroll-snap-align:start;
+        padding:20px 0 !important;
+      }
+
+      /* Reseñas en carrusel horizontal en vez de 4 tarjetas una debajo de otra. */
+      #pk-review-grid {
+        display:flex !important;
+        gap:14px !important;
+        overflow-x:auto;
+        margin-left:-22px;
+        margin-right:-22px;
+        padding:0 22px 10px;
+        scroll-snap-type:x mandatory;
+        scrollbar-width:none;
+      }
+      #pk-review-grid::-webkit-scrollbar { display:none; }
+      #pk-review-grid figure {
+        flex:0 0 min(82vw, 340px);
+        min-height:320px !important;
+        scroll-snap-align:start;
+      }
+
+      /* Google: misma lógica, no tres bloques verticales. */
+      [data-google-review-grid] {
+        display:flex !important;
+        overflow-x:auto;
+        gap:14px !important;
+        margin-left:-22px;
+        margin-right:-22px;
+        padding:0 22px 8px;
+        scroll-snap-type:x mandatory;
+        scrollbar-width:none;
+      }
+      [data-google-review-grid]::-webkit-scrollbar { display:none; }
+      [data-google-review-placeholder] {
+        flex:0 0 min(82vw, 340px);
+        min-height:170px !important;
+        scroll-snap-align:start;
+      }
+
+      /* El selector conserva 3 preguntas, pero ocupa una sola altura. */
+      #selector { padding:48px 0 !important; }
+      #selector > div > div:first-child { padding:0 22px; }
+      #pk-quiz-grid {
+        display:flex !important;
+        gap:14px !important;
+        overflow-x:auto;
+        margin-top:26px !important;
+        padding:0 22px 8px;
+        scroll-snap-type:x mandatory;
+        scrollbar-width:none;
+      }
+      #pk-quiz-grid::-webkit-scrollbar { display:none; }
+      #pk-quiz-grid > div {
+        flex:0 0 min(84vw, 350px);
+        padding:20px !important;
+        scroll-snap-align:start;
+      }
+      #pk-quiz-result {
+        margin:20px 22px 0 !important;
+        padding:22px !important;
+      }
+
+      /* Formulario de cotización más compacto. */
+      #cotiza { padding:50px 22px !important; }
+      #pk-quote-layout { gap:26px !important; }
+      #pk-quote-form { gap:11px !important; }
+      #pk-quote-form input,
+      #pk-quote-form select { min-height:47px !important; }
+
+      /* Diferenciadores también en una sola fila. */
+      #nosotros { padding:50px 0 !important; }
+      #nosotros > div { padding:0 22px; }
+      #pk-diff-grid {
+        display:flex !important;
+        overflow-x:auto;
+        gap:18px !important;
+        margin-left:-22px;
+        margin-right:-22px;
+        padding:0 22px 8px;
+        scroll-snap-type:x mandatory;
+        scrollbar-width:none;
+      }
+      #pk-diff-grid::-webkit-scrollbar { display:none; }
+      #pk-diff-grid > div {
+        flex:0 0 min(78vw, 310px);
+        scroll-snap-align:start;
+      }
+      #nosotros > div > p { margin-top:26px !important; }
+
+      /* FAQ y CTA con menos aire vertical. */
+      #faq { padding:48px 22px !important; }
+      #faq details { padding:15px 0 !important; }
+      #faq summary { font-size:18px !important; }
+
+      /* Evitar sensación de imagen estirada en el CTA final. */
+      [data-screen-label="10 CTA final"] [data-par] {
+        inset:0 !important;
+        transform:none !important;
+      }
+      [data-screen-label="10 CTA final"] {
+        min-height:72svh !important;
+        padding-top:90px !important;
+        padding-bottom:62px !important;
+      }
+    }
+
+/* ==================================================================
+   pk-catalog-typography
+   ================================================================== */
+/* Jerarquía tipográfica inspirada directamente en el catálogo PatagoniK.
+       Montserrat se carga como webfont abierta; Palatino/Myriad usan la fuente
+       instalada cuando existe y fallbacks compatibles en otros dispositivos. */
+    /* cyrillic-ext */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/montserrat-600-1.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/montserrat-600-2.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/montserrat-600-3.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/montserrat-600-4.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/montserrat-600-5.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+    :root {
+      --pk-serif: "Palatino Linotype", "Book Antiqua", Palatino, "Times New Roman", Georgia, serif;
+      --pk-sans: "Myriad Pro", "Myriad", "Segoe UI", Arial, Helvetica, sans-serif;
+      --pk-tagline: "Montserrat", "Segoe UI", Arial, sans-serif;
+    }
+
+    body,
+    input,
+    textarea {
+      font-family: var(--pk-serif) !important;
+    }
+
+    /* Marca PatagoniK */
+    [data-hdr-logo],
+    [data-center-logo] > div > span:first-child,
+    footer > div > div:first-child > span {
+      font-family: var(--pk-serif) !important;
+      font-weight: 400 !important;
+    }
+
+    /* "Encuentros en la zona" como en el catálogo */
+    [data-center-logo] > div > span:nth-child(2) {
+      font-family: var(--pk-tagline) !important;
+      font-weight: 600 !important;
+      font-style: italic !important;
+      letter-spacing: .055em !important;
+    }
+
+    /* Grandes titulares editoriales */
+    h1,
+    h2,
+    #pk-exp-lead,
+    #pk-exp-note,
+    #pk-quiz-result h3 {
+      font-family: var(--pk-serif) !important;
+      font-weight: 400 !important;
+    }
+
+    /* Nombres de excursiones: misma lógica visual del catálogo */
+    #tours [data-hs-card] h3,
+    #tours-mobile [data-exp-detail] h3,
+    #pk-exp-title {
+      font-family: var(--pk-sans) !important;
+      font-weight: 700 !important;
+      letter-spacing: -.015em !important;
+    }
+
+    /* Navegación, botones y datos técnicos */
+    button,
+    select,
+    nav,
+    [data-langtoggle],
+    [data-menu-toggle],
+    [data-btn],
+    [data-wa],
+    [data-google-rating],
+    [data-mobile-exp-tech],
+    [data-t^="tour."][data-t$=".d"],
+    [data-t^="tour."][data-t$=".c"],
+    #pk-exp-facts,
+    #pk-exp-includes,
+    #pk-exp-excludes,
+    #pk-quote-form label > span,
+    #pk-review-grid figcaption,
+    #google-reviews > div:first-child p {
+      font-family: var(--pk-sans) !important;
+    }
+
+    /* Texto de lectura: Palatino, como el cuerpo del catálogo */
+    p,
+    blockquote,
+    details p,
+    #pk-exp-body,
+    [data-mobile-exp-summary] {
+      font-family: var(--pk-serif) !important;
+    }
+
+    /* Los títulos de bloques mantienen el contraste editorial del catálogo */
+    #como h3,
+    #selector h3,
+    #nosotros h3,
+    #faq summary {
+      font-family: var(--pk-serif) !important;
+      font-weight: 400 !important;
+    }
+
+    @media (max-width: 760px) {
+      /* En Android, donde Palatino/Myriad pueden no estar instaladas,
+         los fallbacks mantienen proporciones y legibilidad. */
+      body { letter-spacing: normal; }
+      #tours-mobile [data-exp-detail] h3 {
+        font-family: var(--pk-sans) !important;
+        font-weight: 700 !important;
+      }
+    }
+
+/* ==================================================================
+   pk-mobile-photo-swipe
+   ================================================================== */
+@media (max-width: 760px) {
+      #pk-mobile-exp-track {
+        touch-action: pan-x !important;
+        overscroll-behavior-x: contain;
+        cursor: grab;
+      }
+
+      #pk-mobile-exp-track [data-exp-detail] {
+        touch-action: pan-x !important;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* La imagen deja pasar el gesto al carrusel.
+         El tap sigue llegando a la tarjeta, por lo que "Ver detalles" continúa funcionando. */
+      #pk-mobile-exp-track [data-mobile-exp-image],
+      #pk-mobile-exp-track [data-mobile-exp-image] image-slot {
+        pointer-events: none !important;
+        touch-action: pan-x !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -webkit-user-drag: none !important;
+      }
+    }
+
+/* ==================================================================
+   pk-mobile-photo-scroll-all-directions
+   ================================================================== */
+@media (max-width: 760px) {
+      /* No bloquear el gesto natural del navegador sobre ninguna fotografía. */
+      image-slot,
+      [data-mobile-exp-image],
+      [data-esc-small],
+      [data-esc-stack],
+      [data-par] {
+        touch-action: pan-x pan-y !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+      }
+
+      /* Los image-slot son puramente visuales: el gesto pasa al contenedor/página. */
+      image-slot {
+        pointer-events: none !important;
+        -webkit-user-drag: none !important;
+      }
+
+      /* Carrusel de experiencias: horizontal si el gesto va de lado,
+         scroll normal de la página si el gesto va hacia arriba/abajo. */
+      #pk-mobile-exp-track,
+      #pk-mobile-exp-track [data-exp-detail],
+      #pk-mobile-exp-track [data-mobile-exp-image],
+      #pk-mobile-exp-track [data-mobile-exp-image] image-slot {
+        touch-action: pan-x pan-y !important;
+      }
+
+      /* Igual comportamiento en los otros carruseles móviles. */
+      #pk-how-grid,
+      #pk-review-grid,
+      [data-google-review-grid],
+      #pk-quiz-grid,
+      #pk-diff-grid {
+        touch-action: pan-x pan-y !important;
+      }
+    }
+
+/* ==================================================================
+   pk-cta-accent-v15
+   ================================================================== */
+:root { --pk-copper:#D58955; --pk-copper-dark:#A95F35; --pk-warm:#F4D9BE; }
+
+    [data-hdr-cta] [data-btn-bg] {
+      background:var(--pk-copper) !important;
+      box-shadow:0 8px 28px rgba(213,137,85,.32);
+    }
+    [data-hdr-cta] { color:#1F2923 !important; }
+
+    #cotiza {
+      background:linear-gradient(135deg,#243129 0%,#3F5145 55%,#71503E 100%) !important;
+    }
+    #pk-quote-form button[type="submit"] {
+      background:var(--pk-copper) !important;
+      color:#1F2923 !important;
+      box-shadow:0 14px 38px rgba(213,137,85,.22);
+    }
+    #pk-quote-form button[type="submit"]:hover {
+      background:#E19A67 !important;
+    }
+
+    #pk-quiz-cta {
+      background:var(--pk-copper) !important;
+      color:#1F2923 !important;
+    }
+
+    [data-screen-label="10 CTA final"] [data-btn-bg] {
+      background:var(--pk-copper) !important;
+    }
+    [data-screen-label="10 CTA final"] [data-btn] {
+      color:#1F2923 !important;
+    }
+
+    @media (max-width:760px) {
+      [data-menu] > div:first-child {
+        grid-template-columns:1fr !important;
+        overflow-y:auto;
+        padding-right:4px;
+      }
+      [data-menu] > div:first-child a {
+        font-size:clamp(1.45rem,7vw,2rem) !important;
+        line-height:1.2 !important;
+        padding:2px 0;
+      }
+    }
+
+/* ==================================================================
+   pk-soft-cta-v16
+   ================================================================== */
+:root {
+      --pk-cta-soft:#C9B292;
+      --pk-cta-soft-hover:#D4C0A3;
+      --pk-cta-text:#263129;
+    }
+
+    [data-hdr-cta] [data-btn-bg],
+    [data-screen-label="10 CTA final"] [data-btn-bg] {
+      background:var(--pk-cta-soft) !important;
+      box-shadow:0 8px 24px rgba(72,59,43,.13) !important;
+    }
+
+    [data-hdr-cta],
+    [data-screen-label="10 CTA final"] [data-btn] {
+      color:var(--pk-cta-text) !important;
+    }
+
+    #pk-quote-form button[type="submit"] {
+      background:var(--pk-cta-soft) !important;
+      color:var(--pk-cta-text) !important;
+      box-shadow:none !important;
+    }
+
+    #pk-quote-form button[type="submit"]:hover,
+    #pk-quiz-cta:hover {
+      background:var(--pk-cta-soft-hover) !important;
+    }
+
+    #pk-quiz-cta {
+      background:var(--pk-cta-soft) !important;
+      color:var(--pk-cta-text) !important;
+    }
+
+    /* Quitar el cobre más intenso de la versión anterior. */
+    #cotiza {
+      background:linear-gradient(135deg,#26332B 0%,#415347 62%,#5A4A3F 100%) !important;
+    }
+
+/* ==================================================================
+   pk-section-spacing-v16
+   ================================================================== */
+/* Ritmo vertical más compacto, manteniendo separación editorial. */
+    #esencia {
+      padding-top:clamp(42px,7vw,74px) !important;
+      padding-bottom:clamp(48px,8vw,86px) !important;
+    }
+
+    #resenas {
+      padding-top:clamp(24px,3.5vw,38px) !important;
+      padding-bottom:clamp(34px,5vw,58px) !important;
+    }
+
+    #como {
+      padding-top:clamp(30px,4.5vw,52px) !important;
+      padding-bottom:clamp(38px,5.5vw,64px) !important;
+    }
+
+    #selector {
+      padding-top:clamp(42px,6vw,68px) !important;
+      padding-bottom:clamp(44px,6vw,70px) !important;
+    }
+
+    #cotiza {
+      padding-top:clamp(46px,6vw,72px) !important;
+      padding-bottom:clamp(46px,6vw,72px) !important;
+    }
+
+    #nosotros {
+      padding-top:clamp(42px,6vw,68px) !important;
+      padding-bottom:clamp(42px,6vw,68px) !important;
+    }
+
+    #faq {
+      padding-top:clamp(42px,6vw,68px) !important;
+      padding-bottom:clamp(44px,6vw,72px) !important;
+    }
+
+    #google-reviews {
+      margin-top:clamp(22px,3vw,32px) !important;
+      padding-top:clamp(22px,3vw,32px) !important;
+    }
+
+    #pk-review-grid {
+      margin-bottom:0 !important;
+    }
+
+    #pk-diff-grid {
+      gap:clamp(24px,4vw,38px) !important;
+    }
+
+    #nosotros > div > p {
+      margin-top:clamp(24px,4vw,38px) !important;
+    }
+
+    @media (max-width:760px) {
+      #esencia { padding:34px 0 40px !important; }
+      #resenas { padding:22px 22px 34px !important; }
+      #como { padding:34px 0 36px !important; }
+      #selector { padding:38px 0 !important; }
+      #cotiza { padding:40px 22px !important; }
+      #nosotros { padding:38px 0 !important; }
+      #faq { padding:38px 22px !important; }
+
+      [data-menu] {
+        top:64px !important;
+        left:12px !important;
+        width:min(340px,calc(100vw - 24px)) !important;
+        max-height:calc(100svh - 78px) !important;
+        padding:12px 14px 12px !important;
+        border-radius:16px !important;
+      }
+
+      [data-menu] > div:first-child a {
+        font-size:1rem !important;
+        line-height:1.15 !important;
+        padding:8px 5px !important;
+      }
+    }
+
+/* ==================================================================
+   pk-uniform-experiences-v17
+   ================================================================== */
+/* Un único formato para las 15 experiencias en escritorio */
+    @media (min-width:761px) {
+      #tours [data-hs-track] {
+        gap:clamp(18px,2.2vw,30px) !important;
+        padding-bottom:clamp(54px,8vh,82px) !important;
+      }
+
+      #tours [data-hs-card] {
+        width:clamp(285px,25vw,340px) !important;
+        height:clamp(405px,54vh,445px) !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:stretch !important;
+        gap:0 !important;
+        color:#F5F2EC !important;
+        cursor:pointer !important;
+        overflow:hidden !important;
+      }
+
+      #tours [data-desktop-exp-image] {
+        position:relative;
+        flex:0 0 clamp(215px,28vh,250px);
+        width:100%;
+        overflow:hidden;
+        background:#111;
+      }
+
+      #tours [data-desktop-exp-image] image-slot {
+        display:block !important;
+        width:100% !important;
+        height:100% !important;
+      }
+
+      #tours [data-hs-card] h3 {
+        min-height:2.2em;
+        margin:11px 0 4px !important;
+        font-size:clamp(20px,1.65vw,25px) !important;
+        line-height:1.08 !important;
+        writing-mode:horizontal-tb !important;
+        transform:none !important;
+        white-space:normal !important;
+      }
+
+      #tours [data-desktop-exp-summary] {
+        min-height:4.25em;
+        margin:2px 0 8px !important;
+        font-size:12px !important;
+        line-height:1.42 !important;
+        color:rgba(245,242,236,.78) !important;
+        display:-webkit-box;
+        -webkit-line-clamp:3;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+      }
+
+      #tours [data-desktop-exp-tech] {
+        margin:auto 0 0 !important;
+        font-size:9px !important;
+        line-height:1.45 !important;
+        letter-spacing:.15em !important;
+        text-transform:uppercase;
+        color:rgba(245,242,236,.58) !important;
+      }
+
+      #tours [data-desktop-exp-more] {
+        margin-top:7px;
+        font-size:8.5px;
+        letter-spacing:.18em;
+        text-transform:uppercase;
+        color:rgba(245,242,236,.42);
+      }
+    }
+
+    /* En móvil todas las fotos quedan exactamente en el mismo formato */
+    @media (max-width:760px) {
+      #pk-mobile-exp-track [data-mobile-exp-image] {
+        aspect-ratio:4 / 3 !important;
+        height:auto !important;
+        min-height:0 !important;
+        flex:0 0 auto !important;
+      }
+      #pk-mobile-exp-track [data-exp-detail] {
+        min-height:392px !important;
+      }
+      #pk-mobile-exp-track [data-exp-detail] h3 {
+        min-height:2.15em;
+      }
+      #pk-mobile-exp-track [data-mobile-exp-summary] {
+        min-height:4.3em;
+      }
+    }
+
+/* ==================================================================
+   pk-tight-sections-v17
+   ================================================================== */
+/* Compactación perceptible: se eliminan los grandes colchones entre bloques. */
+    #esencia {
+      padding-top:32px !important;
+      padding-bottom:38px !important;
+    }
+
+    #resenas {
+      padding-top:18px !important;
+      padding-bottom:28px !important;
+    }
+
+    #resenas > div > [data-reveal]:first-child {
+      margin-top:0 !important;
+    }
+
+    #como {
+      padding-top:24px !important;
+      padding-bottom:30px !important;
+    }
+    #como h2 {
+      margin-bottom:20px !important;
+    }
+    #pk-how-grid > li {
+      padding-top:20px !important;
+      padding-bottom:20px !important;
+    }
+
+    #selector {
+      padding-top:30px !important;
+      padding-bottom:32px !important;
+    }
+    #pk-quiz-grid {
+      margin-top:24px !important;
+    }
+    #pk-quiz-result {
+      margin-top:18px !important;
+    }
+
+    #cotiza {
+      padding-top:34px !important;
+      padding-bottom:34px !important;
+    }
+    #pk-quote-layout {
+      gap:clamp(24px,4vw,48px) !important;
+    }
+
+    #nosotros {
+      padding-top:30px !important;
+      padding-bottom:30px !important;
+    }
+    #nosotros > div > p {
+      margin-top:24px !important;
+    }
+
+    #faq {
+      padding-top:28px !important;
+      padding-bottom:32px !important;
+    }
+    #faq h2 {
+      margin-bottom:22px !important;
+    }
+
+    #google-reviews {
+      margin-top:20px !important;
+      padding-top:20px !important;
+    }
+
+    /* La sección de experiencias móvil tampoco deja colchones grandes. */
+    #tours-mobile {
+      padding-top:38px !important;
+      padding-bottom:30px !important;
+    }
+
+    @media (max-width:760px) {
+      #esencia { padding:26px 0 30px !important; }
+      #resenas { padding:14px 22px 24px !important; }
+      #como { padding:24px 0 28px !important; }
+      #selector { padding:28px 0 !important; }
+      #cotiza { padding:30px 22px !important; }
+      #nosotros { padding:28px 0 !important; }
+      #faq { padding:28px 22px !important; }
+      #tours-mobile { padding:32px 0 26px !important; }
+    }
+
+/* ==================================================================
+   pk-upper-compact-lower-restore-v18
+   ================================================================== */
+/* ---------------------------------------------------------
+       PARTE SUPERIOR: aquí sí reducimos el aire.
+       --------------------------------------------------------- */
+
+    /* La secuencia Vive / Encuentra / Tu comodidad ocupa menos scroll. */
+    #top {
+      height:235vh !important;
+    }
+
+    [data-franjas] {
+      gap:clamp(5px,1.2vh,14px) !important;
+      padding-top:clamp(54px,7vh,76px) !important;
+      padding-bottom:clamp(18px,3vh,30px) !important;
+    }
+
+    [data-franja="1"] {
+      gap:clamp(10px,1.8vw,24px) !important;
+    }
+
+    [data-video-slot] {
+      height:clamp(96px,15vh,148px) !important;
+    }
+
+    [data-franja="2"] {
+      gap:clamp(8px,1.5vw,20px) !important;
+    }
+
+    [data-f2-img] {
+      height:clamp(100px,16vh,176px) !important;
+    }
+
+    [data-franja="3"] {
+      margin-top:-2px !important;
+    }
+
+    /* Nuestra Esencia: menos espacio alrededor y entre las dos filas de imágenes/texto. */
+    #esencia {
+      padding-top:22px !important;
+      padding-bottom:28px !important;
+    }
+
+    #esencia [data-esc-grid] {
+      row-gap:clamp(16px,2.2vw,28px) !important;
+    }
+
+    #esencia [data-esc-intro] {
+      margin-top:12px !important;
+    }
+
+    #esencia [data-esc-btn] {
+      margin-top:18px !important;
+    }
+
+    /* ---------------------------------------------------------
+       PARTE INFERIOR: vuelve al espaciado de la versión 16.
+       --------------------------------------------------------- */
+    #resenas {
+      padding-top:clamp(24px,3.5vw,38px) !important;
+      padding-bottom:clamp(34px,5vw,58px) !important;
+    }
+
+    #como {
+      padding-top:clamp(30px,4.5vw,52px) !important;
+      padding-bottom:clamp(38px,5.5vw,64px) !important;
+    }
+
+    #como h2 {
+      margin-bottom:clamp(34px,8vw,66px) !important;
+    }
+
+    #pk-how-grid > li {
+      padding-top:clamp(24px,6vw,34px) !important;
+      padding-bottom:clamp(24px,6vw,34px) !important;
+    }
+
+    #selector {
+      padding-top:clamp(42px,6vw,68px) !important;
+      padding-bottom:clamp(44px,6vw,70px) !important;
+    }
+
+    #pk-quiz-grid {
+      margin-top:clamp(34px,6vw,56px) !important;
+    }
+
+    #pk-quiz-result {
+      margin-top:clamp(24px,4vw,38px) !important;
+    }
+
+    #cotiza {
+      padding-top:clamp(46px,6vw,72px) !important;
+      padding-bottom:clamp(46px,6vw,72px) !important;
+    }
+
+    #pk-quote-layout {
+      gap:clamp(34px,7vw,84px) !important;
+    }
+
+    #nosotros {
+      padding-top:clamp(42px,6vw,68px) !important;
+      padding-bottom:clamp(42px,6vw,68px) !important;
+    }
+
+    #pk-diff-grid {
+      gap:clamp(24px,4vw,38px) !important;
+    }
+
+    #nosotros > div > p {
+      margin-top:clamp(24px,4vw,38px) !important;
+    }
+
+    #faq {
+      padding-top:clamp(42px,6vw,68px) !important;
+      padding-bottom:clamp(44px,6vw,72px) !important;
+    }
+
+    #faq h2 {
+      margin-bottom:clamp(28px,5vw,44px) !important;
+    }
+
+    #google-reviews {
+      margin-top:clamp(22px,3vw,32px) !important;
+      padding-top:clamp(22px,3vw,32px) !important;
+    }
+
+    /* En móvil reducimos especialmente el bloque superior,
+       pero devolvemos el ritmo inferior de v16. */
+    @media (max-width:760px) {
+      #top {
+        height:215vh !important;
+      }
+
+      [data-franjas] {
+        gap:6px !important;
+        padding-top:56px !important;
+        padding-bottom:16px !important;
+      }
+
+      [data-video-slot] {
+        height:92px !important;
+      }
+
+      [data-franja="2"] {
+        gap:6px !important;
+      }
+
+      [data-f2-img] {
+        height:108px !important;
+      }
+
+      [data-franja="3"] {
+        margin-top:-4px !important;
+      }
+
+      #esencia {
+        padding:18px 0 24px !important;
+      }
+
+      #esencia [data-esc-grid] {
+        row-gap:16px !important;
+      }
+
+      #esencia [data-esc-intro] {
+        margin-top:10px !important;
+      }
+
+      #esencia [data-esc-btn] {
+        margin-top:16px !important;
+      }
+
+      #resenas {
+        padding:22px 22px 34px !important;
+      }
+
+      #como {
+        padding:34px 0 36px !important;
+      }
+
+      #como h2 {
+        margin-bottom:22px !important;
+      }
+
+      #pk-how-grid > li {
+        padding:20px 0 !important;
+      }
+
+      #selector {
+        padding:38px 0 !important;
+      }
+
+      #pk-quiz-grid {
+        margin-top:26px !important;
+      }
+
+      #pk-quiz-result {
+        margin-top:20px !important;
+      }
+
+      #cotiza {
+        padding:40px 22px !important;
+      }
+
+      #pk-quote-layout {
+        gap:26px !important;
+      }
+
+      #nosotros {
+        padding:38px 0 !important;
+      }
+
+      #nosotros > div > p {
+        margin-top:26px !important;
+      }
+
+      #faq {
+        padding:38px 22px !important;
+      }
+
+      #faq h2 {
+        margin-bottom:28px !important;
+      }
+    }
+
+/* ==================================================================
+   pk-experience-sides-soft-v21
+   ================================================================== */
+/* Aclarar los laterales/fondos de las experiencias para que no contrasten tan duro */
+    #tours [data-hs-card] {
+      background: linear-gradient(180deg, rgba(57,67,62,.92) 0%, rgba(36,43,39,.96) 100%) !important;
+      border-radius: 2px;
+    }
+
+    #tours [data-desktop-exp-image],
+    #tours [data-hs-img] {
+      background: #2F3632 !important;
+    }
+
+    #pk-mobile-exp-track [data-exp-detail] {
+      background: linear-gradient(180deg, rgba(57,67,62,.94) 0%, rgba(36,43,39,.98) 100%) !important;
+      border-radius: 2px;
+    }
+
+    #pk-mobile-exp-track [data-mobile-exp-image] {
+      background: #2F3632 !important;
+    }
+
+    /* Modal/ficha de experiencia también un poco más suave */
+    #pk-exp-panel {
+      background: #F3EFE8 !important;
+    }
+
+    @media (max-width:760px) {
+      #pk-mobile-exp-track [data-exp-detail] {
+        box-shadow: 0 10px 26px rgba(23,29,26,.12);
+      }
+    }
+
+/* ==================================================================
+   pk-quote-blurred-bg-v25
+   ================================================================== */
+#cotiza { isolation:isolate; }
+    #pk-quote-layout { position:relative; z-index:1; }
+    #cotiza input,
+    #cotiza select,
+    #cotiza textarea {
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+    }
+    @media (max-width:760px) {
+      #pk-quote-bg > div:first-child {
+        filter: blur(14px) !important;
+        opacity: .38 !important;
+        transform: scale(1.12) !important;
+      }
+    }
+
+/* ==================================================================
+   pk-quote-bg-visible-v26
+   ================================================================== */
+#cotiza { position:relative; overflow:hidden; isolation:isolate; }
+    #pk-quote-bg { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    #pk-quote-layout { position:relative; z-index:1; }
+    #pk-quote-bg > div:first-child {
+      filter:none !important;
+      transform:none !important;
+      background-size:cover !important;
+      background-position:center center !important;
+      opacity:.88 !important;
+    }
+    #pk-quote-bg > div:last-child {
+      background:linear-gradient(180deg, rgba(35,39,37,.32) 0%, rgba(35,39,37,.22) 38%, rgba(35,39,37,.38) 100%) !important;
+    }
+    @media (max-width:760px) {
+      #pk-quote-bg > div:first-child {
+        opacity:.9 !important;
+        background-position:center center !important;
+      }
+    }
+
+/* ==================================================================
+   pk-quote-waterfall-bg-v27
+   ================================================================== */
+#cotiza {
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+      background-position: center center !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+    }
+    #pk-quote-overlay {
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+    }
+    #pk-quote-layout,
+    #cotiza > div:not(#pk-quote-overlay) {
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width:760px) {
+      #cotiza {
+        background-position: center center !important;
+      }
+    }
+
+/* ==================================================================
+   pk-quote-waterfall-force-v28
+   ================================================================== */
+#cotiza {
+      background: #232725 url("/images/bg-5663e45d.webp") center 46% / cover no-repeat !important;
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+    }
+
+    #pk-quote-overlay {
+      background: linear-gradient(
+        180deg,
+        rgba(27,32,29,.22) 0%,
+        rgba(27,32,29,.14) 42%,
+        rgba(27,32,29,.28) 100%
+      ) !important;
+    }
+
+    #pk-quote-layout {
+      position: relative !important;
+      z-index: 2 !important;
+    }
+
+    @media (max-width:760px) {
+      #cotiza {
+        background-position: center 45% !important;
+      }
+    }
+
+/* ==================================================================
+   pk-quote-readable-v29
+   ================================================================== */
+/* Reforzar legibilidad general sin perder la foto de fondo */
+    #pk-quote-layout {
+      position: relative !important;
+      z-index: 2 !important;
+    }
+
+    /* Columna izquierda: texto oscuro para la zona más clara de la cascada */
+    #cotiza [data-t="quote.kicker"],
+    #cotiza [data-t="quote.title"],
+    #cotiza [data-t="quote.intro"] {
+      color: #18211C !important;
+      text-shadow: 0 1px 1px rgba(255,255,255,.18);
+    }
+
+    #cotiza [data-t="quote.kicker"] {
+      color: rgba(24,33,28,.78) !important;
+    }
+
+    /* Panel del formulario para que no se mezcle con el fondo */
+    #pk-quote-form {
+      background: rgba(26, 33, 29, .68) !important;
+      border: 1px solid rgba(255,255,255,.12) !important;
+      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(5px) !important;
+      padding: clamp(18px, 3vw, 26px) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 16px 36px rgba(16,20,18,.18) !important;
+    }
+
+    /* Dentro del formulario sí conviene mantener texto claro */
+    #pk-quote-form,
+    #pk-quote-form label > span,
+    #pk-quote-form p,
+    #pk-quote-form input,
+    #pk-quote-form select,
+    #pk-quote-form option {
+      color: #F5F2EC !important;
+    }
+
+    #pk-quote-form label > span {
+      color: rgba(245,242,236,.76) !important;
+    }
+
+    #pk-quote-form input,
+    #pk-quote-form select {
+      background: rgba(255,255,255,.10) !important;
+      border: 1px solid rgba(255,255,255,.22) !important;
+    }
+
+    #pk-quote-form input::placeholder {
+      color: rgba(245,242,236,.68) !important;
+    }
+
+    #pk-quote-form button[type="submit"] {
+      color: #233028 !important;
+    }
+
+    #pk-quote-form [data-t="quote.note"] {
+      color: rgba(245,242,236,.62) !important;
+    }
+
+    @media (max-width:760px) {
+      #cotiza [data-t="quote.title"],
+      #cotiza [data-t="quote.intro"],
+      #cotiza [data-t="quote.kicker"] {
+        color: #101713 !important;
+        text-shadow: 0 1px 0 rgba(255,255,255,.22);
+      }
+
+      #pk-quote-form {
+        padding: 16px !important;
+      }
+    }
+
+/* ==================================================================
+   pk-quote-left-box-v30
+   ================================================================== */
+/* Cuadro para la columna izquierda de la sección de cotización */
+    #pk-quote-layout > div:first-child {
+      background: rgba(26, 33, 29, .58) !important;
+      border: 1px solid rgba(255,255,255,.12) !important;
+      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(5px) !important;
+      padding: clamp(18px, 3vw, 26px) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 16px 36px rgba(16,20,18,.16) !important;
+    }
+
+    /* Dentro de ese cuadro conviene volver a texto claro */
+    #pk-quote-layout > div:first-child [data-t="quote.kicker"] {
+      color: rgba(245,242,236,.76) !important;
+      text-shadow: none !important;
+    }
+
+    #pk-quote-layout > div:first-child [data-t="quote.title"],
+    #pk-quote-layout > div:first-child [data-t="quote.intro"] {
+      color: #F5F2EC !important;
+      text-shadow: none !important;
+    }
+
+    @media (max-width:760px) {
+      #pk-quote-layout > div:first-child {
+        padding: 16px !important;
+      }
+      #pk-quote-layout > div:first-child [data-t="quote.kicker"],
+      #pk-quote-layout > div:first-child [data-t="quote.title"],
+      #pk-quote-layout > div:first-child [data-t="quote.intro"] {
+        color: #F5F2EC !important;
+      }
+    }
+
+/* ==================================================================
+   pk-experiences-forest-v33
+   ================================================================== */
+#tours [data-hs-card] {
+      background: linear-gradient(180deg, rgba(71,77,71,.90) 0%, rgba(55,60,56,.95) 100%) !important;
+    }
+    #pk-mobile-exp-track [data-exp-detail] {
+      background: linear-gradient(180deg, rgba(71,77,71,.92) 0%, rgba(55,60,56,.96) 100%) !important;
+    }
+
+/* ==================================================================
+   pk-experiences-fullwidth-v34
+   ================================================================== */
+/* La capa principal ahora debe cubrir todo el ancho visible */
+    #pt-exp-bg {
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+    }
+
+    /* Overlay un poco más suave para que se aprecie mejor la foto */
+    #tours > div[data-hs-sticky] > div[aria-hidden="true"] + div[aria-hidden="true"] {
+      background: linear-gradient(180deg, rgba(28,27,23,.18) 0%, rgba(28,27,23,.08) 42%, rgba(28,27,23,.18) 100%) !important;
+    }
+
+/* ==================================================================
+   pk-catalog-font-full-v37
+   ================================================================== */
+/*
+      Tipografía alineada con la jerarquía visual del catálogo PatagoniK:
+      - Palatino / Book Antiqua para titulares y lectura editorial.
+      - Myriad Pro / Segoe UI para navegación, fichas, botones y datos técnicos.
+      - Montserrat italic para el tagline.
+    */
+    :root {
+      --pk-catalog-serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
+      --pk-catalog-sans: "Myriad Pro", Myriad, "Segoe UI", Arial, Helvetica, sans-serif;
+    }
+
+    body,
+    h1, h2,
+    #esencia h2,
+    #selector h2,
+    #como h2,
+    #cotiza h2,
+    #nosotros h2,
+    #faq h2,
+    #pk-exp-lead,
+    #pk-exp-note,
+    blockquote,
+    details p,
+    #pk-exp-body {
+      font-family: var(--pk-catalog-serif) !important;
+    }
+
+    /* Los títulos de experiencias del catálogo son más limpios y contemporáneos */
+    #tours [data-hs-card] h3,
+    #tours-mobile [data-exp-detail] h3,
+    #pk-exp-title,
+    #pk-mobile-exp-track h3 {
+      font-family: var(--pk-catalog-sans) !important;
+      font-weight: 700 !important;
+    }
+
+    nav,
+    nav a,
+    button,
+    select,
+    input,
+    textarea,
+    [data-btn],
+    [data-wa],
+    [data-t^="tour."][data-t$=".d"],
+    [data-t^="tour."][data-t$=".c"],
+    [data-mobile-exp-tech],
+    #pk-exp-facts,
+    #pk-exp-includes,
+    #pk-exp-excludes,
+    #pk-quote-form label > span {
+      font-family: var(--pk-catalog-sans) !important;
+    }
+
+    p,
+    #pk-mobile-exp-track [data-mobile-exp-summary],
+    #tours [data-desktop-exp-summary] {
+      font-family: var(--pk-catalog-serif) !important;
+    }
+
+/* ==================================================================
+   pk-quote-mobile-safe-v37
+   ================================================================== */
+@media (max-width:760px) {
+      /* Dar aire real a ambos lados del bloque Planifica tu viaje */
+      #cotiza {
+        padding-left:16px !important;
+        padding-right:16px !important;
+      }
+
+      #pk-quote-layout {
+        width:100% !important;
+        max-width:100% !important;
+        box-sizing:border-box !important;
+        gap:18px !important;
+      }
+
+      #pk-quote-layout > div:first-child,
+      #pk-quote-form {
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        box-sizing:border-box !important;
+        margin:0 !important;
+      }
+
+      #pk-quote-form {
+        padding:16px !important;
+      }
+
+      #pk-quote-form label {
+        min-width:0 !important;
+        width:100% !important;
+        box-sizing:border-box !important;
+      }
+
+      #pk-quote-form input,
+      #pk-quote-form select,
+      #pk-quote-form textarea {
+        display:block !important;
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        box-sizing:border-box !important;
+      }
+
+      /* Reservar espacio para la flecha nativa de los select */
+      #pk-quote-form select {
+        padding-right:42px !important;
+        appearance:auto !important;
+        -webkit-appearance:menulist !important;
+        background-clip:padding-box !important;
+      }
+    }
+
+/* ==================================================================
+   pk-experience-titles-v38
+   ================================================================== */
+/* Títulos de experiencias más sobrios: centrados, algo menores y con menos peso */
+    #tours [data-hs-card] h3,
+    #tours [data-desktop-exp-image] + h3 {
+      width:100% !important;
+      min-height:2.2em !important;
+      margin:10px 0 5px !important;
+      padding:0 6px !important;
+      box-sizing:border-box !important;
+      text-align:center !important;
+      font-family:var(--pk-catalog-sans) !important;
+      font-size:clamp(18px,1.35vw,22px) !important;
+      line-height:1.12 !important;
+      font-weight:500 !important;
+      letter-spacing:.005em !important;
+    }
+
+    /* Alinear también los textos inferiores para que la tarjeta se sienta más ordenada */
+    #tours [data-desktop-exp-summary],
+    #tours [data-desktop-exp-tech],
+    #tours [data-desktop-exp-more] {
+      text-align:center !important;
+      margin-left:auto !important;
+      margin-right:auto !important;
+    }
+
+    #tours [data-desktop-exp-summary] {
+      max-width:31ch !important;
+    }
+
+    /* Móvil: misma jerarquía, sin que el título se vuelva dominante */
+    #pk-mobile-exp-track h3,
+    #tours-mobile [data-exp-detail] h3 {
+      width:100% !important;
+      min-height:0 !important;
+      margin:10px 0 5px !important;
+      padding:0 5px !important;
+      box-sizing:border-box !important;
+      text-align:center !important;
+      font-family:var(--pk-catalog-sans) !important;
+      font-size:18px !important;
+      line-height:1.15 !important;
+      font-weight:500 !important;
+      letter-spacing:.005em !important;
+    }
+
+    #pk-mobile-exp-track [data-mobile-exp-summary],
+    #pk-mobile-exp-track [data-mobile-exp-tech],
+    #pk-mobile-exp-track [data-exp-detail] > span:last-child {
+      text-align:center !important;
+    }
+
+    #pk-mobile-exp-track [data-mobile-exp-summary] {
+      margin-left:auto !important;
+      margin-right:auto !important;
+      max-width:31ch !important;
+    }
+
+/* ==================================================================
+   pk-experience-map-v39
+   ================================================================== */
+#pk-map-route-list button {
+      appearance:none; border:1px solid rgba(43,43,43,.10); background:rgba(255,255,255,.48);
+      color:#2B2B2B; text-align:left; padding:13px 14px; border-radius:12px; cursor:pointer;
+      font-family:var(--pk-catalog-sans); font-size:12px; line-height:1.25; transition:.22s ease;
+    }
+    #pk-map-route-list button:hover,
+    #pk-map-route-list button.is-active {
+      background:#4F5D45; color:#F5F2EC; border-color:#4F5D45; transform:translateX(2px);
+    }
+    #pk-experience-map .leaflet-popup-content-wrapper { border-radius:14px; box-shadow:0 14px 36px rgba(20,26,22,.20); }
+    #pk-experience-map .leaflet-popup-content { margin:14px 16px; font-family:var(--pk-catalog-sans); }
+    #pk-experience-map .leaflet-control-attribution { font-size:8px; }
+    .pk-map-popup-title { margin:0 0 6px; font-size:15px; font-weight:600; color:#263129; }
+    .pk-map-popup-copy { margin:0 0 11px; max-width:27ch; font-size:11px; line-height:1.45; color:rgba(38,49,41,.68); }
+    .pk-map-popup-link { display:inline-flex; padding:8px 11px; border-radius:999px; background:#C9B292; color:#263129; font-size:10px; font-weight:600; text-decoration:none; }
+    @media(max-width:760px){
+      #mapa-experiencias { padding:36px 16px !important; }
+      #mapa-experiencias > div > div:first-child { grid-template-columns:1fr !important; gap:12px !important; }
+      #pk-map-layout { grid-template-columns:1fr !important; gap:12px !important; }
+      #pk-map-route-list { flex-direction:row !important; overflow-x:auto; padding-bottom:3px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; }
+      #pk-map-route-list button { flex:0 0 auto; max-width:210px; scroll-snap-align:start; }
+      #pk-map-layout > div:last-child { min-height:430px !important; }
+    }
+
+/* ==================================================================
+   pk-map-v40
+   ================================================================== */
+#pk-experience-map .leaflet-control-layers { font-family:var(--pk-catalog-sans); font-size:11px; }
+    #pk-experience-map .leaflet-tooltip { font-family:var(--pk-catalog-sans); font-size:10px; border:0; border-radius:8px; box-shadow:0 6px 18px rgba(20,26,22,.16); }
+    #pk-exp-mini-map .leaflet-control-attribution { font-size:7px; }
+    #pk-exp-mini-map .leaflet-control-zoom { transform:scale(.88); transform-origin:top left; }
+    .pk-map-ref-icon { background:#C9B292; border:2px solid #fff; width:12px; height:12px; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,.24); }
+    @media(max-width:760px){
+      #pk-map-route-list { display:block !important; overflow:visible !important; }
+      #pk-map-route-list > div > div { flex-direction:row !important; overflow-x:auto; padding-bottom:4px; gap:7px !important; }
+      #pk-map-route-list button { flex:0 0 auto; max-width:205px; }
+      #pk-map-legend { display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; }
+      #pk-exp-mini-map { height:230px !important; }
+    }
+
+/* ==================================================================
+   pk-official-map-v43
+   ================================================================== */
+#pk-exp-mini-map .pk-official-map-image,
+    #pk-exp-mini-map .pk-official-map-overlay {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      transform-origin:center center;
+      will-change:transform;
+      user-select:none;
+      -webkit-user-drag:none;
+      pointer-events:none;
+    }
+    #pk-exp-mini-map .pk-official-map-image {
+      object-fit:cover;
+      filter:saturate(.96) contrast(1.02);
+    }
+    #pk-exp-mini-map .pk-official-map-overlay {
+      overflow:visible;
+    }
+    #pk-exp-mini-map .pk-official-map-route-glow {
+      fill:none;
+      stroke:rgba(245,242,236,.84);
+      stroke-width:17;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      filter:drop-shadow(0 1px 5px rgba(10,12,11,.22));
+    }
+    #pk-exp-mini-map .pk-official-map-route-line {
+      fill:none;
+      stroke:#A55D41;
+      stroke-width:7;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      stroke-dasharray:18 11;
+    }
+    #pk-exp-mini-map .pk-official-map-route-line[data-kind="nav"] {
+      stroke:#8F6A34;
+      stroke-dasharray:12 10;
+    }
+    #pk-exp-mini-map .pk-official-map-shade {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(180deg,rgba(20,25,22,.02),rgba(20,25,22,.06));
+    }
+    #pk-exp-mini-map .pk-official-map-marker {
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:20px;
+      height:20px;
+      border-radius:999px;
+      border:3px solid #F5F2EC;
+      background:#A0694F;
+      box-shadow:0 4px 18px rgba(20,20,20,.28);
+      pointer-events:none;
+    }
+    #pk-exp-mini-map .pk-official-map-marker::after {
+      content:'';
+      position:absolute;
+      inset:-8px;
+      border:1px solid rgba(245,242,236,.72);
+      border-radius:999px;
+    }
+    #pk-exp-mini-map .pk-official-map-label {
+      position:absolute;
+      left:50%;
+      top:calc(50% + 20px);
+      transform:translateX(-50%);
+      max-width:min(78%,300px);
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(28,33,29,.78);
+      backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+      color:#F5F2EC;
+      font-family:var(--pk-catalog-sans);
+      font-size:9px;
+      line-height:1.3;
+      letter-spacing:.08em;
+      text-align:center;
+      text-transform:uppercase;
+      pointer-events:none;
+    }
+    @media(max-width:760px){
+      #pk-exp-mini-map{height:250px !important;}
+      #pk-exp-mini-map .pk-official-map-label{max-width:84%; font-size:8px;}
+      #pk-exp-mini-map .pk-official-map-route-glow{stroke-width:14;}
+      #pk-exp-mini-map .pk-official-map-route-line{stroke-width:6;}
+    }
+
+/* ==================================================================
+   pk-exp-carousel-v48
+   ================================================================== */
+/*
+      C3 — Experiencias con flechas.
+
+      Antes, #tours era una sección de 300vh "pineada": el scroll de la página
+      manejaba un translate del track y sólo se veían 6 tarjetas hasta pulsar
+      "Mostrar más". Ahora el track es un scroller horizontal normal, las 16
+      experiencias están dentro desde el inicio y las flechas lo desplazan.
+
+      Se usa !important porque las propiedades que hay que revertir viven en el
+      atributo style= de los nodos (position/height/transform del track), y ese
+      es el criterio que ya seguía el resto de bloques pk-*-vNN del archivo.
+    */
+    @media (min-width: 761px) {
+      /* La altura la daba el recorrido del pin; ahora la da el contenido. */
+      #tours {
+        height: auto !important;
+      }
+
+      #tours [data-hs-sticky] {
+        position: relative !important;
+        top: auto !important;
+        height: auto !important;
+        padding: clamp(92px, 14vh, 148px) 0 clamp(104px, 13vh, 142px);
+      }
+
+      #tours [data-hs-track] {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        height: auto !important;
+        transform: none !important;
+        will-change: auto !important;
+        /* El track llevaba pointer-events:none para que el cursor
+           personalizado sólo reaccionara sobre las tarjetas; ahora además
+           tiene que recibir la rueda y el arrastre. */
+        pointer-events: auto !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 0 !important;
+        /* El snap tiene que respetar el margen lateral del track. */
+        scroll-padding-inline-start: clamp(22px, 6vw, 96px);
+      }
+      #tours [data-hs-track]::-webkit-scrollbar { display: none; }
+
+      #tours [data-hs-card] {
+        scroll-snap-align: start;
+      }
+
+      /* El kicker estaba anclado a una sección de 100svh; ahora la sección la
+         mide el contenido, así que pasa al flujo por encima del track en vez
+         de quedar flotando sobre las tarjetas. */
+      /* relative, no static: el z-index:3 del nodo sólo cuenta si está
+         posicionado, y sin él la línea queda debajo del overlay del fondo. */
+      #tours [data-exp-kicker] {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        margin: 0 clamp(22px, 6vw, 96px) clamp(20px, 3vh, 34px);
+      }
+    }
+
+    /* El track móvil tiene 22px de padding lateral, así que sin scroll-padding
+       el punto de snap de la primera tarjeta cae en sc-camel-scroll-left=22 y el inicio
+       del recorrido nunca se lee como "extremo". Alinear el snap con ese
+       padding devuelve el reposo a 0 y mantiene el margen visual. */
+    #pk-mobile-exp-track {
+      scroll-padding-inline-start: 22px;
+    }
+
+    /* Fila de flechas: abajo a la derecha en desktop — el mismo lugar que
+       ocupaba "Mostrar más" — y centrada bajo el track en móvil. */
+    .pk-exp-arrows {
+      display: flex;
+      gap: 12px;
+    }
+    #tours .pk-exp-arrows {
+      position: absolute;
+      right: clamp(22px, 6vw, 96px);
+      bottom: clamp(34px, 6vh, 58px);
+      z-index: 6;
+    }
+    #tours-mobile .pk-exp-arrows {
+      justify-content: center;
+      padding: 20px 22px 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #tours [data-hs-track],
+      #pk-mobile-exp-track {
+        scroll-behavior: auto;
+      }
+    }
+
+/* ==================================================================
+   pk-router-v48
+   ================================================================== */
+/* C1 — Sólo una de las dos ramas está en pantalla. Se refuerza con
+       !important porque varias reglas antiguas fijan el display de secciones
+       por id, y basta con que una de ellas gane para que la portada siga
+       visible por debajo de una ruta. */
+    #pk-landing[hidden],
+    #pk-route-outlet[hidden] {
+      display: none !important;
+    }
+
+    /* Las vistas de ruta arrancan bajo la cabecera fija. */
+    #pk-route-outlet {
+      display: block;
+      padding-top: clamp(58px, 9vh, 82px);
+      background: #F5F2EC;
+    }
+
+/* ==================================================================
+   pk-quote-merge-v48
+   ================================================================== */
+/*
+      C2 — #selector dejó de ser una sección y pasó a ser un div dentro de
+      #cotiza. Las reglas antiguas siguen dándole padding y fondo propios de
+      sección, así que se anulan aquí; dos ids ganan en especificidad a las
+      declaraciones de un id, incluidas las que llevan !important.
+    */
+    /*
+      El quiz venía con tratamiento "editorial" (tarjetas transparentes con
+      filete superior y texto oscuro) diseñado para el fondo crema de la
+      antigua sección. Sobre la foto de la cascada eso queda ilegible, así que
+      el bloque adopta el mismo panel translúcido que ya usan el formulario y
+      su columna de texto: es el lenguaje que la sección ya tenía para poner
+      contenido encima de la foto.
+    */
+    #cotiza #selector {
+      margin: clamp(30px, 5vw, 52px) 0 0 !important;
+      padding: clamp(20px, 3.2vw, 34px) !important;
+      background: rgba(24,30,27,.43) !important;
+      border: 1px solid rgba(245,242,236,.14) !important;
+      box-shadow: 0 18px 54px rgba(0,0,0,.12);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    /* Dentro del panel el texto ya hereda el claro de #cotiza; lo que hay que
+       corregir son los filetes y bordes, calculados sobre fondo claro. */
+    #cotiza #pk-quiz-grid > div {
+      border-top-color: rgba(245,242,236,.20) !important;
+    }
+    #cotiza #pk-quiz-grid button[data-quiz-option] {
+      color: #F5F2EC !important;
+      border-color: rgba(245,242,236,.28) !important;
+    }
+    #cotiza #pk-quiz-grid button[data-quiz-option]:hover {
+      border-color: rgba(245,242,236,.5) !important;
+    }
+    /* El estado elegido ya trae verde sólido y texto claro: se deja intacto. */
+
+    /* El encabezado del quiz venía pensado para fondo crema. Sobre la foto de
+       la cascada se lee igual que el bloque de cotización, que ya iba en
+       oscuro con un realce claro detrás. */
+    #cotiza [data-t="quiz.kicker"],
+    #cotiza [data-t="quiz.title"],
+    #cotiza [data-t="quiz.intro"] {
+      color: #18211C !important;
+      text-shadow: 0 1px 1px rgba(255,255,255,.18);
+    }
+    #cotiza [data-t="quiz.kicker"] {
+      color: rgba(24,33,28,.78) !important;
+    }
+
+    /* quote.title bajó de h2 a h3 para dejar un solo encabezado por sección;
+       la regla de tipografía del catálogo apuntaba a "#cotiza h2". */
+    #cotiza h3[data-t="quote.title"] {
+      font-family: var(--pk-catalog-serif) !important;
+      font-size: clamp(26px, 4.4vw, 44px);
+      font-weight: 300;
+      line-height: 1.06;
+      margin: 0;
+    }
+
+    /* Separación entre el paso 1 (elegir) y el paso 2 (cotizar). */
+    #cotiza #pk-quote-layout {
+      margin-top: clamp(38px, 6vw, 68px);
+      padding-top: clamp(30px, 5vw, 54px);
+      border-top: 1px solid rgba(245,242,236,.18);
+    }
+
+    @media (max-width: 760px) {
+      #cotiza #selector { margin-top: clamp(22px, 6vw, 34px) !important; }
+      #cotiza #pk-quote-layout {
+        margin-top: clamp(26px, 7vw, 40px);
+        padding-top: clamp(22px, 6vw, 34px);
+      }
+    }
+
+/* ==================================================================
+   pk-cotiza-v50
+   ================================================================== */
+/*
+      C4 — #cotiza sin fotografía: fondo sólido de bosque, tarjetas de vidrio
+      finas y más aire entre secciones. Dos ids ganan a las reglas antiguas.
+    */
+    #pk-landing #cotiza {
+      background: linear-gradient(180deg, #1E2520 0%, #262F28 44%, #1E2520 100%) !important;
+      background-image: linear-gradient(180deg, #1E2520 0%, #262F28 44%, #1E2520 100%) !important;
+      padding: clamp(84px, 13vw, 152px) clamp(22px, 6vw, 96px) !important;
+      color: #F5F2EC !important;
+    }
+    #pk-landing #cotiza #pk-quote-overlay,
+    #pk-landing #cotiza #pk-quote-bg { display: none !important; }
+
+    /* Encabezado: el bloque venía forzado a texto oscuro por la foto. */
+    #pk-landing #cotiza [data-t="quiz.title"],
+    #pk-landing #cotiza [data-t="quote.title"] {
+      color: #F5F2EC !important;
+      text-shadow: none !important;
+    }
+    #pk-landing #cotiza [data-t="quiz.intro"],
+    #pk-landing #cotiza [data-t="quote.intro"] {
+      color: rgba(245,242,236,.66) !important;
+      text-shadow: none !important;
+    }
+    #pk-landing #cotiza [data-t="quiz.kicker"],
+    #pk-landing #cotiza [data-t="quote.kicker"] {
+      color: #A8B39A !important;
+      text-shadow: none !important;
+    }
+
+    /* El quiz deja de ser un panel dentro de un panel: las tarjetas son el panel. */
+    #pk-landing #cotiza #selector {
+      margin: clamp(40px, 6vw, 68px) 0 0 !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid { gap: clamp(16px, 2vw, 24px) !important; margin-top: 0 !important; }
+    #pk-landing #cotiza #pk-quiz-grid > div,
+    #pk-landing #cotiza #pk-quote-form,
+    #pk-landing #cotiza #pk-quote-layout > div:first-child {
+      padding: clamp(26px, 3.2vw, 38px) !important;
+      background: rgba(245,242,236,.045) !important;
+      border: 1px solid rgba(245,242,236,.13) !important;
+      border-radius: 3px !important;
+      box-shadow: 0 1px 0 rgba(245,242,236,.05) inset !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      transition: background .7s cubic-bezier(.22,.61,.36,1), border-color .7s cubic-bezier(.22,.61,.36,1), opacity .9s ease, transform .9s ease !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid > div:hover {
+      background: rgba(245,242,236,.075) !important;
+      border-color: rgba(245,242,236,.24) !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid > div > span:first-child { color: #A8B39A !important; }
+    #pk-landing #cotiza #pk-quiz-grid h3 { color: #F5F2EC !important; }
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option] {
+      color: rgba(245,242,236,.9) !important;
+      border-color: rgba(245,242,236,.24) !important;
+      background: transparent !important;
+      transition: background .45s ease, border-color .45s ease, color .45s ease !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option]:hover {
+      border-color: rgba(168,179,154,.75) !important;
+      background: rgba(168,179,154,.12) !important;
+    }
+
+    /* Paso 2 — cotización. Misma familia de tarjeta, sin filete divisorio. */
+    #pk-landing #cotiza #pk-quote-layout {
+      margin-top: clamp(20px, 3vw, 32px) !important;
+      padding-top: 0 !important;
+      border-top: 0 !important;
+      align-items: stretch !important;
+    }
+    #pk-landing #cotiza #pk-quote-layout > div:first-child {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    #pk-landing #cotiza #pk-quote-form input,
+    #pk-landing #cotiza #pk-quote-form select {
+      border: 1px solid rgba(245,242,236,.16) !important;
+      border-radius: 2px !important;
+      background: rgba(15,20,17,.34) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      transition: border-color .45s ease, background .45s ease !important;
+    }
+    #pk-landing #cotiza #pk-quote-form input:focus,
+    #pk-landing #cotiza #pk-quote-form select:focus {
+      outline: none !important;
+      border-color: rgba(168,179,154,.8) !important;
+      background: rgba(15,20,17,.5) !important;
+    }
+
+    /* Más aire y paso suave entre secciones de la portada. */
+    #pk-landing > section + section,
+    #pk-landing #tours,
+    #pk-landing #tours-mobile { margin-top: clamp(34px, 5.5vw, 78px) !important; }
+    #pk-landing #cotiza h3[data-t="quote.title"] {
+      font-size: clamp(30px, 4vw, 52px) !important;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    #pk-landing > section { scroll-margin-top: 92px; }
+    #pk-landing #cotiza { position: relative !important; }
+    #pk-landing #cotiza::before,
+    #pk-landing #cotiza::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: clamp(40px, 7vw, 96px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #pk-landing #cotiza::before { top: 0; background: linear-gradient(180deg, rgba(34,40,44,.85) 0%, rgba(34,40,44,0) 100%); }
+    #pk-landing #cotiza::after { bottom: 0; background: linear-gradient(0deg, rgba(20,25,22,.7) 0%, rgba(20,25,22,0) 100%); }
+    #pk-landing #cotiza > div:not(#pk-quote-overlay) { position: relative; z-index: 1; }
+
+    @supports (animation-timeline: view()) {
+      @keyframes pk-sec-in { from { opacity: 0; } to { opacity: 1; } }
+      #pk-landing #cotiza,
+      #pk-landing > section:last-of-type {
+        animation: pk-sec-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 42%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      #pk-landing #cotiza { padding: clamp(56px, 12vw, 84px) 22px !important; }
+      #pk-landing #cotiza #selector { margin-top: clamp(26px, 7vw, 40px) !important; }
+      #pk-landing #cotiza #pk-quote-layout { margin-top: 14px !important; }
+      #pk-landing #cotiza #pk-quiz-grid > div,
+      #pk-landing #cotiza #pk-quote-form,
+      #pk-landing #cotiza #pk-quote-layout > div:first-child {
+        padding: 22px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      #pk-landing > section + section { margin-top: clamp(24px, 7vw, 44px) !important; }
+    }
+
+/* ==================================================================
+   pk-cotiza-compact-v51
+   ================================================================== */
+/* C5 — #cotiza más breve y fácil de digerir. */
+    #pk-landing #cotiza {
+      padding: clamp(58px, 8vw, 96px) clamp(22px, 6vw, 96px) !important;
+    }
+    #pk-landing #cotiza [data-t="quiz.title"] {
+      font-size: clamp(28px, 4vw, 46px) !important;
+      max-width: 22ch;
+    }
+    #pk-landing #cotiza [data-t="quiz.intro"] {
+      margin-top: 12px !important;
+      max-width: 46ch !important;
+      font-size: 14px !important;
+      line-height: 1.6 !important;
+    }
+    #pk-landing #cotiza #selector { margin-top: clamp(26px, 4vw, 44px) !important; }
+    #pk-landing #cotiza #pk-quiz-grid > div { padding: clamp(20px, 2.4vw, 28px) !important; }
+    #pk-landing #cotiza #pk-quiz-grid h3 {
+      margin: 0 0 14px !important;
+      font-size: clamp(17px, 1.5vw, 19px) !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid > div > span:first-child { margin-bottom: 8px !important; }
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option] {
+      padding: 8px 12px !important;
+      font-size: 11.5px !important;
+    }
+
+    /* Planifica tu viaje: panel crema sobre el fondo de bosque. */
+    #pk-landing #cotiza #pk-quote-layout > div:first-child {
+      padding: clamp(26px, 3.2vw, 40px) !important;
+      background: #F5F2EC !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      border-radius: 3px !important;
+      justify-content: center !important;
+    }
+    #pk-landing #cotiza h3[data-t="quote.title"] {
+      font-size: clamp(26px, 3.2vw, 40px) !important;
+      color: #1E2520 !important;
+    }
+    #pk-landing #cotiza [data-t="quote.kicker"] { color: #6B7A5E !important; }
+    #pk-landing #cotiza [data-t="quote.intro"] {
+      margin-top: 14px !important;
+      font-size: 14px !important;
+      line-height: 1.6 !important;
+      max-width: 34ch !important;
+      color: rgba(30,37,32,.66) !important;
+    }
+    #pk-landing #cotiza #pk-quote-layout { margin-top: clamp(30px, 4.5vw, 52px) !important; }
+
+    @media (max-width: 760px) {
+      #pk-landing #cotiza { padding: 46px 22px !important; }
+      #pk-landing #cotiza #pk-quote-layout > div:first-child { padding: 24px !important; }
+    }
+
+/* ==================================================================
+   pk-exp-cards-v51
+   ================================================================== */
+/* C6 — Tarjetas de experiencias más bajas y flechas al medio del carrusel. */
+    @media (min-width: 761px) {
+      #tours [data-hs-card] { height: clamp(348px, 44vh, 396px) !important; }
+      #tours [data-desktop-exp-image] { flex: 0 0 clamp(186px, 23vh, 214px) !important; }
+      #tours [data-hs-card] h3 {
+        min-height: 2.16em !important;
+        margin: 10px 0 3px !important;
+        font-size: clamp(18px, 1.5vw, 22px) !important;
+      }
+      #tours [data-desktop-exp-summary] {
+        -webkit-line-clamp: 2 !important;
+        min-height: 2.9em !important;
+        margin: 2px auto 8px !important;
+      }
+      /* El margin:auto empujaba la ficha técnica al borde inferior y abría un
+         hueco visible bajo descripciones cortas. */
+      #tours [data-desktop-exp-tech] { margin: 0 auto !important; }
+      #tours [data-desktop-exp-more] { margin: 6px auto 0 !important; }
+      #tours [data-hs-sticky] { padding: clamp(72px, 11vh, 116px) 0 clamp(76px, 10vh, 108px) !important; }
+      #tours [data-hs-track] { padding-bottom: 0 !important; align-items: center !important; }
+
+      #tours .pk-exp-arrows {
+        position: absolute !important;
+        top: 50% !important;
+        bottom: auto !important;
+        left: clamp(8px, 1.6vw, 22px) !important;
+        right: clamp(8px, 1.6vw, 22px) !important;
+        transform: translateY(-50%) !important;
+        justify-content: space-between !important;
+        pointer-events: none !important;
+        z-index: 6 !important;
+      }
+      #tours .pk-exp-arrows > * { pointer-events: auto !important; }
+    }
+
+/* ==================================================================
+   pk-cotiza-cream-v52
+   ================================================================== */
+/* C7 — #cotiza entero en crema: quiz y formulario sobre fondo claro. */
+    #pk-landing #cotiza {
+      background: #F5F2EC !important;
+      background-image: none !important;
+      color: #1E2520 !important;
+    }
+    #pk-landing #cotiza::before { background: linear-gradient(180deg, rgba(34,40,44,.16) 0%, rgba(34,40,44,0) 100%) !important; }
+    #pk-landing #cotiza::after { background: linear-gradient(0deg, rgba(30,37,32,.12) 0%, rgba(30,37,32,0) 100%) !important; }
+
+    #pk-landing #cotiza [data-t="quiz.title"],
+    #pk-landing #cotiza h3[data-t="quote.title"],
+    #pk-landing #cotiza #pk-quiz-grid h3 { color: #1E2520 !important; }
+    #pk-landing #cotiza [data-t="quiz.kicker"],
+    #pk-landing #cotiza [data-t="quote.kicker"],
+    #pk-landing #cotiza #pk-quiz-grid > div > span:first-child { color: #6B7A5E !important; }
+    #pk-landing #cotiza [data-t="quiz.intro"],
+    #pk-landing #cotiza [data-t="quote.intro"] { color: rgba(30,37,32,.66) !important; }
+
+    /* Tarjetas del quiz y formulario: blanco cálido con filete verde tenue. */
+    #pk-landing #cotiza #pk-quiz-grid > div,
+    #pk-landing #cotiza #pk-quote-form {
+      background: #FBF9F5 !important;
+      border: 1px solid rgba(30,37,32,.11) !important;
+      box-shadow: none !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid > div:hover {
+      background: #FFFDF9 !important;
+      border-color: rgba(107,122,94,.42) !important;
+    }
+    #pk-landing #cotiza #pk-quote-layout > div:first-child {
+      background: transparent !important;
+      padding: clamp(4px,1vw,12px) 0 0 !important;
+      justify-content: flex-start !important;
+    }
+
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option] {
+      color: rgba(30,37,32,.82) !important;
+      border-color: rgba(30,37,32,.2) !important;
+      background: transparent !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option]:hover {
+      border-color: rgba(107,122,94,.75) !important;
+      background: rgba(107,122,94,.1) !important;
+      color: #1E2520 !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option].is-selected,
+    #pk-landing #cotiza #pk-quiz-grid button[data-quiz-option].is-selected:hover {
+      background: #4F5D45 !important;
+      border-color: #4F5D45 !important;
+      color: #F5F2EC !important;
+    }
+    #pk-landing #cotiza [data-t="quote.intro"] { display: none !important; }
+
+    #pk-landing #cotiza #pk-quote-form { color: #1E2520 !important; }
+    #pk-landing #cotiza #pk-quote-form label,
+    #pk-landing #cotiza #pk-quote-form span { color: rgba(30,37,32,.6) !important; }
+    #pk-landing #cotiza #pk-quote-form p { color: rgba(30,37,32,.55) !important; }
+    #pk-landing #cotiza #pk-quote-form option { color: #1E2520 !important; background: #FFFFFF !important; }
+    #pk-landing #cotiza #pk-quote-form input,
+    #pk-landing #cotiza #pk-quote-form select {
+      background: #FFFFFF !important;
+      border: 1px solid rgba(30,37,32,.16) !important;
+      color: #1E2520 !important;
+    }
+    #pk-landing #cotiza #pk-quote-form input::placeholder { color: rgba(30,37,32,.36) !important; }
+    #pk-landing #cotiza #pk-quote-form input:focus,
+    #pk-landing #cotiza #pk-quote-form select:focus {
+      border-color: #6B7A5E !important;
+      background: #FFFFFF !important;
+    }
+    #pk-landing #cotiza #pk-quote-form button[type="submit"] {
+      background: #1E2520 !important;
+      color: #F5F2EC !important;
+      border-color: #1E2520 !important;
+    }
+    #pk-landing #cotiza #pk-quote-form button[type="submit"]:hover { background: #6B7A5E !important; border-color: #6B7A5E !important; }
+
+/* ==================================================================
+   pk-cotiza-split-v53
+   ================================================================== */
+/* C8 — En escritorio: cuestionario a la izquierda, "Cuéntanos lo esencial"
+       a la derecha, en una sola fila. El contenedor de #selector pasa a grid. */
+    @media (min-width: 981px) {
+      #pk-landing #cotiza div:has(> #selector) {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        column-gap: clamp(32px, 4.5vw, 72px) !important;
+        row-gap: clamp(30px, 4vw, 52px) !important;
+        align-items: start !important;
+      }
+      #pk-landing #cotiza div:has(> #selector) > div[data-reveal] { grid-column: 1 / -1 !important; }
+      #pk-landing #cotiza #selector { grid-column: 1 !important; margin: 0 !important; }
+      #pk-landing #cotiza #pk-quiz-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: clamp(14px, 1.6vw, 20px) !important;
+      }
+      #pk-landing #cotiza #pk-quote-layout {
+        grid-column: 2 !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: clamp(18px, 2.2vw, 28px) !important;
+        margin: 0 !important;
+        max-width: none !important;
+        position: sticky !important;
+        top: clamp(90px, 12vh, 118px) !important;
+      }
+      #pk-landing #cotiza h3[data-t="quote.title"] { font-size: clamp(26px, 2.8vw, 40px) !important; }
+    }
+
+/* ==================================================================
+   pk-exp-three-v54
+   ================================================================== */
+/* C9 — Exactamente 3 tarjetas visibles: el ancho se deriva del ancho del
+       track (100% = viewport menos su padding lateral) menos los dos gaps. */
+    @media (min-width: 981px) {
+      #tours [data-hs-track] { --pk-hs-gap: clamp(18px, 2.2vw, 30px); }
+      #tours [data-hs-card] {
+        width: calc((100% - 2 * var(--pk-hs-gap)) / 3) !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        flex: 0 0 calc((100% - 2 * var(--pk-hs-gap)) / 3) !important;
+      }
+    }
+    @media (min-width: 761px) and (max-width: 980px) {
+      #tours [data-hs-track] { --pk-hs-gap: clamp(18px, 2.2vw, 30px); }
+      #tours [data-hs-card] {
+        width: calc((100% - var(--pk-hs-gap)) / 2) !important;
+        flex: 0 0 calc((100% - var(--pk-hs-gap)) / 2) !important;
+      }
+    }
+
+/* ==================================================================
+   pk-cotiza-align-v54
+   ================================================================== */
+/* C10 — Los dos títulos de #cotiza en la misma fila y las dos columnas
+       alineadas fila a fila (subgrid). */
+    @media (min-width: 981px) {
+      #pk-landing #cotiza div:has(> #selector) {
+        grid-template-rows: auto auto !important;
+      }
+      #pk-landing #cotiza div:has(> #selector) > div[data-reveal] {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        max-width: none !important;
+      }
+      #pk-landing #cotiza #selector { grid-column: 1 !important; grid-row: 2 !important; }
+      #pk-landing #cotiza #pk-quote-layout {
+        grid-column: 2 !important;
+        grid-row: 1 / span 2 !important;
+        display: grid !important;
+        grid-template-rows: subgrid !important;
+        position: static !important;
+        top: auto !important;
+        align-self: stretch !important;
+        align-content: stretch !important;
+      }
+      #pk-landing #cotiza #pk-quote-layout > div[data-reveal] {
+        grid-row: 1 !important;
+        justify-content: flex-start !important;
+        align-self: start !important;
+      }
+      #pk-landing #cotiza #pk-quote-form {
+        grid-row: 2 !important;
+        align-content: start !important;
+        min-width: 0 !important;
+      }
+      #pk-landing #cotiza #pk-quote-form label,
+      #pk-landing #cotiza #pk-quote-form input,
+      #pk-landing #cotiza #pk-quote-form select { min-width: 0 !important; }
+      /* Mismo tamaño de título a ambos lados para que las líneas coincidan. */
+      #pk-landing #cotiza [data-t="quiz.title"],
+      #pk-landing #cotiza h3[data-t="quote.title"] {
+        font-size: clamp(26px, 3vw, 42px) !important;
+        line-height: 1.04 !important;
+        max-width: 20ch !important;
+      }
+      #pk-landing #cotiza [data-t="quiz.intro"] { max-width: 40ch !important; }
+    }
+
+/* ==================================================================
+   pk-fixes-v55
+   ================================================================== */
+/* C11 — 3 tarjetas visibles conservando el ancho original.
+       El ancho de tarjeta vuelve a clamp(285px,25vw,340px); lo que se limita
+       es el riel: max-width = 3 tarjetas + 2 gaps + los dos paddings. Así no
+       asoma media tarjeta y las proporciones no cambian. */
+    @media (min-width: 761px) {
+      #tours {
+        --pk-card: clamp(285px, 25vw, 340px);
+        --pk-gap: clamp(18px, 2.2vw, 30px);
+        --pk-pad: clamp(22px, 6vw, 96px);
+        --pk-rail: calc(3 * var(--pk-card) + 2 * var(--pk-gap) + 2 * var(--pk-pad));
+      }
+      #tours [data-hs-card] {
+        width: var(--pk-card) !important;
+        flex: 0 0 var(--pk-card) !important;
+        max-width: none !important;
+      }
+      #tours [data-hs-track] {
+        max-width: var(--pk-rail) !important;
+        margin-inline: auto !important;
+      }
+      /* El kicker se alinea con el borde del riel, no con el del viewport. */
+      #tours [data-exp-kicker] {
+        width: 100% !important;
+        max-width: var(--pk-rail) !important;
+        margin: 0 auto clamp(20px, 3vh, 34px) !important;
+        padding-inline: var(--pk-pad) !important;
+      }
+      /* Flechas justo por dentro de los extremos del riel. */
+      #tours .pk-exp-arrows {
+        left: max(10px, calc(50% - var(--pk-rail) / 2 + 10px)) !important;
+        right: max(10px, calc(50% - var(--pk-rail) / 2 + 10px)) !important;
+      }
+    }
+    @media (min-width: 761px) and (max-width: 980px) {
+      #tours { --pk-rail: calc(2 * var(--pk-card) + var(--pk-gap) + 2 * var(--pk-pad)); }
+    }
+
+    /* C12 — El CTA del formulario: el span heredaba el gris oscuro de la regla
+       de labels y quedaba invisible sobre el botón. */
+    #pk-landing #cotiza #pk-quote-form button[type="submit"],
+    #pk-landing #cotiza #pk-quote-form button[type="submit"] span {
+      color: #F5F2EC !important;
+    }
+
+    /* C13 — Fuera la bajada del quiz y menos aire entre títulos y contenido. */
+    #pk-landing #cotiza [data-t="quiz.intro"] { display: none !important; }
+    @media (min-width: 981px) {
+      #pk-landing #cotiza div:has(> #selector) {
+        row-gap: clamp(14px, 1.8vw, 24px) !important;
+      }
+    }
+    @media (max-width: 980px) {
+      #pk-landing #cotiza #selector { margin-top: clamp(18px, 3.5vw, 28px) !important; }
+      #pk-landing #cotiza #pk-quote-layout { margin-top: clamp(24px, 5vw, 38px) !important; }
+    }
+
+/* ==================================================================
+   pk-fixes-v56
+   ================================================================== */
+/* C14 — Nada de tarjeta asomando en los costados.
+       El sliver lo producía el padding interior del track: al ser padding del
+       propio scroller, las tarjetas se desplazan POR ENCIMA de esa franja y
+       quedan a la vista. Ahora el riel mide exactamente 3 tarjetas + 2 gaps,
+       sin padding interno, así que el recorte cae justo en el borde. */
+    @media (min-width: 761px) {
+      #tours { --pk-rail: calc(3 * var(--pk-card) + 2 * var(--pk-gap)); }
+      #tours [data-hs-track] {
+        padding-inline: 0 !important;
+        scroll-padding-inline-start: 0 !important;
+        max-width: var(--pk-rail) !important;
+      }
+      #tours [data-exp-kicker] {
+        max-width: var(--pk-rail) !important;
+        padding-inline: 0 !important;
+      }
+      /* Flechas por fuera del riel; si no cabe, se pegan al margen. */
+      #tours .pk-exp-arrows {
+        left: max(10px, calc(50% - var(--pk-rail) / 2 - 58px)) !important;
+        right: max(10px, calc(50% - var(--pk-rail) / 2 - 58px)) !important;
+      }
+    }
+    @media (min-width: 761px) and (max-width: 980px) {
+      #tours { --pk-rail: calc(2 * var(--pk-card) + var(--pk-gap)); }
+    }
+
+    /* C15 — #cotiza minimal: crema corporativo plano, sin las bandas en
+       degradado que leían como sombra, y sin sombras en las tarjetas. */
+    #pk-landing #cotiza::before,
+    #pk-landing #cotiza::after { display: none !important; content: none !important; }
+    #pk-landing #cotiza,
+    #pk-landing #cotiza #selector,
+    #pk-landing #cotiza #pk-quiz-grid > div,
+    #pk-landing #cotiza #pk-quote-form,
+    #pk-landing #cotiza #pk-quote-layout > div {
+      box-shadow: none !important;
+      filter: none !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid > div,
+    #pk-landing #cotiza #pk-quote-form {
+      background: transparent !important;
+      border: 1px solid rgba(30,37,32,.12) !important;
+    }
+    #pk-landing #cotiza #pk-quiz-grid > div:hover {
+      background: rgba(107,122,94,.05) !important;
+      border-color: rgba(107,122,94,.34) !important;
+    }
+
+/* ==================================================================
+   pk-fixes-v57
+   ================================================================== */
+/* Las flechas no deben tocar las tarjetas en el tramo 981–1010px. */
+    @media (min-width: 981px) and (max-width: 1010px) {
+      #tours .pk-exp-arrows {
+        left: max(4px, calc(50% - var(--pk-rail) / 2 - 48px)) !important;
+        right: max(4px, calc(50% - var(--pk-rail) / 2 - 48px)) !important;
+      }
+      #tours .pk-exp-arrows > * { transform: scale(.86); }
+    }
+
+/* ==================================================================
+   pk-fixes-v58
+   ================================================================== */
+/* C16 — Diferenciadores en móvil: el carrusel deja de nacer pegado al
+       borde. El scroller se queda con el margen (padding + scroll-padding)
+       en vez de heredarlo del contenedor con márgenes negativos. */
+    @media (max-width: 760px) {
+      #diferenciadores { padding: clamp(34px, 8vw, 54px) 0 clamp(44px, 10vw, 66px) !important; }
+      #diferenciadores > div {
+        padding: 0 !important;
+        border-top: 0 !important;
+      }
+      #diferenciadores #pk-diff-grid {
+        margin: 0 !important;
+        padding: 0 22px 10px !important;
+        gap: 18px !important;
+        scroll-padding-inline: 22px !important;
+      }
+      #diferenciadores #pk-diff-grid > div {
+        flex: 0 0 min(76vw, 300px) !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+      }
+      #diferenciadores > div > p { margin: clamp(30px, 7vw, 44px) 22px 0 !important; }
+    }
+
+    /* C17 — Hover de las experiencias: sólo el aro, sin la mano del sistema. */
+    @media (hover: hover) and (pointer: fine) {
+      #tours [data-hs-card],
+      #tours [data-hs-card] * { cursor: none !important; }
+      [data-cursor] {
+        width: 62px !important;
+        height: 62px !important;
+        border: 1px solid rgba(245,242,236,.9) !important;
+        background: rgba(245,242,236,.05) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transition: opacity .55s cubic-bezier(.22,.61,.36,1) !important;
+      }
+      [data-cursor] svg { width: 15px !important; height: 15px !important; }
+    }
+
+    /* C18 — Entrada suave y encadenada de las secciones de la portada. */
+    #pk-landing [data-auto-reveal] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 1.05s cubic-bezier(.22,.61,.36,1), transform 1.05s cubic-bezier(.22,.61,.36,1);
+      will-change: opacity, transform;
+    }
+    #pk-landing [data-auto-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+    }
+    #pk-landing #diferenciadores [data-reveal] { transition-delay: .12s; }
+    #pk-landing #diferenciadores [data-reveal]:nth-child(2) { transition-delay: .24s; }
+    #pk-landing #diferenciadores [data-reveal]:nth-child(3) { transition-delay: .36s; }
+    @media (prefers-reduced-motion: reduce) {
+      #pk-landing [data-auto-reveal] { opacity: 1; transform: none; transition: none; }
+    }
+
+/* ==================================================================
+   pk-cursor-dot-v59
+   ================================================================== */
+/* C19 — El aro fuera: un punto pequeño, es lo mínimo que sigue leyéndose
+       como "esto se puede abrir". */
+    @media (hover: hover) and (pointer: fine) {
+      [data-cursor] {
+        width: 11px !important;
+        height: 11px !important;
+        border: 0 !important;
+        background: #F5F2EC !important;
+        box-shadow: 0 0 0 1px rgba(30,37,32,.18), 0 2px 10px rgba(20,25,22,.28) !important;
+        transition: opacity .4s cubic-bezier(.22,.61,.36,1) !important;
+      }
+      [data-cursor] svg { display: none !important; }
+    }
+
+/* ==================================================================
+   pk-cursor-none-v60
+   ================================================================== */
+/* C20 — Fuera el cursor propio: sólo el puntero del sistema. */
+    [data-cursor] { display: none !important; }
+    #tours [data-hs-card],
+    #tours [data-hs-card] * { cursor: pointer !important; }
+
+/* ==================================================================
+   pk-fixes-v61
+   ================================================================== */
+/* C21 — Menos aire entre Planifica tu viaje y los diferenciadores: eran
+       cuatro separaciones sumadas (padding de #cotiza + margen entre secciones
+       + padding de la sección + padding del contenedor con el filete). */
+    #pk-landing #cotiza { padding-bottom: clamp(34px, 4.5vw, 58px) !important; }
+    #pk-landing #diferenciadores {
+      margin-top: 0 !important;
+      padding-top: clamp(26px, 3.4vw, 44px) !important;
+    }
+    #pk-landing #diferenciadores > div { padding-top: clamp(28px, 3.6vw, 46px) !important; }
+    @media (max-width: 760px) {
+      #pk-landing #cotiza { padding-bottom: 30px !important; }
+      #pk-landing #diferenciadores { padding-top: 26px !important; }
+    }
+
+    /* C22 — La cifra +5: con line-height 1.02 la parte baja del glifo caía
+       fuera de la caja recortada por el mask (de ahí el corte). Además, un
+       inline-block con overflow:hidden usa su borde inferior como línea base,
+       así que el rótulo nunca podía alinearse con la cifra: se alinean por
+       abajo y se compensa la bajada exacta del glifo. */
+    #resenas [data-t="social.figure"] { line-height: 1.16 !important; }
+    #resenas span:has(> [data-t="social.figure"]) { padding: 0 !important; }
+    #resenas div:has(> span > [data-t="social.figure"]) { align-items: flex-end !important; }
+    #resenas [data-t="social.figureLabel"] {
+      margin-bottom: calc(0.241 * clamp(4rem, 22vw, 9rem) - 6px) !important;
+    }

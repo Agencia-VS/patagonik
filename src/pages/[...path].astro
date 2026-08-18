@@ -3,12 +3,13 @@ import { getCollection } from 'astro:content';
 import type { Locale } from '@/content.config';
 import { LOCALES, DEFAULT_LOCALE, homePath, routePath, experiencePath } from '@/i18n/routes';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Header from '@/components/Header.astro';
-import Footer from '@/components/Footer.astro';
-import Home from '@/components/pages/Home.astro';
-import About from '@/components/pages/About.astro';
-import Faq from '@/components/pages/Faq.astro';
+import Header from '@/components/design/SiteHeader.astro';
+import Footer from '@/components/design/SiteFooter.astro';
+import Home from '@/components/design/Landing.astro';
+import About from '@/components/design/AboutSections.astro';
+import Faq from '@/components/design/FaqSection.astro';
 import ExperienceDetail from '@/components/pages/ExperienceDetail.astro';
+import ExperiencesIndex from '@/components/pages/ExperiencesIndex.astro';
 import { useTranslations } from '@/i18n';
 
 /**
@@ -20,12 +21,14 @@ import { useTranslations } from '@/i18n';
  */
 export async function getStaticPaths() {
   const experiences = await getCollection('experiences');
-  type Kind = 'home' | 'about' | 'faq' | 'experience';
+  type Kind = 'home' | 'about' | 'faq' | 'experiences' | 'experience';
 
   const pages: { kind: Kind; slug?: string; paths: Record<Locale, string> }[] = [
     { kind: 'home', paths: byLocale((l) => homePath(l)) },
     { kind: 'about', paths: byLocale((l) => routePath('about', l)) },
     { kind: 'faq', paths: byLocale((l) => routePath('faq', l)) },
+    // Catálogo completo: es a donde apunta "Experiencias" del menú.
+    { kind: 'experiences', paths: byLocale((l) => routePath('experiences', l)) },
     ...experiences.map((entry) => ({
       kind: 'experience' as Kind,
       slug: entry.data.slug,
@@ -47,7 +50,7 @@ export async function getStaticPaths() {
 }
 
 const { kind, locale, slug, alternates } = Astro.props as {
-  kind: 'home' | 'about' | 'faq' | 'experience';
+  kind: 'home' | 'about' | 'faq' | 'experiences' | 'experience';
   locale: Locale;
   slug?: string;
   alternates: Record<Locale, string>;
@@ -65,6 +68,7 @@ const META: Record<string, { title: string; description: string }> = {
   },
   about: { title: t('meta.about.title'), description: t('meta.about.description') },
   faq: { title: t('meta.faq.title'), description: t('meta.faq.description') },
+  experiences: { title: t('meta.experiences.title'), description: t('meta.experiences.description') },
   experience: entry
     ? {
         title: `${entry.data.content[locale].title} · PatagoniK`,
@@ -76,11 +80,12 @@ const META: Record<string, { title: string; description: string }> = {
 const meta = META[kind]!;
 ---
 
-<BaseLayout locale={locale} title={meta.title} description={meta.description} alternates={alternates}>
-  <Header slot="header" locale={locale} alternates={alternates} />
-  {kind === 'home' && <Home locale={locale} experiences={experiences} />}
+<BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates}>
+  <Header slot="header" locale={locale} />
+  {kind === 'home' && <Home locale={locale} />}
   {kind === 'about' && <About locale={locale} />}
   {kind === 'faq' && <Faq locale={locale} />}
+  {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} />}
   {kind === 'experience' && entry && <ExperienceDetail locale={locale} entry={entry} />}
   <Footer slot="footer" locale={locale} />
 </BaseLayout>

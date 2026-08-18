@@ -7,7 +7,8 @@
     "preview": "astro preview",
     "check": "astro check && tsc --noEmit -p tsconfig.json",
     "content:export": "python3 design/tools/export_content.py",
-    "design:build": "python3 design/tools/build.py --src design/src --out design/dist/PatagoniK_Landing.html"
+    "design:build": "python3 design/tools/build.py --src design/src --out design/dist/PatagoniK_Landing.html",
+    "port": "node scripts/port-design.mjs && node scripts/port-markup.mjs && node scripts/port-behaviour.mjs"
   },
   "repository": {
     "type": "git",

@@ -37,9 +37,15 @@ Español en la raíz, inglés y portugués con prefijo, y **el segmento traducid
 | | es | en | pt |
 |---|---|---|---|
 | inicio | `/` | `/en/` | `/pt/` |
+| experiencias | `/experiencias` | `/en/experiences` | `/pt/experiencias` |
 | quiénes somos | `/quienes-somos` | `/en/about-us` | `/pt/quem-somos` |
 | preguntas | `/preguntas-frecuentes` | `/en/faq` | `/pt/perguntas-frequentes` |
 | experiencia | `/experiencias/:slug` | `/en/experiences/:slug` | `/pt/experiencias/:slug` |
+
+El menú sale de una tabla en `scripts/port-markup.mjs` (`rewriteMenu`), en
+orden jerárquico: navegar → conocer → contactar, y **Cotiza tu viaje al
+final** como CTA. Los anclas (`#cotiza`, `#contacto`) apuntan a la portada
+con ruta absoluta, para que también funcionen desde otra página.
 
 Los segmentos salen de `src/i18n/routes.ts`; cambiarlos ahí cambia las URLs y
 el `hreflang` a la vez, que es lo que evita que se desincronicen.
@@ -65,10 +71,28 @@ página indexable y el selector de idioma es navegación real.
 - **Fotos.** `src/components/ExperienceCard.astro` tiene el hueco marcado con
   `data-image`; cuando lleguen, entra `<Image>` de `astro:assets` y genera
   `srcset` y formatos modernos.
-- **Puesta a punto visual.** Las páginas montan contenido y estructura reales,
-  pero las ~30 capas `<style id="pk-*-vNN">` del bundle no se han portado: son
-  parches acumulados peleándose con `!important`. Se reconstruyen por
-  componente, no se copian.
-- **`site` en `astro.config.mjs`** apunta a `https://patagonik.cl` como
-  marcador — de ahí salen canonical y hreflang.
-- **GA4**: en el bundle `GA4_ID` estaba vacío.
+- **GA4 y captura de leads** — a la espera de decisión del cliente. Hoy el
+  formulario abre WhatsApp y no guarda nada.
+
+## El diseño
+
+Está portado desde `design/` con tres scripts, reproducibles con `npm run port`:
+
+| | |
+|---|---|
+| `port-design.mjs` | tipografías y fotos a `public/`, los 51 bloques `<style>` a `src/styles/design.css` **en su orden** |
+| `port-markup.mjs` | el marcado de cada sección a `src/components/design/*.astro` |
+| `port-behaviour.mjs` | el script del diseño, sin el runtime de Claude Design |
+
+**Re-ejecutar `npm run port` sobrescribe lo generado.** Si el diseño cambia en
+Claude Design: exportar el bundle, `python3 design/tools/unpack.py <bundle>
+--out design/src`, y volver a portar.
+
+Detalles que conviene no re-descubrir:
+
+- Los `<image-slot>` se conservan como elemento: 17 reglas del CSS los
+  seleccionan por nombre e id.
+- `setupDesktopExperiences` no se puede quitar del script: reconstruye cada
+  tarjeta con los atributos `data-desktop-exp-*` de los que depende el CSS.
+- El diseño usa `<sc-raw-select>` y `sc-camel-view-box`, que resolvía el
+  runtime; el port los normaliza.

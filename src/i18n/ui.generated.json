@@ -84,7 +84,7 @@
     "quote.submit": "Continuar por WhatsApp",
     "quote.title": "Cuéntanos lo esencial.",
     "quote.unsure": "No sé / necesito recomendación",
-    "social.figure": "[data-t=\"social.figure\"]) { padding: 0 !important; }\n    #resenas div:has(> span > [data-t=\"social.figure\"]) { align-items: flex-end !important; }\n    #resenas [data-t=\"social.figureLabel\"] {\n      margin-bottom: calc(0.241 * clamp(4rem, 22vw, 9rem) - 6px) !important;\n    }",
+    "social.figure": "+5",
     "social.figureLabel": "años guiando el parque"
   },
   "en": {
