@@ -1,0 +1,60 @@
+---
+import type { Locale } from '@/content.config';
+import { useTranslations } from '@/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<footer class="pk-footer">
+  <div class="pk-shell pk-footer__grid">
+    <div>
+      <p class="pk-footer__brand">PatagoniK</p>
+      <p>{t('footer.tagline')}</p>
+    </div>
+    <div>
+      <h2>{t('footer.contact')}</h2>
+      <p>WhatsApp · +56 9 3171 2780</p>
+      <p>WhatsApp · +56 9 7435 7864</p>
+      <p>patagoniknatales@gmail.com</p>
+    </div>
+    <div>
+      <h2>{t('footer.social')}</h2>
+      <p><a href="https://instagram.com/Patagonik.natales" rel="noopener" target="_blank">@Patagonik.natales</a></p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .pk-footer {
+    background: var(--pk-dark);
+    color: rgba(245, 242, 236, 0.72);
+    padding-block: clamp(48px, 9vw, 84px);
+    margin-top: clamp(56px, 10vw, 110px);
+  }
+  .pk-footer__grid {
+    display: grid;
+    gap: clamp(24px, 5vw, 48px);
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+  .pk-footer__brand {
+    font-family: var(--pk-serif);
+    font-size: 1.4rem;
+    letter-spacing: 0.17em;
+    color: var(--pk-cream);
+    margin: 0 0 0.4rem;
+  }
+  .pk-footer h2 {
+    font-family: var(--pk-sans);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    color: rgba(245, 242, 236, 0.55);
+  }
+  .pk-footer p {
+    margin: 0 0 0.35rem;
+    font-size: 0.9rem;
+  }
+</style>

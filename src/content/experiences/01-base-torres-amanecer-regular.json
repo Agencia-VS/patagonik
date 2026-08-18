@@ -1,0 +1,151 @@
+{
+  "order": 1,
+  "slug": "base-torres-amanecer-regular",
+  "image": "exp-01",
+  "content": {
+    "es": {
+      "cardTitle": "Base Torres amanecer / regular",
+      "cardSummary": "Travesía por el valle del río Ascencio, bosque nativo y morrena glaciar hasta la laguna frente a las tres torres. Disponible en modalidad amanecer o regular, según temporada, condiciones y tipo de experiencia que quieras vivir.",
+      "cardDetail": "Día completo · 10 h",
+      "title": "Mirador Base Torres · amanecer / regular",
+      "lead": "La ruta más emblemática de la Patagonia, en versión amanecer o regular.",
+      "body": "Una travesía por el valle del río Ascencio, bosque nativo y terreno de montaña hasta alcanzar la laguna frente a las tres torres de granito. El tramo final asciende por morrena glaciar y concentra la mayor exigencia de la jornada. Esta experiencia puede coordinarse en modalidad amanecer o regular, según la época del año, las condiciones del sendero y la operación del día.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales; opción amanecer o regular según temporada, logística y condiciones."
+        ],
+        [
+          "Duración",
+          "8 a 10 h"
+        ],
+        [
+          "Distancia",
+          "22 km"
+        ],
+        [
+          "Desnivel",
+          "+1.200 m aprox."
+        ],
+        [
+          "Altitud máxima",
+          "890 m s. n. m."
+        ],
+        [
+          "Nivel",
+          "Medio–alto"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guía certificado",
+        "Bastones de trekking",
+        "Microcrampones cuando sean necesarios"
+      ],
+      "excludes": [
+        "Entrada al Parque Nacional",
+        "Alimentación",
+        "Seguro personal de viaje",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "Puedes vivirla en modo amanecer o regular, manteniendo la esencia del trekking más emblemático del parque."
+    },
+    "en": {
+      "cardTitle": "Base Torres amanecer / regular",
+      "cardSummary": "Travesía por el valle del río Ascencio, bosque nativo y morrena glaciar hasta la laguna frente a las tres torres. Disponible en modalidad amanecer o regular, según temporada, condiciones y tipo de experiencia que quieras vivir.",
+      "cardDetail": "Full day · 10 h",
+      "title": "Base Torres Viewpoint · sunrise / regular",
+      "lead": "Patagonia's most iconic trail, in a sunrise or regular version.",
+      "body": "A traverse through the Ascencio river valley, native forest and mountain terrain up to the lagoon facing the three granite towers. The final stretch climbs a glacial moraine and holds the hardest effort of the day. This experience can be arranged in sunrise or regular mode, depending on the season, trail conditions and the day's operation.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales; sunrise or regular option depending on season, logistics and conditions."
+        ],
+        [
+          "Duration",
+          "8 to 10 h"
+        ],
+        [
+          "Distance",
+          "22 km"
+        ],
+        [
+          "Elevation gain",
+          "+1,200 m approx."
+        ],
+        [
+          "Max. altitude",
+          "890 m a.s.l."
+        ],
+        [
+          "Level",
+          "Medium–high"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Certified guide",
+        "Trekking poles",
+        "Microspikes when required"
+      ],
+      "excludes": [
+        "National Park entrance fee",
+        "Meals",
+        "Personal travel insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "You can experience it at sunrise or in regular mode, keeping the essence of the park's most iconic trek."
+    },
+    "pt": {
+      "cardTitle": "Base Torres",
+      "cardSummary": "Travesía por el valle del río Ascencio, bosque nativo y morrena glaciar hasta la laguna frente a las tres torres. Disponible en modalidad amanecer o regular, según temporada, condiciones y tipo de experiencia que quieras vivir.",
+      "cardDetail": "Dia inteiro · 10 h",
+      "title": "Mirante Base Torres · amanhecer / regular",
+      "lead": "A rota mais emblemática da Patagônia, na versão amanhecer ou regular.",
+      "body": "Uma travessia pelo vale do rio Ascencio, bosque nativo e terreno de montanha até alcançar a lagoa em frente às três torres de granito. O trecho final sobe por morena glacial e concentra a maior exigência do dia. Esta experiência pode ser combinada na modalidade amanhecer ou regular, conforme a época do ano, as condições da trilha e a operação do dia.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales; opção amanhecer ou regular conforme temporada, logística e condições."
+        ],
+        [
+          "Duração",
+          "8 a 10 h"
+        ],
+        [
+          "Distância",
+          "22 km"
+        ],
+        [
+          "Desnível",
+          "+1.200 m aprox."
+        ],
+        [
+          "Altitude máxima",
+          "890 m s. n. m."
+        ],
+        [
+          "Nível",
+          "Médio–alto"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guia certificado",
+        "Bastões de trekking",
+        "Micro grampons quando necessário"
+      ],
+      "excludes": [
+        "Entrada do Parque Nacional",
+        "Alimentação",
+        "Seguro pessoal de viagem",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Você pode vivê-la no modo amanhecer ou regular, mantendo a essência do trekking mais emblemático do parque."
+    }
+  }
+}

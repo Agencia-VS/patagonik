@@ -1,0 +1,130 @@
+{
+  "order": 5,
+  "slug": "avistamiento-de-fauna",
+  "image": "exp-05",
+  "content": {
+    "es": {
+      "cardTitle": "Excursiones de avistamiento de fauna",
+      "cardSummary": "Salidas de observación responsable al amanecer, priorizando silencio, distancia y respeto por la fauna silvestre.",
+      "cardDetail": "Fauna silvestre de la Patagonia",
+      "title": "Excursiones de avistamiento de fauna",
+      "lead": "Observación responsable, silencio y tiempo para esperar.",
+      "body": "Salidas tempranas hacia sectores con potencial para observar fauna silvestre, especialmente Laguna Azul, Laguna Amarga y Lago Sarmiento. La experiencia prioriza la distancia adecuada, el respeto por los animales, la interpretación del paisaje y la fotografía.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "05:30 aprox. desde alojamiento en Puerto Natales para priorizar las primeras horas de actividad de fauna."
+        ],
+        [
+          "Horario",
+          "Preferentemente amanecer"
+        ],
+        [
+          "Duración",
+          "Variable según programa"
+        ],
+        [
+          "Nivel",
+          "Bajo a moderado"
+        ],
+        [
+          "Avistamientos",
+          "Nunca garantizados"
+        ]
+      ],
+      "includes": [
+        "Planificación de sectores",
+        "Observación responsable",
+        "Paradas estratégicas para fotografía e interpretación"
+      ],
+      "excludes": [
+        "Garantía de avistamiento de puma u otra especie",
+        "Permisos especiales no incluidos"
+      ],
+      "modality": "Privada o a medida, según objetivo del grupo.",
+      "note": "La naturaleza marca el ritmo; nosotros cuidamos la forma de observarla."
+    },
+    "en": {
+      "cardTitle": "Wildlife watching excursions",
+      "cardSummary": "Salidas de observación responsable al amanecer, priorizando silencio, distancia y respeto por la fauna silvestre.",
+      "cardDetail": "Patagonian wildlife",
+      "title": "Wildlife watching excursions",
+      "lead": "Responsible observation, silence and time to wait.",
+      "body": "Early departures towards areas with potential for watching wildlife, especially Laguna Azul, Laguna Amarga and Lake Sarmiento. The experience puts the emphasis on keeping a proper distance, respect for the animals, reading the landscape and photography.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "05:30 approx. from your accommodation in Puerto Natales to make the most of the first hours of wildlife activity."
+        ],
+        [
+          "Schedule",
+          "Preferably at sunrise"
+        ],
+        [
+          "Duration",
+          "Varies with the programme"
+        ],
+        [
+          "Level",
+          "Low to moderate"
+        ],
+        [
+          "Sightings",
+          "Never guaranteed"
+        ]
+      ],
+      "includes": [
+        "Area planning",
+        "Responsible observation",
+        "Strategic stops for photography and interpretation"
+      ],
+      "excludes": [
+        "Any guarantee of sighting puma or other species",
+        "Special permits not included"
+      ],
+      "modality": "Private or tailor-made, depending on the group's goal.",
+      "note": "Nature sets the pace; we take care of how you observe it."
+    },
+    "pt": {
+      "cardTitle": "Excursões de observação de fauna",
+      "cardSummary": "Salidas de observación responsable al amanecer, priorizando silencio, distancia y respeto por la fauna silvestre.",
+      "cardDetail": "Fauna silvestre da Patagônia",
+      "title": "Excursões de observação de fauna",
+      "lead": "Observação responsável, silêncio e tempo para esperar.",
+      "body": "Saídas cedo rumo a setores com potencial para observar a fauna silvestre, especialmente Laguna Azul, Laguna Amarga e Lago Sarmiento. A experiência prioriza a distância adequada, o respeito pelos animais, a interpretação da paisagem e a fotografia.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "05:30 aprox. da hospedagem em Puerto Natales para priorizar as primeiras horas de atividade da fauna."
+        ],
+        [
+          "Horário",
+          "De preferência ao amanhecer"
+        ],
+        [
+          "Duração",
+          "Variável conforme o programa"
+        ],
+        [
+          "Nível",
+          "Baixo a moderado"
+        ],
+        [
+          "Avistamentos",
+          "Nunca garantidos"
+        ]
+      ],
+      "includes": [
+        "Planejamento de setores",
+        "Observação responsável",
+        "Paradas estratégicas para fotografia e interpretação"
+      ],
+      "excludes": [
+        "Garantia de avistamento de puma ou outra espécie",
+        "Permissões especiais não incluídas"
+      ],
+      "modality": "Privada ou sob medida, conforme o objetivo do grupo.",
+      "note": "A natureza marca o ritmo; nós cuidamos da forma de observá-la."
+    }
+  }
+}

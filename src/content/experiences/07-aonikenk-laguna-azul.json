@@ -1,0 +1,139 @@
+{
+  "order": 7,
+  "slug": "aonikenk-laguna-azul",
+  "image": "exp-07",
+  "content": {
+    "es": {
+      "cardTitle": "Aonikenk + Laguna Azul",
+      "cardSummary": "Travesía por estepa, lagunas y sitios arqueológicos, con pinturas rupestres, fauna y cierre en Laguna Azul.",
+      "cardDetail": "Día completo · 9 km · Moderado",
+      "cardCategory": "Estepa · patrimonio · fauna",
+      "title": "Aonikenk + Laguna Azul",
+      "lead": "Cruzar la estepa de un extremo a otro.",
+      "body": "Una travesía continua por sectores abiertos de estepa, lagunas y conglomerados con vistas del Macizo Paine. Incluye el paso por sitios arqueológicos y pinturas rupestres antes de continuar hacia Laguna Azul y Cascada Paine.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales · hora exacta se confirma según clima, ritmo del grupo y planificación del día."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Distancia",
+          "9 km"
+        ],
+        [
+          "Nivel físico",
+          "Medio"
+        ],
+        [
+          "Desnivel",
+          "Moderado"
+        ]
+      ],
+      "includes": [
+        "Transporte logístico",
+        "Guía certificado",
+        "Bastones de trekking"
+      ],
+      "excludes": [
+        "Entrada al parque",
+        "Alimentación",
+        "Seguro personal",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "No es solo una caminata: es cruzar la Patagonia paso a paso."
+    },
+    "en": {
+      "cardTitle": "Aonikenk + Laguna Azul",
+      "cardSummary": "Travesía por estepa, lagunas y sitios arqueológicos, con pinturas rupestres, fauna y cierre en Laguna Azul.",
+      "cardDetail": "Full day · 9 km · Moderate",
+      "cardCategory": "Steppe · heritage · wildlife",
+      "title": "Aonikenk + Laguna Azul",
+      "lead": "Crossing the steppe from one end to the other.",
+      "body": "A continuous traverse across open steppe, lagoons and conglomerate formations with views of the Paine Massif. It takes in archaeological sites and rock paintings before continuing towards Laguna Azul and Paine Waterfall.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales · exact time confirmed according to weather, group pace and the day's planning."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Distance",
+          "9 km"
+        ],
+        [
+          "Fitness level",
+          "Medium"
+        ],
+        [
+          "Elevation gain",
+          "Moderate"
+        ]
+      ],
+      "includes": [
+        "Logistics transport",
+        "Certified guide",
+        "Trekking poles"
+      ],
+      "excludes": [
+        "Park entrance fee",
+        "Meals",
+        "Personal insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "It is not just a walk: it is crossing Patagonia step by step."
+    },
+    "pt": {
+      "cardTitle": "Aonikenk + Laguna Azul",
+      "cardSummary": "Travesía por estepa, lagunas y sitios arqueológicos, con pinturas rupestres, fauna y cierre en Laguna Azul.",
+      "cardDetail": "Dia inteiro · 9 km · Moderado",
+      "cardCategory": "Estepe · patrimônio · fauna",
+      "title": "Aonikenk + Laguna Azul",
+      "lead": "Cruzar a estepe de ponta a ponta.",
+      "body": "Uma travessia contínua por setores abertos de estepe, lagoas e conglomerados com vistas do Maciço Paine. Inclui a passagem por sítios arqueológicos e pinturas rupestres antes de seguir rumo à Laguna Azul e à Cascata Paine.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales · horário exato confirmado conforme clima, ritmo do grupo e planejamento do dia."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Distância",
+          "9 km"
+        ],
+        [
+          "Nível físico",
+          "Médio"
+        ],
+        [
+          "Desnível",
+          "Moderado"
+        ]
+      ],
+      "includes": [
+        "Transporte logístico",
+        "Guia certificado",
+        "Bastões de trekking"
+      ],
+      "excludes": [
+        "Entrada do parque",
+        "Alimentação",
+        "Seguro pessoal",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Não é só uma caminhada: é cruzar a Patagônia passo a passo."
+    }
+  }
+}

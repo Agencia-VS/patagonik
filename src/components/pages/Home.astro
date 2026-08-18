@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '@/content.config';
+import { useTranslations } from '@/i18n';
+import { routePath } from '@/i18n/routes';
+import ExperienceCard from '@/components/ExperienceCard.astro';
+
+interface Props {
+  locale: Locale;
+  experiences: CollectionEntry<'experiences'>[];
+}
+const { locale, experiences } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="pk-hero">
+  <div class="pk-shell">
+    <p class="pk-kicker">{t('f1.a')} · {t('f1.b')}</p>
+    <h1>{t('f3')}</h1>
+    <p class="pk-lede">{t('hero.sub')}</p>
+  </div>
+</section>
+
+<section class="pk-experiences" id="experiencias">
+  <div class="pk-shell">
+    <p class="pk-kicker">{t('exp.kicker')}</p>
+    <h2>{t('menu.tours')}</h2>
+  </div>
+
+  {/*
+    Carrusel horizontal con scroll-snap nativo — el mismo patrón al que se
+    convirtió #tours en el bundle (C3), pero sin JS: aquí las flechas sólo son
+    azúcar sobre un scroller que ya funciona con dedo, rueda y teclado.
+  */}
+  <div class="pk-track" tabindex="0" role="region" aria-label={t('exp.all')}>
+    {experiences.map((entry) => <ExperienceCard locale={locale} entry={entry} />)}
+  </div>
+</section>
+
+<section class="pk-shell pk-quote">
+  <h2>{t('quiz.title')}</h2>
+  <p>{t('quiz.intro')}</p>
+  <p><a href={routePath('about', locale)}>{t('menu.about')} →</a></p>
+</section>
+
+<style>
+  .pk-hero {
+    padding-block: clamp(64px, 12vw, 140px);
+    background: var(--pk-cream);
+  }
+  .pk-kicker {
+    font-size: 0.66rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pk-green);
+    margin: 0 0 0.8rem;
+  }
+  .pk-hero h1 {
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .pk-lede {
+    max-width: 46ch;
+    margin-top: 1.2rem;
+    line-height: 1.7;
+    color: var(--pk-ink-soft);
+  }
+  .pk-experiences {
+    background: var(--pk-dark-alt);
+    color: var(--pk-cream);
+    padding-block: clamp(48px, 9vw, 96px);
+  }
+  .pk-experiences h2 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    margin-bottom: clamp(20px, 4vw, 36px);
+  }
+  .pk-track {
+    display: flex;
+    gap: clamp(18px, 2.2vw, 30px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--pk-gutter);
+    padding-inline: var(--pk-gutter);
+    padding-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .pk-track::-webkit-scrollbar {
+    display: none;
+  }
+  .pk-quote {
+    padding-block: clamp(48px, 9vw, 96px);
+  }
+  .pk-quote h2 {
+    font-size: clamp(1.9rem, 5vw, 3.4rem);
+  }
+  .pk-quote p {
+    max-width: 56ch;
+    line-height: 1.7;
+    color: var(--pk-ink-soft);
+  }
+</style>

@@ -1,0 +1,139 @@
+{
+  "order": 12,
+  "slug": "trekking-escenico-torres-del-paine",
+  "image": "exp-12",
+  "content": {
+    "es": {
+      "cardTitle": "Trekking Escénico Torres del Paine",
+      "cardSummary": "Aonikenk, Salto Grande, Mirador Cuernos y Mirador Cóndor en una jornada activa de paisajes y senderos.",
+      "cardDetail": "Día completo · 14 km · Moderado",
+      "cardCategory": "Aonikenk · Cuernos · Cóndor",
+      "title": "Trekking Escénico Torres del Paine",
+      "lead": "Miradores, senderos y la esencia del paisaje patagónico.",
+      "body": "Jornada activa que integra Sendero Aonikenk y pinturas rupestres, Salto Grande y Mirador Cuernos, más el ascenso al Mirador Cóndor. Una combinación de patrimonio, fauna, lagos y grandes panorámicas.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales · horario definitivo se ajusta según orden de senderos, clima y duración de la jornada."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Distancia",
+          "14 km"
+        ],
+        [
+          "Desnivel acumulado",
+          "400 m"
+        ],
+        [
+          "Nivel",
+          "Medio"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guía certificado",
+        "Bastones de trekking"
+      ],
+      "excludes": [
+        "Entrada al Parque Nacional",
+        "Alimentación",
+        "Seguro personal",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "No es solo caminar: es descubrir la Patagonia desde sus mejores miradores."
+    },
+    "en": {
+      "cardTitle": "Scenic Trekking Torres del Paine",
+      "cardSummary": "Aonikenk, Salto Grande, Mirador Cuernos y Mirador Cóndor en una jornada activa de paisajes y senderos.",
+      "cardDetail": "Full day · 14 km · Moderate",
+      "cardCategory": "Aonikenk · Cuernos · Cóndor",
+      "title": "Scenic Trekking Torres del Paine",
+      "lead": "Viewpoints, trails and the essence of the Patagonian landscape.",
+      "body": "An active day combining the Aonikenk trail and its rock paintings, Salto Grande and the Cuernos Viewpoint, plus the climb to the Cóndor Viewpoint. A mix of heritage, wildlife, lakes and wide panoramas.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales · final time adjusted according to trail order, weather and the length of the day."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Distance",
+          "14 km"
+        ],
+        [
+          "Total elevation gain",
+          "400 m"
+        ],
+        [
+          "Level",
+          "Medium"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Certified guide",
+        "Trekking poles"
+      ],
+      "excludes": [
+        "National Park entrance fee",
+        "Meals",
+        "Personal insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "It is not only walking: it is discovering Patagonia from its finest viewpoints."
+    },
+    "pt": {
+      "cardTitle": "Trekking Cênico Torres del Paine",
+      "cardSummary": "Aonikenk, Salto Grande, Mirador Cuernos y Mirador Cóndor en una jornada activa de paisajes y senderos.",
+      "cardDetail": "Dia inteiro · 14 km · Moderado",
+      "cardCategory": "Aonikenk · Cuernos · Cóndor",
+      "title": "Trekking Cênico Torres del Paine",
+      "lead": "Mirantes, trilhas e a essência da paisagem patagônica.",
+      "body": "Jornada ativa que integra a Trilha Aonikenk e as pinturas rupestres, Salto Grande e Mirante Cuernos, além da subida ao Mirante Cóndor. Uma combinação de patrimônio, fauna, lagos e grandes panorâmicas.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales · horário definitivo ajustado conforme a ordem das trilhas, o clima e a duração da jornada."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Distância",
+          "14 km"
+        ],
+        [
+          "Desnível acumulado",
+          "400 m"
+        ],
+        [
+          "Nível",
+          "Médio"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guia certificado",
+        "Bastões de trekking"
+      ],
+      "excludes": [
+        "Entrada do Parque Nacional",
+        "Alimentação",
+        "Seguro pessoal",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Não é só caminhar: é descobrir a Patagônia a partir de seus melhores mirantes."
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "patagonik",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/check-i18n.mjs",
+    "preview": "astro preview",
+    "check": "astro check && tsc --noEmit -p tsconfig.json",
+    "content:export": "python3 design/tools/export_content.py",
+    "design:build": "python3 design/tools/build.py --src design/src --out design/dist/PatagoniK_Landing.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agencia-VS/patagonik.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Agencia-VS/patagonik/issues"
+  },
+  "homepage": "https://github.com/Agencia-VS/patagonik#readme",
+  "dependencies": {
+    "@astrojs/vercel": "^11.0.5",
+    "astro": "^7.2.2",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "playwright": "^1.62.1",
+    "typescript": "^7.0.2"
+  },
+  "type": "module",
+  "private": true
+}

@@ -1,0 +1,139 @@
+{
+  "order": 10,
+  "slug": "laguna-cebolla-avistamiento-de-fauna",
+  "image": "exp-10",
+  "content": {
+    "es": {
+      "cardTitle": "Laguna Cebolla + Avistamiento de Fauna",
+      "cardSummary": "Una ruta más silenciosa y remota desde Laguna Azul, con observación de fauna y una caminata de 19 km.",
+      "cardDetail": "Día completo · 19 km · Moderado",
+      "cardCategory": "Naturaleza · fauna · silencio",
+      "title": "Laguna Cebolla + Avistamiento de Fauna",
+      "lead": "Bosque, paisaje y observación de fauna en una salida más íntima.",
+      "body": "Una jornada enfocada en observación, silencio y conexión con sectores menos intervenidos. Desde Laguna Azul comienza una caminata hacia la remota Laguna Cebolla, combinando paisaje abierto, fauna y una perspectiva distinta del Macizo Paine.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Si se prioriza fauna: 05:30 aprox. · si se opera principalmente como trekking Laguna Cebolla: salida entre 07:00 y 08:00."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Distancia",
+          "19 km"
+        ],
+        [
+          "Desnivel",
+          "Suave"
+        ],
+        [
+          "Nivel",
+          "Medio"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guía especializado",
+        "Snack"
+      ],
+      "excludes": [
+        "Entrada al Parque Nacional",
+        "Alimentación adicional",
+        "Seguro personal",
+        "Gastos personales"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "Aquí vienes a observar, esperar y conectar."
+    },
+    "en": {
+      "cardTitle": "Laguna Cebolla + Wildlife Watching",
+      "cardSummary": "Una ruta más silenciosa y remota desde Laguna Azul, con observación de fauna y una caminata de 19 km.",
+      "cardDetail": "Full day · 19 km · Moderate",
+      "cardCategory": "Nature · wildlife · silence",
+      "title": "Laguna Cebolla + Wildlife Watching",
+      "lead": "Forest, landscape and wildlife watching on a more intimate outing.",
+      "body": "A day focused on observation, silence and connection with less-visited areas. From Laguna Azul a walk sets off towards the remote Laguna Cebolla, combining open landscape, wildlife and a different perspective on the Paine Massif.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "If wildlife is the priority: 05:30 approx. · if it runs mainly as the Laguna Cebolla trek: departure between 07:00 and 08:00."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Distance",
+          "19 km"
+        ],
+        [
+          "Elevation gain",
+          "Gentle"
+        ],
+        [
+          "Level",
+          "Medium"
+        ]
+      ],
+      "includes": [
+        "Transport",
+        "Specialised guide",
+        "Snack"
+      ],
+      "excludes": [
+        "National Park entrance fee",
+        "Additional meals",
+        "Personal insurance",
+        "Personal expenses"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "You come here to observe, to wait and to connect."
+    },
+    "pt": {
+      "cardTitle": "Laguna Cebolla + Observação de Fauna",
+      "cardSummary": "Una ruta más silenciosa y remota desde Laguna Azul, con observación de fauna y una caminata de 19 km.",
+      "cardDetail": "Dia inteiro · 19 km · Moderado",
+      "cardCategory": "Natureza · fauna · silêncio",
+      "title": "Laguna Cebolla + Observação de Fauna",
+      "lead": "Bosque, paisagem e observação de fauna em uma saída mais íntima.",
+      "body": "Uma jornada focada em observação, silêncio e conexão com setores menos alterados. A partir da Laguna Azul começa uma caminhada rumo à remota Laguna Cebolla, combinando paisagem aberta, fauna e uma perspectiva diferente do Maciço Paine.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Se a prioridade for a fauna: 05:30 aprox. · se operar principalmente como trekking Laguna Cebolla: saída entre 07:00 e 08:00."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Distância",
+          "19 km"
+        ],
+        [
+          "Desnível",
+          "Suave"
+        ],
+        [
+          "Nível",
+          "Médio"
+        ]
+      ],
+      "includes": [
+        "Transporte",
+        "Guia especializado",
+        "Lanche"
+      ],
+      "excludes": [
+        "Entrada do Parque Nacional",
+        "Alimentação adicional",
+        "Seguro pessoal",
+        "Gastos pessoais"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Aqui você vem para observar, esperar e conectar-se."
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "order": 11,
+  "slug": "lazo-weber",
+  "image": "exp-11",
+  "content": {
+    "es": {
+      "cardTitle": "Lazo – Weber",
+      "cardSummary": "Caminata continua por estepa, lagunas y amplias vistas del Macizo Paine hasta el sector Weber.",
+      "cardDetail": "Día completo · 14 km · Moderado",
+      "cardCategory": "Travesía · estepa · paisaje",
+      "title": "Lazo – Weber",
+      "lead": "La amplitud como protagonista.",
+      "body": "Caminata por uno de los sectores menos concurridos del parque, avanzando entre estepa abierta, lagunas y parches de bosque. El Macizo Paine acompaña el recorrido hasta el Mirador Toro y el descenso hacia Weber.",
+      "facts": [
+        [
+          "Salida desde Puerto Natales",
+          "Salida temprana desde Puerto Natales · horario definitivo se confirma según logística, clima y condiciones del sendero."
+        ],
+        [
+          "Duración",
+          "Día completo"
+        ],
+        [
+          "Distancia",
+          "14 km"
+        ],
+        [
+          "Nivel",
+          "Moderado"
+        ],
+        [
+          "Terreno",
+          "Estepa y sendero abierto"
+        ]
+      ],
+      "includes": [
+        "Transporte según programa",
+        "Guía certificado",
+        "Bastones de trekking"
+      ],
+      "excludes": [
+        "Entrada al parque",
+        "Alimentación",
+        "Seguro personal",
+        "Propinas"
+      ],
+      "modality": "Compartida, privada o Tailor-made.",
+      "note": "Aquí el paisaje no se encierra: se respira en todas direcciones."
+    },
+    "en": {
+      "cardTitle": "Lazo – Weber",
+      "cardSummary": "Caminata continua por estepa, lagunas y amplias vistas del Macizo Paine hasta el sector Weber.",
+      "cardDetail": "Full day · 14 km · Moderate",
+      "cardCategory": "Traverse · steppe · landscape",
+      "title": "Lazo – Weber",
+      "lead": "Openness as the main character.",
+      "body": "A walk through one of the least crowded sectors of the park, moving between open steppe, lagoons and patches of forest. The Paine Massif stays with you all the way to the Toro Viewpoint and the descent towards Weber.",
+      "facts": [
+        [
+          "Departure from Puerto Natales",
+          "Early departure from Puerto Natales · final time confirmed according to logistics, weather and trail conditions."
+        ],
+        [
+          "Duration",
+          "Full day"
+        ],
+        [
+          "Distance",
+          "14 km"
+        ],
+        [
+          "Level",
+          "Moderate"
+        ],
+        [
+          "Terrain",
+          "Steppe and open trail"
+        ]
+      ],
+      "includes": [
+        "Transport according to the programme",
+        "Certified guide",
+        "Trekking poles"
+      ],
+      "excludes": [
+        "Park entrance fee",
+        "Meals",
+        "Personal insurance",
+        "Tips"
+      ],
+      "modality": "Shared, private or tailor-made.",
+      "note": "Here the landscape is not closed in: it breathes in every direction."
+    },
+    "pt": {
+      "cardTitle": "Lazo – Weber",
+      "cardSummary": "Caminata continua por estepa, lagunas y amplias vistas del Macizo Paine hasta el sector Weber.",
+      "cardDetail": "Dia inteiro · 14 km · Moderado",
+      "cardCategory": "Travessia · estepe · paisagem",
+      "title": "Lazo – Weber",
+      "lead": "A amplitude como protagonista.",
+      "body": "Caminhada por um dos setores menos movimentados do parque, avançando entre estepe aberta, lagoas e manchas de bosque. O Maciço Paine acompanha o percurso até o Mirante Toro e a descida rumo a Weber.",
+      "facts": [
+        [
+          "Saída de Puerto Natales",
+          "Saída cedo de Puerto Natales · horário definitivo confirmado conforme logística, clima e condições da trilha."
+        ],
+        [
+          "Duração",
+          "Dia inteiro"
+        ],
+        [
+          "Distância",
+          "14 km"
+        ],
+        [
+          "Nível",
+          "Moderado"
+        ],
+        [
+          "Terreno",
+          "Estepe e trilha aberta"
+        ]
+      ],
+      "includes": [
+        "Transporte conforme o programa",
+        "Guia certificado",
+        "Bastões de trekking"
+      ],
+      "excludes": [
+        "Entrada do parque",
+        "Alimentação",
+        "Seguro pessoal",
+        "Gorjetas"
+      ],
+      "modality": "Compartilhada, privada ou sob medida.",
+      "note": "Aqui a paisagem não se fecha: respira-se em todas as direções."
+    }
+  }
+}

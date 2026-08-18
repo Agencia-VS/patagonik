@@ -1,0 +1,57 @@
+---
+import type { Locale } from '@/content.config';
+import { useTranslations } from '@/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// Las 6 preguntas viven en el diccionario como faq.qN / faq.aN.
+const items = [1, 2, 3, 4, 5, 6].map((n) => ({ q: t(`faq.q${n}`), a: t(`faq.a${n}`) }));
+---
+
+<section class="pk-shell pk-faq">
+  <p class="pk-kicker">{t('faq.kicker')}</p>
+  <h1>{t('faq.title')}</h1>
+
+  <dl>
+    {items.map((item) => (
+      <details>
+        <summary>{item.q}</summary>
+        <p>{item.a}</p>
+      </details>
+    ))}
+  </dl>
+</section>
+
+<style>
+  .pk-faq {
+    padding-block: clamp(40px, 7vw, 80px);
+    max-width: 820px;
+  }
+  .pk-kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pk-green);
+    margin: 0 0 0.7rem;
+  }
+  .pk-faq h1 {
+    font-size: clamp(1.9rem, 5vw, 3.2rem);
+    margin-bottom: 2rem;
+  }
+  details {
+    border-top: 1px solid rgba(43, 43, 43, 0.14);
+    padding: 1.1rem 0;
+  }
+  summary {
+    cursor: pointer;
+    font-family: var(--pk-serif);
+    font-size: 1.1rem;
+  }
+  details p {
+    margin: 0.8rem 0 0;
+    line-height: 1.7;
+    color: var(--pk-ink-soft);
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@/content.config';
+import { LOCALES, DEFAULT_LOCALE, homePath, routePath, experiencePath } from '@/i18n/routes';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Home from '@/components/pages/Home.astro';
+import About from '@/components/pages/About.astro';
+import Faq from '@/components/pages/Faq.astro';
+import ExperienceDetail from '@/components/pages/ExperienceDetail.astro';
+import { useTranslations } from '@/i18n';
+
+/**
+ * Una sola ruta atrapa todo el sitio porque el segmento cambia de idioma a
+ * idioma (/quienes-somos, /en/about-us, /pt/quem-somos). Con archivos sueltos
+ * habría que duplicar una página por idioma y por sección; aquí la tabla de
+ * abajo es la única fuente de verdad y hreflang sale de ella sin poder
+ * desincronizarse.
+ */
+export async function getStaticPaths() {
+  const experiences = await getCollection('experiences');
+  type Kind = 'home' | 'about' | 'faq' | 'experience';
+
+  const pages: { kind: Kind; slug?: string; paths: Record<Locale, string> }[] = [
+    { kind: 'home', paths: byLocale((l) => homePath(l)) },
+    { kind: 'about', paths: byLocale((l) => routePath('about', l)) },
+    { kind: 'faq', paths: byLocale((l) => routePath('faq', l)) },
+    ...experiences.map((entry) => ({
+      kind: 'experience' as Kind,
+      slug: entry.data.slug,
+      paths: byLocale((l) => experiencePath(entry.data.slug, l)),
+    })),
+  ];
+
+  function byLocale(fn: (l: Locale) => string): Record<Locale, string> {
+    return Object.fromEntries(LOCALES.map((l) => [l, fn(l)])) as Record<Locale, string>;
+  }
+
+  return pages.flatMap((page) =>
+    LOCALES.map((locale) => ({
+      // El catch-all recibe la ruta sin la barra inicial; '' produce la home.
+      params: { path: page.paths[locale].replace(/^\//, '') || undefined },
+      props: { kind: page.kind, locale, slug: page.slug, alternates: page.paths },
+    })),
+  );
+}
+
+const { kind, locale, slug, alternates } = Astro.props as {
+  kind: 'home' | 'about' | 'faq' | 'experience';
+  locale: Locale;
+  slug?: string;
+  alternates: Record<Locale, string>;
+};
+
+const t = useTranslations(locale);
+const experiences = (await getCollection('experiences')).sort((a, b) => a.data.order - b.data.order);
+const entry = slug ? experiences.find((e) => e.data.slug === slug) : undefined;
+if (kind === 'experience' && !entry) throw new Error(`experiencia no encontrada: ${slug}`);
+
+const META: Record<string, { title: string; description: string }> = {
+  home: {
+    title: t('meta.home.title'),
+    description: t('meta.home.description'),
+  },
+  about: { title: t('meta.about.title'), description: t('meta.about.description') },
+  faq: { title: t('meta.faq.title'), description: t('meta.faq.description') },
+  experience: entry
+    ? {
+        title: `${entry.data.content[locale].title} · PatagoniK`,
+        description: entry.data.content[locale].lead,
+      }
+    : { title: 'PatagoniK', description: '' },
+};
+
+const meta = META[kind]!;
+---
+
+<BaseLayout locale={locale} title={meta.title} description={meta.description} alternates={alternates}>
+  <Header slot="header" locale={locale} alternates={alternates} />
+  {kind === 'home' && <Home locale={locale} experiences={experiences} />}
+  {kind === 'about' && <About locale={locale} />}
+  {kind === 'faq' && <Faq locale={locale} />}
+  {kind === 'experience' && entry && <ExperienceDetail locale={locale} entry={entry} />}
+  <Footer slot="footer" locale={locale} />
+</BaseLayout>
