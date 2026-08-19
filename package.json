@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Agencia-VS/patagonik#readme",
   "dependencies": {
-    "@astrojs/vercel": "^8.0.4",
+    "@astrojs/vercel": "^11.0.5",
     "astro": "^7.2.2",
     "sharp": "^0.35.3"
   },
@@ -32,6 +32,11 @@
     "@types/node": "^26.2.0",
     "playwright": "^1.62.1",
     "typescript": "^6.0.0"
+  },
+  "overrides": {
+    "@vercel/routing-utils": {
+      "path-to-regexp": "6.3.0"
+    }
   },
   "type": "module",
   "engines": {
