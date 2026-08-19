@@ -4,4 +4,4 @@
 /backups/
 /docs/
 /.github/
-/supabase/
+# `supabase/` se incluye: scripts/check-media.mjs valida la migración en build.
