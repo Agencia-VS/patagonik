@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Agencia-VS/patagonik#readme",
   "dependencies": {
-    "@astrojs/vercel": "^11.0.5",
+    "@astrojs/vercel": "^8.0.4",
     "astro": "^7.2.2",
     "sharp": "^0.35.3"
   },
