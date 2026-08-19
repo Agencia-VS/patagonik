@@ -31,9 +31,8 @@ panel y la siguiente publicación.
 
 ## 1. Crear y preparar Supabase
 
-1. Crear el proyecto y ejecutar
-   `supabase/migrations/20260819000000_landing_media_admin.sql` con
-   `supabase db push` o desde SQL Editor.
+1. Crear el proyecto y ejecutar en orden las migraciones de `supabase/migrations/`
+   con `supabase db push` o desde SQL Editor.
 2. En Authentication → Users, crear al usuario del cliente.
 3. Convertirlo en administrador desde SQL Editor:
 
@@ -147,6 +146,9 @@ npm run media:export
 
 - **Guardar borrador** no altera la web pública.
 - **Publicar** guarda un batch en `landing_slot_revisions` y dispara Vercel.
+- Si la base se creó con la primera versión del panel y Publicar responde
+  `UPDATE requires a WHERE clause`, ejecutar una vez
+  `supabase/migrations/20260819210000_fix_publish_safe_update.sql` en SQL Editor.
 - Si el deploy hook falla, el panel lo informa y registra `publish_jobs.failed`;
   volver a pulsar Publicar reintenta el despliegue.
 - Si Supabase está pausado, restaurarlo desde el dashboard. La web no requiere

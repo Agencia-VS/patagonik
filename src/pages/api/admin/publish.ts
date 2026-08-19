@@ -34,6 +34,9 @@ export const POST: APIRoute = async ({ request }) => {
     });
     if (!rpcResponse.ok) {
       const detail = await rpcResponse.text();
+      if (detail.includes('UPDATE requires a WHERE clause')) {
+        throw new ApiError(409, 'Supabase todavía usa la función de publicación anterior. Aplica la migración 20260819210000_fix_publish_safe_update.sql y vuelve a intentar.');
+      }
       throw new ApiError(rpcResponse.status === 403 ? 403 : 422, `No se pudo publicar: ${detail}`);
     }
     const [result] = (await rpcResponse.json()) as PublishResult[];

@@ -286,7 +286,11 @@ begin
       published_focal_point = draft_focal_point,
       published_at = now(),
       updated_by = auth.uid(),
-      updated_at = now();
+      updated_at = now()
+  where published_at is null
+     or draft_asset_id is distinct from published_asset_id
+     or draft_alt is distinct from published_alt
+     or draft_focal_point is distinct from published_focal_point;
 
   get diagnostics v_count = row_count;
 

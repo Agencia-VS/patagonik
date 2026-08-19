@@ -14,69 +14,169 @@ const adminConfig = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="robots" content="noindex,nofollow,noarchive" />
-    <title>Assets de la landing · PatagoniK</title>
+    <meta name="theme-color" content="#eeece5" />
+    <title>Panel de administración · PatagoniK</title>
     <script type="application/json" id="pk-admin-config" set:html={JSON.stringify(adminConfig).replace(/</g, '\\u003c')}></script>
   </head>
-  <body>
+  <body data-admin-view="login">
     <main>
       <section id="login-view" class="login" aria-labelledby="login-title">
         <div class="panel login__panel">
-          <p class="eyebrow">PatagoniK · Administración</p>
-          <h1 id="login-title">Assets de la landing</h1>
-          <p>Inicia sesión con la cuenta administradora creada en Supabase.</p>
-          <form id="login-form">
-            <label>Correo <input name="email" type="email" autocomplete="username" required /></label>
-            <label>Contraseña <input name="password" type="password" autocomplete="current-password" required /></label>
-            <button type="submit">Ingresar</button>
+          <div class="login__mark" aria-hidden="true">PK</div>
+          <p class="eyebrow">PatagoniK</p>
+          <h1 id="login-title">Panel de administración</h1>
+          <p class="login__lead">Aquí se gestionan los recursos gráficos de la página.</p>
+
+          <form id="login-form" class="login__form">
+            <label class="field">
+              <span>Correo electrónico</span>
+              <input name="email" type="email" autocomplete="username" placeholder="admin@patagonik.cl" required />
+            </label>
+            <label class="field">
+              <span>Contraseña</span>
+              <input name="password" type="password" autocomplete="current-password" placeholder="Tu contraseña" required />
+            </label>
+            <button type="submit" class="button button--primary button--wide">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" /></svg>
+              <span>Entrar al panel</span>
+            </button>
           </form>
-          <p id="login-status" class="status" role="status"></p>
+          <p id="login-status" class="status status--login" role="status" aria-live="polite"></p>
         </div>
       </section>
 
-      <section id="dashboard-view" hidden>
+      <section id="dashboard-view" class="dashboard" aria-labelledby="dashboard-title" hidden>
         <header class="toolbar">
-          <div>
-            <p class="eyebrow">PatagoniK · Administración</p>
-            <h1>Assets de la landing</h1>
-            <p class="toolbar__help">Guarda borradores libremente. “Publicar” crea una revisión y despliega la landing estática.</p>
+          <div class="toolbar__identity">
+            <div class="toolbar__mark" aria-hidden="true">PK</div>
+            <div>
+              <p class="eyebrow">Panel de administración</p>
+              <h1 id="dashboard-title" tabindex="-1">Recursos gráficos</h1>
+              <p class="toolbar__help">Organiza, reemplaza y publica los recursos de cada sección.</p>
+            </div>
           </div>
           <div class="toolbar__actions">
-            <button id="refresh-button" type="button" class="secondary">Actualizar</button>
-            <button id="logout-button" type="button" class="secondary">Salir</button>
-            <button id="publish-button" type="button">Publicar cambios</button>
+            <button id="refresh-button" type="button" class="button button--secondary">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.3 6.2A6 6 0 1 0 16 12M15.3 6.2V2.8m0 3.4h-3.4" /></svg>
+              <span>Actualizar</span>
+            </button>
+            <button id="logout-button" type="button" class="button button--quiet">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4H4v12h4m3-3 3-3-3-3m3 3H7" /></svg>
+              <span>Salir</span>
+            </button>
+            <button id="publish-button" type="button" class="button button--primary">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 14V3m-4 4 4-4 4 4M4 12v4h12v-4" /></svg>
+              <span>Publicar cambios</span>
+            </button>
           </div>
         </header>
-        <p id="dashboard-status" class="status status--dashboard" role="status" aria-live="polite"></p>
-        <div id="asset-grid" class="grid" aria-live="polite"></div>
+
+        <div class="dashboard__content">
+          <div class="dashboard__feedback">
+            <div id="draft-count" class="draft-count" data-empty="true">
+              <span class="draft-count__dot" aria-hidden="true"></span>
+              <span>Sin cambios pendientes</span>
+            </div>
+            <p id="dashboard-status" class="status status--dashboard" role="status" aria-live="polite"></p>
+          </div>
+
+          <nav class="section-nav" aria-label="Secciones de la página">
+            <div class="section-nav__intro">
+              <p class="eyebrow">Secciones</p>
+              <p>Elige una sección para administrar sus recursos.</p>
+            </div>
+            <div id="section-tabs" class="section-tabs" role="tablist" aria-label="Recursos por sección">
+              <button id="section-tab-hero" class="section-tab" type="button" role="tab" aria-selected="true" aria-controls="asset-grid" data-section-tab="hero">
+                <span>Hero</span><span class="section-tab__count" data-section-count="hero">0</span>
+              </button>
+              <button id="section-tab-experiences" class="section-tab" type="button" role="tab" aria-selected="false" aria-controls="asset-grid" tabindex="-1" data-section-tab="experiences">
+                <span>Experiencias</span><span class="section-tab__count" data-section-count="experiences">0</span>
+              </button>
+              <button id="section-tab-essence" class="section-tab" type="button" role="tab" aria-selected="false" aria-controls="asset-grid" tabindex="-1" data-section-tab="essence">
+                <span>Nuestra esencia</span><span class="section-tab__count" data-section-count="essence">0</span>
+              </button>
+              <button id="section-tab-closing" class="section-tab" type="button" role="tab" aria-selected="false" aria-controls="asset-grid" tabindex="-1" data-section-tab="closing">
+                <span>Cierre</span><span class="section-tab__count" data-section-count="closing">0</span>
+              </button>
+            </div>
+          </nav>
+
+          <header class="section-heading">
+            <div>
+              <p id="section-kicker" class="eyebrow">Portada y transición</p>
+              <h2 id="section-title">Hero</h2>
+              <p id="section-description">Recursos principales que reciben al visitante al entrar al sitio.</p>
+            </div>
+            <div class="section-total"><strong id="section-visible-count">0</strong><span>recursos</span></div>
+          </header>
+
+          <div id="asset-grid" class="asset-grid" role="tabpanel" aria-labelledby="section-tab-hero" aria-live="polite"></div>
+        </div>
       </section>
     </main>
 
     <template id="asset-card-template">
       <article class="asset-card">
-        <div class="asset-card__preview" data-preview></div>
+        <div class="asset-card__preview">
+          <div class="asset-card__media" data-preview-media></div>
+          <div class="asset-card__badges">
+            <span class="state-badge" data-state></span>
+            <span class="type-badge" data-resource-label></span>
+          </div>
+        </div>
+
         <form class="asset-card__form" data-asset-form>
-          <div class="asset-card__heading">
-            <div><p data-slot-key></p><h2 data-label></h2></div>
-            <span data-state></span>
-          </div>
-          <label>Archivo nuevo <input data-file type="file" accept="image/*,video/mp4,video/webm" /></label>
-          <p class="hint">Sube aquí o pega debajo una URL de Cloudinary / public ID.</p>
-          <label>URL o public ID <input data-public-id type="text" spellcheck="false" /></label>
-          <label>Tipo
-            <select data-resource-type><option value="image">Imagen</option><option value="video">Video</option></select>
-          </label>
-          <fieldset>
-            <legend>Texto alternativo</legend>
-            <label>ES <input data-alt="es" type="text" /></label>
-            <label>EN <input data-alt="en" type="text" /></label>
-            <label>PT <input data-alt="pt" type="text" /></label>
-          </fieldset>
-          <div class="focal">
-            <label>Foco X <input data-focal="x" type="number" min="0" max="1" step="0.05" /></label>
-            <label>Foco Y <input data-focal="y" type="number" min="0" max="1" step="0.05" /></label>
-          </div>
-          <button type="submit">Guardar borrador</button>
-          <p class="card-status" data-card-status role="status"></p>
+          <header class="asset-card__heading">
+            <p data-slot-key></p>
+            <h3 data-label></h3>
+          </header>
+
+          <section class="replacement" aria-label="Reemplazar recurso">
+            <div class="replacement__heading">
+              <h4>Reemplazar recurso</h4>
+              <p>Sube un archivo o utiliza un recurso existente de Cloudinary.</p>
+            </div>
+            <label class="field file-field">
+              <span>Archivo nuevo</span>
+              <input data-file type="file" accept="image/*,video/mp4,video/webm" />
+            </label>
+            <div class="source-divider"><span>o usar Cloudinary</span></div>
+            <div class="source-fields">
+              <label class="field field--source">
+                <span>URL o public ID</span>
+                <input data-public-id type="text" spellcheck="false" placeholder="patagonik/landing/recurso" />
+              </label>
+              <label class="field field--type">
+                <span>Tipo</span>
+                <select data-resource-type><option value="image">Imagen</option><option value="video">Video</option></select>
+              </label>
+            </div>
+          </section>
+
+          <details class="asset-card__settings">
+            <summary><span>Accesibilidad y encuadre</span><small>Opcional</small></summary>
+            <div class="settings-body">
+              <fieldset>
+                <legend>Texto alternativo</legend>
+                <label class="field">ES <input data-alt="es" type="text" placeholder="Descripción en español" /></label>
+                <label class="field">EN <input data-alt="en" type="text" placeholder="English description" /></label>
+                <label class="field">PT <input data-alt="pt" type="text" placeholder="Descrição em português" /></label>
+              </fieldset>
+              <div class="focal">
+                <label class="field">Foco X <input data-focal="x" type="number" min="0" max="1" step="0.05" /></label>
+                <label class="field">Foco Y <input data-focal="y" type="number" min="0" max="1" step="0.05" /></label>
+              </div>
+              <p class="hint">El foco controla qué parte del recurso se mantiene visible al recortarlo.</p>
+            </div>
+          </details>
+
+          <footer class="asset-card__actions">
+            <p class="card-status" data-card-status role="status" aria-live="polite"></p>
+            <button type="submit" class="button button--primary button--save">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m5 10 3 3 7-7" /></svg>
+              <span>Guardar borrador</span>
+            </button>
+          </footer>
         </form>
       </article>
     </template>
@@ -88,45 +188,210 @@ const adminConfig = {
 </html>
 
 <style>
-  :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color:#26302a; background:#eeece5; }
-  * { box-sizing:border-box; }
-  body { margin:0; min-height:100vh; background:#eeece5; }
-  main { min-height:100vh; }
-  h1,h2,p { margin-top:0; }
-  h1 { margin-bottom:.5rem; font:400 clamp(2rem,5vw,3.8rem)/1 Georgia,serif; }
-  button,input,select { font:inherit; }
-  button { min-height:44px; padding:.7rem 1rem; border:0; border-radius:999px; cursor:pointer; color:#fff; background:#536349; font-weight:700; }
-  button:disabled { cursor:wait; opacity:.55; }
-  button.secondary { color:#344138; background:transparent; border:1px solid #aeb4aa; }
-  label { display:grid; gap:.4rem; color:#536057; font-size:.82rem; font-weight:650; }
-  input,select { width:100%; min-height:43px; padding:.65rem .75rem; border:1px solid #c9ccc5; border-radius:6px; color:#26302a; background:#fff; }
-  input:focus,select:focus,button:focus-visible { outline:3px solid rgba(83,99,73,.25); outline-offset:2px; }
-  .eyebrow { margin-bottom:.8rem; color:#6b7a5e; font-size:.68rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; }
-  .login { min-height:100vh; display:grid; place-items:center; padding:1.5rem; }
-  .panel { background:#faf9f5; border:1px solid #d8d8d0; box-shadow:0 28px 80px rgba(38,48,42,.12); }
-  .login__panel { width:min(100%,440px); padding:clamp(1.5rem,5vw,3rem); }
-  .login__panel > p:not(.eyebrow) { color:#687169; line-height:1.6; }
-  .login form { display:grid; gap:1rem; margin-top:1.5rem; }
-  .toolbar { position:sticky; z-index:10; top:0; display:flex; align-items:flex-end; justify-content:space-between; gap:2rem; padding:1.25rem clamp(1rem,4vw,3.5rem); border-bottom:1px solid #d7d8d1; background:rgba(250,249,245,.94); backdrop-filter:blur(14px); }
-  .toolbar h1 { font-size:clamp(1.8rem,4vw,3rem); }
-  .toolbar__help { max-width:68ch; margin-bottom:0; color:#697169; line-height:1.45; }
-  .toolbar__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.6rem; }
-  .status { min-height:1.35em; margin:1rem 0 0; color:#9a3e2d; font-size:.86rem; }
-  .status[data-kind="success"],.card-status[data-kind="success"] { color:#397042; }
-  .status--dashboard { margin:0; padding:.8rem clamp(1rem,4vw,3.5rem) 0; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,390px),1fr)); gap:1.15rem; padding:1.25rem clamp(1rem,4vw,3.5rem) 4rem; }
-  .asset-card { overflow:hidden; display:grid; grid-template-rows:230px auto; border:1px solid #d7d8d1; background:#faf9f5; }
-  .asset-card__preview { display:grid; place-items:center; overflow:hidden; color:#859087; background:#dfe2da; }
-  .asset-card__preview img,.asset-card__preview video { width:100%; height:100%; object-fit:cover; display:block; }
-  .asset-card__form { display:grid; gap:.85rem; padding:1.15rem; }
-  .asset-card__heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
-  .asset-card__heading p { margin:0 0 .3rem; color:#879087; font:600 .65rem/1.4 ui-monospace,monospace; overflow-wrap:anywhere; }
-  .asset-card__heading h2 { margin:0; font:400 1.3rem/1.15 Georgia,serif; }
-  .asset-card__heading span { flex:none; padding:.28rem .5rem; border-radius:999px; color:#536349; background:#e4e9df; font-size:.66rem; font-weight:750; }
-  .hint { margin:-.55rem 0 0; color:#7c847d; font-size:.72rem; line-height:1.4; }
-  fieldset { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; margin:0; padding:.8rem; border:1px solid #d8d8d0; }
-  legend { padding:0 .35rem; color:#6f786f; font-size:.73rem; font-weight:700; }
-  .focal { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
-  .card-status { min-height:1.25em; margin:0; color:#9a3e2d; font-size:.78rem; }
-  @media (max-width:760px) { .toolbar { position:static; align-items:stretch; flex-direction:column; } .toolbar__actions { justify-content:flex-start; } fieldset { grid-template-columns:1fr; } }
+  :root {
+    color-scheme: light;
+    --canvas: #eeece5;
+    --surface: #faf9f5;
+    --surface-strong: #ffffff;
+    --ink: #26302a;
+    --muted: #697169;
+    --soft: #879087;
+    --olive: #536349;
+    --olive-dark: #414f3b;
+    --olive-light: #e4e9df;
+    --line: #d7d8d1;
+    --line-strong: #c6cac2;
+    --danger: #9a3e2d;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: var(--canvas);
+  }
+
+  * { box-sizing: border-box; }
+  html { min-width: 320px; background: var(--canvas); }
+  body { margin: 0; min-height: 100vh; background: var(--canvas); }
+  main { min-height: 100vh; }
+  [hidden] { display: none !important; }
+  h1, h2, h3, h4, p { margin-top: 0; }
+  button, input, select { font: inherit; }
+  button, input, select, summary { -webkit-tap-highlight-color: transparent; }
+
+  h1 { margin-bottom: .65rem; font: 400 clamp(2.15rem, 5vw, 3.9rem)/.98 Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
+  .eyebrow { margin-bottom: .7rem; color: #6b7a5e; font-size: .68rem; font-weight: 800; letter-spacing: .19em; text-transform: uppercase; }
+  .field { display: grid; gap: .45rem; color: #536057; font-size: .8rem; font-weight: 720; }
+
+  input, select {
+    width: 100%; min-height: 46px; padding: .72rem .82rem; border: 1px solid var(--line-strong); border-radius: 11px;
+    color: var(--ink); background: var(--surface-strong); box-shadow: 0 1px 1px rgba(38, 48, 42, .03), inset 0 1px 0 rgba(255, 255, 255, .65);
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  input::placeholder { color: #a0a69f; }
+  input:hover, select:hover { border-color: #aeb5aa; }
+  input:focus, select:focus { outline: none; border-color: var(--olive); box-shadow: 0 0 0 4px rgba(83, 99, 73, .13); }
+
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 44px; padding: .72rem 1.05rem;
+    border: 1px solid transparent; border-radius: 12px; cursor: pointer; font-size: .84rem; font-weight: 760; line-height: 1;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+  }
+  .button:hover:not(:disabled) { transform: translateY(-1px); }
+  .button:active:not(:disabled) { transform: translateY(0); }
+  .button:focus-visible, .section-tab:focus-visible, summary:focus-visible { outline: 3px solid rgba(83, 99, 73, .25); outline-offset: 3px; }
+  .button:disabled { cursor: wait; opacity: .58; transform: none; }
+  .button[aria-busy="true"] .button__icon { animation: button-pulse .9s ease-in-out infinite alternate; }
+  .button__icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .button--primary { color: #fff; border-color: var(--olive-dark); background: linear-gradient(180deg, #5d6d52 0%, var(--olive) 100%); box-shadow: 0 7px 16px rgba(65, 79, 59, .18), inset 0 1px 0 rgba(255, 255, 255, .14); }
+  .button--primary:hover:not(:disabled) { background: linear-gradient(180deg, #637459 0%, #4b5b43 100%); box-shadow: 0 9px 20px rgba(65, 79, 59, .23); }
+  .button--secondary { color: #3f4d42; border-color: var(--line-strong); background: rgba(255, 255, 255, .78); box-shadow: 0 4px 12px rgba(38, 48, 42, .06); }
+  .button--secondary:hover:not(:disabled) { border-color: #a8afa4; background: #fff; box-shadow: 0 6px 15px rgba(38, 48, 42, .09); }
+  .button--quiet { color: #526057; border-color: transparent; background: transparent; }
+  .button--quiet:hover:not(:disabled) { color: var(--ink); background: #e9e8e1; }
+  .button--wide { width: 100%; min-height: 49px; margin-top: .2rem; }
+
+  .panel { background: var(--surface); border: 1px solid rgba(198, 202, 194, .9); }
+  .login {
+    position: relative; isolation: isolate; min-height: 100svh; display: grid; place-items: center; overflow: hidden; padding: 1.5rem;
+    background: radial-gradient(circle at 12% 14%, rgba(141, 157, 127, .2), transparent 30%), radial-gradient(circle at 88% 82%, rgba(105, 120, 92, .14), transparent 34%), var(--canvas);
+  }
+  .login::before, .login::after { position: absolute; z-index: -1; width: min(32vw, 430px); aspect-ratio: 1; border: 1px solid rgba(83, 99, 73, .11); border-radius: 50%; content: ""; }
+  .login::before { top: -18%; right: -8%; }
+  .login::after { bottom: -23%; left: -7%; }
+  .login__panel { width: min(100%, 480px); padding: clamp(2rem, 6vw, 3.5rem); border-radius: 24px; box-shadow: 0 28px 80px rgba(38, 48, 42, .14), 0 2px 10px rgba(38, 48, 42, .04); }
+  .login__mark, .toolbar__mark {
+    display: grid; place-items: center; width: 50px; height: 50px; margin-bottom: 1.6rem; border: 1px solid rgba(83, 99, 73, .18); border-radius: 15px;
+    color: #fff; background: var(--olive); box-shadow: 0 8px 20px rgba(65, 79, 59, .18); font: 700 .77rem/1 Georgia, serif; letter-spacing: .08em;
+  }
+  .login__lead { max-width: 35ch; margin-bottom: 0; color: var(--muted); font-size: .98rem; line-height: 1.65; }
+  .login__form { display: grid; gap: 1rem; margin-top: 2rem; }
+
+  .status { margin: 0; color: var(--danger); font-size: .8rem; line-height: 1.45; }
+  .status[data-kind="success"], .card-status[data-kind="success"] { color: #397042; }
+  .status--login { min-height: 1.2rem; margin-top: 1rem; text-align: center; }
+
+  .dashboard { min-height: 100vh; }
+  .toolbar {
+    position: sticky; z-index: 20; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    padding: 1rem clamp(1rem, 3.6vw, 3.5rem); border-bottom: 1px solid rgba(199, 202, 195, .84); background: rgba(250, 249, 245, .92);
+    box-shadow: 0 5px 22px rgba(38, 48, 42, .04); backdrop-filter: blur(16px);
+  }
+  .toolbar__identity { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+  .toolbar__mark { flex: none; width: 44px; height: 44px; margin: 0; border-radius: 13px; }
+  .toolbar .eyebrow { margin-bottom: .25rem; }
+  .toolbar h1 { margin: 0; font-size: clamp(1.65rem, 3vw, 2.35rem); }
+  .toolbar h1:focus { outline: none; }
+  .toolbar__help { margin: .3rem 0 0; color: var(--muted); font-size: .8rem; line-height: 1.35; }
+  .toolbar__actions { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: .55rem; }
+
+  .dashboard__content { width: min(100%, 1500px); margin: 0 auto; padding: 1.25rem clamp(1rem, 3.6vw, 3.5rem) 4rem; }
+  .dashboard__feedback { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2rem; margin-bottom: .9rem; }
+  .status--dashboard { text-align: right; }
+  .draft-count { display: inline-flex; align-items: center; gap: .5rem; flex: none; color: #765a25; font-size: .76rem; font-weight: 720; }
+  .draft-count__dot { width: 8px; height: 8px; border-radius: 50%; background: #c38b31; box-shadow: 0 0 0 4px rgba(195, 139, 49, .12); }
+  .draft-count[data-empty="true"] { color: #55705b; }
+  .draft-count[data-empty="true"] .draft-count__dot { background: #5c8464; box-shadow: 0 0 0 4px rgba(92, 132, 100, .12); }
+
+  .section-nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 18px; background: rgba(250, 249, 245, .78); box-shadow: 0 8px 28px rgba(38, 48, 42, .045); }
+  .section-nav__intro { flex: none; }
+  .section-nav__intro .eyebrow { margin-bottom: .25rem; }
+  .section-nav__intro > p:last-child { margin: 0; color: var(--muted); font-size: .76rem; }
+  .section-tabs { display: flex; justify-content: flex-end; gap: .45rem; min-width: 0; }
+  .section-tab {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 42px; padding: .65rem .85rem; border: 1px solid transparent;
+    border-radius: 11px; cursor: pointer; color: #576158; background: transparent; font-size: .78rem; font-weight: 760; white-space: nowrap;
+    transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+  .section-tab:hover { color: var(--ink); background: #edede7; }
+  .section-tab[aria-selected="true"] { color: #fff; border-color: var(--olive-dark); background: var(--olive); box-shadow: 0 5px 13px rgba(65, 79, 59, .16); }
+  .section-tab__count { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 .35rem; border-radius: 999px; color: #59645b; background: #e5e7e1; font-size: .68rem; }
+  .section-tab[aria-selected="true"] .section-tab__count { color: var(--olive-dark); background: #f5f4ee; }
+
+  .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; padding: 2.3rem .15rem 1.15rem; }
+  .section-heading .eyebrow { margin-bottom: .38rem; }
+  .section-heading h2 { margin-bottom: .42rem; font: 400 clamp(1.8rem, 3.5vw, 2.75rem)/1 Georgia, serif; letter-spacing: -.025em; }
+  .section-heading p:last-child { max-width: 64ch; margin-bottom: 0; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+  .section-total { display: flex; align-items: baseline; gap: .4rem; flex: none; padding: .75rem 1rem; border: 1px solid var(--line); border-radius: 13px; color: var(--muted); background: rgba(250, 249, 245, .7); font-size: .72rem; }
+  .section-total strong { color: var(--ink); font-size: 1.25rem; }
+
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); align-items: start; gap: 1.15rem; }
+  .asset-card { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 10px 30px rgba(38, 48, 42, .055); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+  .asset-card:hover { transform: translateY(-2px); border-color: #c9cdc5; box-shadow: 0 15px 38px rgba(38, 48, 42, .08); }
+  .asset-card__preview { position: relative; overflow: hidden; aspect-ratio: 16 / 9; color: #758078; background: #dde1d9; }
+  .asset-card__media { position: absolute; inset: 0; display: grid; place-items: center; font-size: .78rem; }
+  .asset-card__media img, .asset-card__media video { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .asset-card__badges { position: absolute; z-index: 2; top: .8rem; right: .8rem; left: .8rem; display: flex; justify-content: space-between; gap: .5rem; pointer-events: none; }
+  .state-badge, .type-badge { padding: .34rem .58rem; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; color: #344138; background: rgba(250, 249, 245, .9); box-shadow: 0 3px 12px rgba(38, 48, 42, .13); backdrop-filter: blur(8px); font-size: .64rem; font-weight: 800; }
+  .state-badge[data-state="draft"] { color: #744e13; background: rgba(255, 244, 219, .94); }
+  .state-badge[data-state="published"] { color: #35603c; background: rgba(229, 242, 230, .94); }
+  .asset-card__form { display: grid; gap: 1rem; padding: 1.2rem; }
+  .asset-card__heading { min-width: 0; }
+  .asset-card__heading p { margin: 0 0 .35rem; color: var(--soft); font: 650 .62rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+  .asset-card__heading h3 { margin: 0; font: 400 1.4rem/1.15 Georgia, serif; letter-spacing: -.015em; }
+
+  .replacement { display: grid; gap: .85rem; padding: 1rem; border: 1px solid #dfe0da; border-radius: 14px; background: #f4f3ed; }
+  .replacement__heading h4 { margin-bottom: .25rem; font-size: .81rem; }
+  .replacement__heading p { margin: 0; color: var(--muted); font-size: .72rem; line-height: 1.45; }
+  input[type="file"] { padding: .36rem; color: var(--muted); font-size: .72rem; }
+  input[type="file"]::file-selector-button { min-height: 35px; margin-right: .65rem; padding: .5rem .75rem; border: 1px solid var(--line-strong); border-radius: 8px; cursor: pointer; color: #455147; background: #f0f1ec; font: inherit; font-weight: 760; }
+  input[type="file"]::file-selector-button:hover { background: #e6e9e2; }
+  .source-divider { display: flex; align-items: center; gap: .65rem; color: #8a918a; font-size: .64rem; font-weight: 760; text-transform: uppercase; letter-spacing: .08em; }
+  .source-divider::before, .source-divider::after { height: 1px; flex: 1; background: #d9dbd4; content: ""; }
+  .source-fields { display: grid; grid-template-columns: minmax(0, 1fr) 105px; gap: .65rem; }
+
+  .asset-card__settings { overflow: hidden; border: 1px solid #dfe0da; border-radius: 13px; background: rgba(255, 255, 255, .48); }
+  .asset-card__settings summary { display: flex; align-items: center; gap: .5rem; min-height: 46px; padding: .7rem .85rem; cursor: pointer; color: #4e5a51; font-size: .78rem; font-weight: 760; list-style: none; }
+  .asset-card__settings summary::-webkit-details-marker { display: none; }
+  .asset-card__settings summary::after { width: 8px; height: 8px; margin-left: auto; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ""; transform: rotate(45deg) translateY(-2px); transition: transform .18s ease; }
+  .asset-card__settings[open] summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+  .asset-card__settings summary small { color: var(--soft); font-size: .64rem; font-weight: 650; }
+  .settings-body { display: grid; gap: .85rem; padding: 0 .85rem .9rem; border-top: 1px solid #e1e2dc; }
+  fieldset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; margin: .8rem 0 0; padding: 0; border: 0; }
+  legend { margin-bottom: .55rem; padding: 0; color: #69736b; font-size: .69rem; font-weight: 760; }
+  .focal { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
+  .hint { margin: -.25rem 0 0; color: #7c847d; font-size: .67rem; line-height: 1.45; }
+
+  .asset-card__actions { display: flex; align-items: center; justify-content: flex-end; gap: .8rem; padding-top: .05rem; }
+  .card-status { flex: 1; min-width: 0; margin: 0; color: var(--danger); font-size: .72rem; line-height: 1.35; }
+  .button--save { flex: none; }
+
+  @keyframes button-pulse { to { opacity: .35; } }
+
+  @media (max-width: 1080px) {
+    .toolbar { position: static; align-items: flex-start; flex-direction: column; gap: 1rem; }
+    .toolbar__actions { width: 100%; justify-content: flex-start; }
+    .section-nav { align-items: stretch; flex-direction: column; gap: .8rem; }
+    .section-tabs { justify-content: flex-start; }
+  }
+
+  @media (max-width: 700px) {
+    .login { padding: .9rem; }
+    .login__panel { padding: 1.6rem; border-radius: 19px; }
+    .login__mark { margin-bottom: 1.35rem; }
+    .toolbar { padding: 1rem; }
+    .toolbar__mark { display: none; }
+    .toolbar__actions { display: grid; grid-template-columns: 1fr 1fr; }
+    .toolbar__actions .button { width: 100%; }
+    #publish-button { grid-column: 1 / -1; grid-row: 1; }
+    .dashboard__content { padding: 1rem 1rem 3rem; }
+    .dashboard__feedback { align-items: flex-start; flex-direction: column; min-height: 0; }
+    .status--dashboard { text-align: left; }
+    .section-nav { margin-inline: -1rem; padding-inline: 1rem; border-right: 0; border-left: 0; border-radius: 0; }
+    .section-tabs { overflow-x: auto; margin-inline: -1rem; padding: 0 1rem .3rem; scrollbar-width: thin; }
+    .section-tab { flex: none; }
+    .section-heading { align-items: flex-start; padding-top: 1.7rem; }
+    .section-total { display: none; }
+    .asset-grid { gap: .9rem; }
+    .asset-card { border-radius: 17px; }
+    .asset-card:hover { transform: none; }
+  }
+
+  @media (max-width: 500px) {
+    .source-fields, fieldset { grid-template-columns: 1fr; }
+    .asset-card__actions { align-items: stretch; flex-direction: column; }
+    .button--save { width: 100%; }
+    .card-status:empty { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  }
 </style>
