@@ -1,0 +1,132 @@
+---
+export const prerender = true;
+
+const adminConfig = {
+  supabaseUrl: (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/$/, ''),
+  supabaseKey: import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '',
+  cloudName: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME ?? '',
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <title>Assets de la landing · PatagoniK</title>
+    <script type="application/json" id="pk-admin-config" set:html={JSON.stringify(adminConfig).replace(/</g, '\\u003c')}></script>
+  </head>
+  <body>
+    <main>
+      <section id="login-view" class="login" aria-labelledby="login-title">
+        <div class="panel login__panel">
+          <p class="eyebrow">PatagoniK · Administración</p>
+          <h1 id="login-title">Assets de la landing</h1>
+          <p>Inicia sesión con la cuenta administradora creada en Supabase.</p>
+          <form id="login-form">
+            <label>Correo <input name="email" type="email" autocomplete="username" required /></label>
+            <label>Contraseña <input name="password" type="password" autocomplete="current-password" required /></label>
+            <button type="submit">Ingresar</button>
+          </form>
+          <p id="login-status" class="status" role="status"></p>
+        </div>
+      </section>
+
+      <section id="dashboard-view" hidden>
+        <header class="toolbar">
+          <div>
+            <p class="eyebrow">PatagoniK · Administración</p>
+            <h1>Assets de la landing</h1>
+            <p class="toolbar__help">Guarda borradores libremente. “Publicar” crea una revisión y despliega la landing estática.</p>
+          </div>
+          <div class="toolbar__actions">
+            <button id="refresh-button" type="button" class="secondary">Actualizar</button>
+            <button id="logout-button" type="button" class="secondary">Salir</button>
+            <button id="publish-button" type="button">Publicar cambios</button>
+          </div>
+        </header>
+        <p id="dashboard-status" class="status status--dashboard" role="status" aria-live="polite"></p>
+        <div id="asset-grid" class="grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <template id="asset-card-template">
+      <article class="asset-card">
+        <div class="asset-card__preview" data-preview></div>
+        <form class="asset-card__form" data-asset-form>
+          <div class="asset-card__heading">
+            <div><p data-slot-key></p><h2 data-label></h2></div>
+            <span data-state></span>
+          </div>
+          <label>Archivo nuevo <input data-file type="file" accept="image/*,video/mp4,video/webm" /></label>
+          <p class="hint">Sube aquí o pega debajo una URL de Cloudinary / public ID.</p>
+          <label>URL o public ID <input data-public-id type="text" spellcheck="false" /></label>
+          <label>Tipo
+            <select data-resource-type><option value="image">Imagen</option><option value="video">Video</option></select>
+          </label>
+          <fieldset>
+            <legend>Texto alternativo</legend>
+            <label>ES <input data-alt="es" type="text" /></label>
+            <label>EN <input data-alt="en" type="text" /></label>
+            <label>PT <input data-alt="pt" type="text" /></label>
+          </fieldset>
+          <div class="focal">
+            <label>Foco X <input data-focal="x" type="number" min="0" max="1" step="0.05" /></label>
+            <label>Foco Y <input data-focal="y" type="number" min="0" max="1" step="0.05" /></label>
+          </div>
+          <button type="submit">Guardar borrador</button>
+          <p class="card-status" data-card-status role="status"></p>
+        </form>
+      </article>
+    </template>
+
+    <script>
+      import '@/scripts/admin-dashboard';
+    </script>
+  </body>
+</html>
+
+<style>
+  :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color:#26302a; background:#eeece5; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:#eeece5; }
+  main { min-height:100vh; }
+  h1,h2,p { margin-top:0; }
+  h1 { margin-bottom:.5rem; font:400 clamp(2rem,5vw,3.8rem)/1 Georgia,serif; }
+  button,input,select { font:inherit; }
+  button { min-height:44px; padding:.7rem 1rem; border:0; border-radius:999px; cursor:pointer; color:#fff; background:#536349; font-weight:700; }
+  button:disabled { cursor:wait; opacity:.55; }
+  button.secondary { color:#344138; background:transparent; border:1px solid #aeb4aa; }
+  label { display:grid; gap:.4rem; color:#536057; font-size:.82rem; font-weight:650; }
+  input,select { width:100%; min-height:43px; padding:.65rem .75rem; border:1px solid #c9ccc5; border-radius:6px; color:#26302a; background:#fff; }
+  input:focus,select:focus,button:focus-visible { outline:3px solid rgba(83,99,73,.25); outline-offset:2px; }
+  .eyebrow { margin-bottom:.8rem; color:#6b7a5e; font-size:.68rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; }
+  .login { min-height:100vh; display:grid; place-items:center; padding:1.5rem; }
+  .panel { background:#faf9f5; border:1px solid #d8d8d0; box-shadow:0 28px 80px rgba(38,48,42,.12); }
+  .login__panel { width:min(100%,440px); padding:clamp(1.5rem,5vw,3rem); }
+  .login__panel > p:not(.eyebrow) { color:#687169; line-height:1.6; }
+  .login form { display:grid; gap:1rem; margin-top:1.5rem; }
+  .toolbar { position:sticky; z-index:10; top:0; display:flex; align-items:flex-end; justify-content:space-between; gap:2rem; padding:1.25rem clamp(1rem,4vw,3.5rem); border-bottom:1px solid #d7d8d1; background:rgba(250,249,245,.94); backdrop-filter:blur(14px); }
+  .toolbar h1 { font-size:clamp(1.8rem,4vw,3rem); }
+  .toolbar__help { max-width:68ch; margin-bottom:0; color:#697169; line-height:1.45; }
+  .toolbar__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.6rem; }
+  .status { min-height:1.35em; margin:1rem 0 0; color:#9a3e2d; font-size:.86rem; }
+  .status[data-kind="success"],.card-status[data-kind="success"] { color:#397042; }
+  .status--dashboard { margin:0; padding:.8rem clamp(1rem,4vw,3.5rem) 0; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,390px),1fr)); gap:1.15rem; padding:1.25rem clamp(1rem,4vw,3.5rem) 4rem; }
+  .asset-card { overflow:hidden; display:grid; grid-template-rows:230px auto; border:1px solid #d7d8d1; background:#faf9f5; }
+  .asset-card__preview { display:grid; place-items:center; overflow:hidden; color:#859087; background:#dfe2da; }
+  .asset-card__preview img,.asset-card__preview video { width:100%; height:100%; object-fit:cover; display:block; }
+  .asset-card__form { display:grid; gap:.85rem; padding:1.15rem; }
+  .asset-card__heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+  .asset-card__heading p { margin:0 0 .3rem; color:#879087; font:600 .65rem/1.4 ui-monospace,monospace; overflow-wrap:anywhere; }
+  .asset-card__heading h2 { margin:0; font:400 1.3rem/1.15 Georgia,serif; }
+  .asset-card__heading span { flex:none; padding:.28rem .5rem; border-radius:999px; color:#536349; background:#e4e9df; font-size:.66rem; font-weight:750; }
+  .hint { margin:-.55rem 0 0; color:#7c847d; font-size:.72rem; line-height:1.4; }
+  fieldset { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; margin:0; padding:.8rem; border:1px solid #d8d8d0; }
+  legend { padding:0 .35rem; color:#6f786f; font-size:.73rem; font-weight:700; }
+  .focal { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
+  .card-status { min-height:1.25em; margin:0; color:#9a3e2d; font-size:.78rem; }
+  @media (max-width:760px) { .toolbar { position:static; align-items:stretch; flex-direction:column; } .toolbar__actions { justify-content:flex-start; } fieldset { grid-template-columns:1fr; } }
+</style>

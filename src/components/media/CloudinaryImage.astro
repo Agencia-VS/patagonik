@@ -1,0 +1,55 @@
+---
+import type { Locale } from '@/content.config';
+import { cloudinaryImageSrcset, cloudinaryImageUrl, IMAGE_PRESETS } from '@/lib/media/cloudinary';
+import { localizedAlt, type LandingAsset } from '@/lib/media/types';
+
+interface Props {
+  asset: LandingAsset;
+  locale: Locale;
+  preset?: string;
+  loading?: 'eager' | 'lazy';
+  decorative?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  asset,
+  locale,
+  preset = asset.preset,
+  loading = 'lazy',
+  decorative = false,
+  class: className,
+  style = 'width:100%;height:100%;object-fit:cover;display:block;',
+} = Astro.props;
+
+const config = IMAGE_PRESETS[preset] ?? IMAGE_PRESETS.hero;
+const largest = config.widths[config.widths.length - 1] ?? 1600;
+const src = cloudinaryImageUrl(asset, largest, preset) ?? asset.fallback;
+const srcset = cloudinaryImageSrcset(asset, preset);
+const alt = decorative ? '' : localizedAlt(asset, locale);
+const eager = loading === 'eager';
+const focus = asset.focalPoint ?? { x: 0.5, y: 0.5 };
+const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-position:${focus.x * 100}% ${focus.y * 100}%;`;
+---
+
+{
+  src && (
+    <img
+      src={eager ? src : undefined}
+      srcset={eager ? srcset : undefined}
+      data-lazy-src={!eager ? src : undefined}
+      data-lazy-srcset={!eager ? srcset : undefined}
+      data-lazy-media={!eager ? '' : undefined}
+      sizes={config.sizes}
+      alt={alt}
+      loading={loading}
+      decoding={eager ? 'sync' : 'async'}
+      fetchpriority={eager ? 'high' : 'low'}
+      width={asset.width}
+      height={asset.height}
+      class={className}
+      style={finalStyle}
+    />
+  )
+}

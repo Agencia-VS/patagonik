@@ -1,10 +1,17 @@
 ---
 import type { Locale } from '@/content.config';
 import { useTranslations } from '@/i18n';
+import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
+import type { LandingAssetMap } from '@/lib/media/types';
 
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+interface Props { locale: Locale; assets: LandingAssetMap }
+const { locale, assets } = Astro.props;
 const t = useTranslations(locale);
+const asset = (slotKey: string) => {
+  const value = assets[slotKey];
+  if (!value) throw new Error(`Asset requerido no encontrado: ${slotKey}`);
+  return value;
+};
 ---
 
 <section id="esencia" data-esc="" data-nav="light" data-screen-label="02 Nuestra esencia" style="position: relative; overflow: hidden; background: #F5F2EC; padding: clamp(68px, 11vw, 124px) 0 clamp(96px, 14vw, 168px);">
@@ -33,7 +40,7 @@ const t = useTranslations(locale);
 
         <div data-esc-stack="" style="grid-column: 2 / 9; grid-row: 2; position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: linear-gradient(165deg, #3D4E5C 0%, #7E8C7A 100%);">
           <div data-par="0.12" style="position: absolute; inset: -13% 0;">
-            <image-slot id="pt-esc-main" shape="rect" fit="cover"><img src="/images/esc-main.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;" /></image-slot>
+            <image-slot id="pt-esc-main" shape="rect" fit="cover"><CloudinaryImage asset={asset('about.essence')} locale={locale} preset="essence" decorative /></image-slot>
           </div>
         </div>
 
