@@ -1,5 +1,7 @@
-design/
-backups/
-docs/
-.github/
-supabase/
+# Estos patrones se anclan a la raíz. Sin la barra inicial, `design/`
+# también excluye los componentes productivos de `src/components/design/`.
+/design/
+/backups/
+/docs/
+/.github/
+/supabase/
