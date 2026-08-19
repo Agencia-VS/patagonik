@@ -4,13 +4,39 @@ interface ManifestRow {
   slot_key: string; label: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
   draft_asset_id: string | null; draft_public_id: string | null; draft_resource_type: 'image'|'video'|null;
   draft_secure_url: string | null; draft_alt: Record<string,string>; draft_focal_point: {x?:number;y?:number};
-  published_asset_id: string | null; published_secure_url: string | null; published_at: string | null;
+  published_asset_id: string | null; published_resource_type: 'image'|'video'|null; published_secure_url: string | null; published_at: string | null;
   published_alt: Record<string,string>; published_focal_point: {x?:number;y?:number};
 }
 interface CloudinaryUpload {
   public_id: string; resource_type: 'image'|'video'; version: number; format?: string;
   width?: number; height?: number; duration?: number; bytes?: number; secure_url?: string; original_filename?: string;
 }
+
+type SectionId = 'hero' | 'experiences' | 'essence' | 'closing';
+
+const SECTION_ORDER: SectionId[] = ['hero', 'experiences', 'essence', 'closing'];
+const SECTIONS: Record<SectionId, { title: string; kicker: string; description: string }> = {
+  hero: {
+    title: 'Hero',
+    kicker: 'Portada y transición',
+    description: 'Recursos principales que reciben al visitante al entrar al sitio.',
+  },
+  experiences: {
+    title: 'Experiencias',
+    kicker: 'Catálogo visual',
+    description: 'Fondo de la sección y portadas de todas las experiencias disponibles.',
+  },
+  essence: {
+    title: 'Nuestra esencia',
+    kicker: 'Identidad de marca',
+    description: 'Imagen que acompaña la historia y los valores de PatagoniK.',
+  },
+  closing: {
+    title: 'Cierre',
+    kicker: 'Llamado final',
+    description: 'Recurso visual del último llamado a la acción de la landing.',
+  },
+};
 
 const configNode = document.querySelector<HTMLScriptElement>('#pk-admin-config');
 const config = JSON.parse(configNode?.textContent || '{}') as AdminConfig;
@@ -21,15 +47,104 @@ const loginStatus = document.querySelector<HTMLElement>('#login-status')!;
 const dashboardStatus = document.querySelector<HTMLElement>('#dashboard-status')!;
 const grid = document.querySelector<HTMLElement>('#asset-grid')!;
 const template = document.querySelector<HTMLTemplateElement>('#asset-card-template')!;
+const dashboardTitle = document.querySelector<HTMLElement>('#dashboard-title')!;
+const draftCount = document.querySelector<HTMLElement>('#draft-count')!;
+const draftCountText = draftCount.querySelector<HTMLElement>('span:last-child')!;
+const sectionTabsContainer = document.querySelector<HTMLElement>('#section-tabs')!;
+const sectionTabs = [...document.querySelectorAll<HTMLButtonElement>('[data-section-tab]')];
+const sectionTitle = document.querySelector<HTMLElement>('#section-title')!;
+const sectionKicker = document.querySelector<HTMLElement>('#section-kicker')!;
+const sectionDescription = document.querySelector<HTMLElement>('#section-description')!;
+const sectionVisibleCount = document.querySelector<HTMLElement>('#section-visible-count')!;
+const sectionVisibleLabel = document.querySelector<HTMLElement>('.section-total span')!;
 const publishButton = document.querySelector<HTMLButtonElement>('#publish-button')!;
 const refreshButton = document.querySelector<HTMLButtonElement>('#refresh-button')!;
 const logoutButton = document.querySelector<HTMLButtonElement>('#logout-button')!;
 const STORAGE_KEY = 'patagonik-admin-session';
 let session: Session | null = null;
+let activeSection: SectionId = 'hero';
 
 function message(node: HTMLElement, value = '', kind: 'error'|'success' = 'error') {
   node.textContent = value;
-  node.dataset.kind = kind;
+  if (value) node.dataset.kind = kind;
+  else delete node.dataset.kind;
+}
+
+function setBusy(button: HTMLButtonElement, busy: boolean) {
+  button.disabled = busy;
+  button.setAttribute('aria-busy', String(busy));
+}
+
+function isDirty(row: ManifestRow): boolean {
+  return row.draft_asset_id !== row.published_asset_id
+    || JSON.stringify(row.draft_alt) !== JSON.stringify(row.published_alt)
+    || JSON.stringify(row.draft_focal_point) !== JSON.stringify(row.published_focal_point);
+}
+
+function sectionForSlot(slotKey: string): SectionId {
+  if (slotKey === 'landing.experiences-background' || slotKey.startsWith('experience.')) return 'experiences';
+  if (slotKey === 'about.essence') return 'essence';
+  if (slotKey === 'landing.final-cta') return 'closing';
+  return 'hero';
+}
+
+function isSectionId(value: string | undefined): value is SectionId {
+  return SECTION_ORDER.includes(value as SectionId);
+}
+
+function setAdminView(view: 'login' | 'dashboard', focusDashboard = false) {
+  const showingDashboard = view === 'dashboard';
+  loginView.hidden = showingDashboard;
+  dashboardView.hidden = !showingDashboard;
+  document.body.dataset.adminView = view;
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  if (showingDashboard && focusDashboard) {
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      dashboardTitle.focus({ preventScroll: true });
+    });
+  }
+}
+
+function activateSection(section: SectionId, focusTab = false) {
+  activeSection = section;
+  const content = SECTIONS[section];
+  sectionTitle.textContent = content.title;
+  sectionKicker.textContent = content.kicker;
+  sectionDescription.textContent = content.description;
+
+  for (const tab of sectionTabs) {
+    const selected = tab.dataset.sectionTab === section;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    if (selected) {
+      grid.setAttribute('aria-labelledby', tab.id);
+      if (focusTab) tab.focus();
+    }
+  }
+
+  let visible = 0;
+  for (const card of grid.querySelectorAll<HTMLElement>('.asset-card')) {
+    const selected = card.dataset.section === section;
+    card.hidden = !selected;
+    if (selected) visible += 1;
+  }
+  sectionVisibleCount.textContent = String(visible);
+  sectionVisibleLabel.textContent = visible === 1 ? 'recurso' : 'recursos';
+}
+
+function updateManifestSummary(rows: ManifestRow[]) {
+  const counts = Object.fromEntries(SECTION_ORDER.map((section) => [section, 0])) as Record<SectionId, number>;
+  for (const row of rows) counts[sectionForSlot(row.slot_key)] += 1;
+  for (const section of SECTION_ORDER) {
+    document.querySelector<HTMLElement>(`[data-section-count="${section}"]`)!.textContent = String(counts[section]);
+  }
+
+  const drafts = rows.filter(isDirty).length;
+  draftCount.dataset.empty = String(drafts === 0);
+  draftCountText.textContent = drafts === 0
+    ? 'Sin cambios pendientes'
+    : `${drafts} ${drafts === 1 ? 'cambio pendiente' : 'cambios pendientes'}`;
 }
 
 async function parseError(response: Response): Promise<string> {
@@ -130,12 +245,13 @@ async function insertAsset(asset: CloudinaryUpload): Promise<string> {
 }
 
 function preview(row: ManifestRow, container: HTMLElement) {
+  const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
   const derived = row.draft_public_id && config.cloudName
-    ? `https://res.cloudinary.com/${encodeURIComponent(config.cloudName)}/${row.draft_resource_type || 'image'}/upload/w_720,c_limit/f_auto/q_auto/${row.draft_public_id.split('/').map(encodeURIComponent).join('/')}`
+    ? `https://res.cloudinary.com/${encodeURIComponent(config.cloudName)}/${resourceType}/upload/w_720,c_limit/f_auto/q_auto/${row.draft_public_id.split('/').map(encodeURIComponent).join('/')}`
     : null;
   const url = row.draft_secure_url || derived || row.published_secure_url || row.local_fallback;
-  if (!url) { container.textContent = 'Sin asset'; return; }
-  if (row.draft_resource_type === 'video') {
+  if (!url) { container.textContent = 'Sin recurso asignado'; return; }
+  if (resourceType === 'video') {
     const video = document.createElement('video'); video.src = url; video.muted = true; video.controls = true; video.preload = 'metadata';
     container.append(video);
   } else {
@@ -151,22 +267,40 @@ function renderCard(row: ManifestRow): HTMLElement {
   const publicIdInput = card.querySelector<HTMLInputElement>('[data-public-id]')!;
   const typeInput = card.querySelector<HTMLSelectElement>('[data-resource-type]')!;
   const cardStatus = card.querySelector<HTMLElement>('[data-card-status]')!;
+  const stateBadge = card.querySelector<HTMLElement>('[data-state]')!;
+  const resourceLabel = card.querySelector<HTMLElement>('[data-resource-label]')!;
+  const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+  const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
+  const dirty = isDirty(row);
+
+  card.dataset.section = sectionForSlot(row.slot_key);
+  card.dataset.dirty = String(dirty);
   card.querySelector<HTMLElement>('[data-slot-key]')!.textContent = row.slot_key;
   card.querySelector<HTMLElement>('[data-label]')!.textContent = row.label;
-  const dirty = row.draft_asset_id !== row.published_asset_id
-    || JSON.stringify(row.draft_alt) !== JSON.stringify(row.published_alt)
-    || JSON.stringify(row.draft_focal_point) !== JSON.stringify(row.published_focal_point);
-  card.querySelector<HTMLElement>('[data-state]')!.textContent = dirty ? 'Borrador' : row.published_at ? 'Publicado' : 'Local';
-  preview(row, card.querySelector<HTMLElement>('[data-preview]')!);
+  stateBadge.textContent = dirty ? 'Borrador' : row.published_at ? 'Publicado' : 'Local';
+  stateBadge.dataset.state = dirty ? 'draft' : row.published_at ? 'published' : 'local';
+  resourceLabel.textContent = resourceType === 'video' ? 'Video' : 'Imagen';
+  preview(row, card.querySelector<HTMLElement>('[data-preview-media]')!);
   publicIdInput.value = row.draft_public_id || '';
-  typeInput.value = row.draft_resource_type || row.accepted_types[0] || 'image';
+  typeInput.value = resourceType;
+  fileInput.accept = row.accepted_types.includes('video') ? 'image/*,video/mp4,video/webm' : 'image/*';
   [...typeInput.options].forEach((option) => { option.disabled = !row.accepted_types.includes(option.value as 'image'|'video'); });
   for (const locale of ['es','en','pt']) card.querySelector<HTMLInputElement>(`[data-alt="${locale}"]`)!.value = row.draft_alt?.[locale] || '';
   for (const axis of ['x','y'] as const) card.querySelector<HTMLInputElement>(`[data-focal="${axis}"]`)!.value = String(row.draft_focal_point?.[axis] ?? .5);
 
+  typeInput.addEventListener('change', () => {
+    resourceLabel.textContent = typeInput.value === 'video' ? 'Video' : 'Imagen';
+  });
+  fileInput.addEventListener('change', () => {
+    const selected = fileInput.files?.[0];
+    if (!selected) return;
+    typeInput.value = selected.type.startsWith('video/') ? 'video' : 'image';
+    resourceLabel.textContent = typeInput.value === 'video' ? 'Video' : 'Imagen';
+  });
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); message(cardStatus, 'Guardando…', 'success');
-    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!; submit.disabled = true;
+    setBusy(submit, true);
     try {
       let assetId = row.draft_asset_id;
       const selected = fileInput.files?.[0];
@@ -191,18 +325,20 @@ function renderCard(row: ManifestRow): HTMLElement {
       message(cardStatus, 'Borrador guardado.', 'success');
       window.setTimeout(() => loadManifest().catch((error) => message(dashboardStatus, error.message)), 500);
     } catch (error) { message(cardStatus, error instanceof Error ? error.message : 'No se pudo guardar.'); }
-    finally { submit.disabled = false; }
+    finally { setBusy(submit, false); }
   });
   return card;
 }
 
 async function loadManifest(): Promise<void> {
-  message(dashboardStatus, 'Cargando assets…', 'success');
+  message(dashboardStatus, 'Cargando recursos…', 'success');
   const response = await supabase('/rest/v1/landing_admin_manifest?select=*&order=sort_order.asc');
   if (!response.ok) throw new Error(await parseError(response));
   const rows = await response.json() as ManifestRow[];
   grid.replaceChildren(...rows.map(renderCard));
-  message(dashboardStatus, `${rows.length} espacios editoriales cargados.`, 'success');
+  updateManifestSummary(rows);
+  activateSection(activeSection);
+  message(dashboardStatus, `${rows.length} recursos sincronizados.`, 'success');
 }
 
 async function verifyAdmin(): Promise<void> {
@@ -213,15 +349,20 @@ async function verifyAdmin(): Promise<void> {
   if (rows[0]?.role !== 'admin') throw new Error('Esta cuenta no tiene rol de administrador.');
 }
 
-async function showDashboard(): Promise<void> {
-  loginView.hidden = true; dashboardView.hidden = false;
-  try { await verifyAdmin(); await loadManifest(); }
+async function showDashboard(focusDashboard = false): Promise<void> {
+  message(loginStatus, 'Comprobando acceso…', 'success');
+  await verifyAdmin();
+  message(loginStatus);
+  loginForm.reset();
+  setAdminView('dashboard', focusDashboard);
+  try { await loadManifest(); }
   catch (error) { message(dashboardStatus, error instanceof Error ? error.message : 'No se pudo cargar el panel.'); }
 }
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault(); message(loginStatus, 'Ingresando…', 'success');
-  const submit = loginForm.querySelector<HTMLButtonElement>('button')!; submit.disabled = true;
+  const submit = loginForm.querySelector<HTMLButtonElement>('button')!;
+  setBusy(submit, true);
   try {
     if (!config.supabaseUrl || !config.supabaseKey) throw new Error('Falta configurar Supabase en el despliegue.');
     const body = Object.fromEntries(new FormData(loginForm));
@@ -230,16 +371,53 @@ loginForm.addEventListener('submit', async (event) => {
     });
     if (!response.ok) throw new Error(await parseError(response));
     session = await response.json() as Session; localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-    await showDashboard();
+    await showDashboard(true);
   } catch (error) { message(loginStatus, error instanceof Error ? error.message : 'No se pudo iniciar sesión.'); }
-  finally { submit.disabled = false; }
+  finally { setBusy(submit, false); }
 });
 
-refreshButton.addEventListener('click', () => loadManifest().catch((error) => message(dashboardStatus, error.message)));
-logoutButton.addEventListener('click', () => { localStorage.removeItem(STORAGE_KEY); session = null; location.reload(); });
+for (const tab of sectionTabs) {
+  tab.addEventListener('click', () => {
+    if (isSectionId(tab.dataset.sectionTab)) activateSection(tab.dataset.sectionTab);
+  });
+}
+
+sectionTabsContainer.addEventListener('keydown', (event) => {
+  if (!(event instanceof KeyboardEvent) || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+  const currentIndex = sectionTabs.indexOf(document.activeElement as HTMLButtonElement);
+  if (currentIndex < 0) return;
+  event.preventDefault();
+  let nextIndex = currentIndex;
+  if (event.key === 'Home') nextIndex = 0;
+  else if (event.key === 'End') nextIndex = sectionTabs.length - 1;
+  else if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % sectionTabs.length;
+  else nextIndex = (currentIndex - 1 + sectionTabs.length) % sectionTabs.length;
+  const nextSection = sectionTabs[nextIndex]?.dataset.sectionTab;
+  if (isSectionId(nextSection)) activateSection(nextSection, true);
+});
+
+refreshButton.addEventListener('click', async () => {
+  setBusy(refreshButton, true);
+  try { await loadManifest(); }
+  catch (error) { message(dashboardStatus, error instanceof Error ? error.message : 'No se pudieron actualizar los recursos.'); }
+  finally { setBusy(refreshButton, false); }
+});
+
+logoutButton.addEventListener('click', () => {
+  localStorage.removeItem(STORAGE_KEY);
+  session = null;
+  grid.replaceChildren();
+  updateManifestSummary([]);
+  activateSection('hero');
+  message(dashboardStatus);
+  message(loginStatus, 'Sesión cerrada.', 'success');
+  setAdminView('login');
+  window.requestAnimationFrame(() => loginForm.querySelector<HTMLInputElement>('input[name="email"]')?.focus());
+});
+
 publishButton.addEventListener('click', async () => {
   if (!window.confirm('¿Publicar todos los borradores y desplegar la landing?')) return;
-  publishButton.disabled = true; message(dashboardStatus, 'Publicando y solicitando despliegue…', 'success');
+  setBusy(publishButton, true); message(dashboardStatus, 'Publicando y solicitando despliegue…', 'success');
   try {
     const active = await ensureSession();
     const response = await fetch('/api/admin/publish', { method:'POST', headers:{ Authorization:`Bearer ${active.access_token}` } });
@@ -248,8 +426,13 @@ publishButton.addEventListener('click', async () => {
     await loadManifest();
     message(dashboardStatus, `${body.message} Los cambios aparecerán al terminar el build.`, 'success');
   } catch (error) { message(dashboardStatus, error instanceof Error ? error.message : 'No se pudo publicar.'); }
-  finally { publishButton.disabled = false; }
+  finally { setBusy(publishButton, false); }
 });
 
 try { session = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') as Session|null; } catch { session = null; }
-if (session && config.supabaseUrl && config.supabaseKey) showDashboard();
+if (session && config.supabaseUrl && config.supabaseKey) {
+  showDashboard().catch((error) => {
+    setAdminView('login');
+    message(loginStatus, error instanceof Error ? error.message : 'La sesión ya no es válida.');
+  });
+}

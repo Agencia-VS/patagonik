@@ -25,6 +25,9 @@ for (const file of components) {
   const body = readFileSync(file, 'utf8');
   if (/<(?:img|video)\b[^>]*\bsrc=["']\/images\//.test(body)) errors.push(`${file} conserva un asset hardcodeado`);
 }
+if (!migration.includes('where published_at is null')) {
+  errors.push('la publicación SQL no tiene un WHERE compatible con pg-safeupdate');
+}
 if (!readFileSync('src/scripts/design-behaviour.js', 'utf8').includes('setupLazyMedia()')) {
   errors.push('falta setupLazyMedia en el comportamiento de diseño');
 }
