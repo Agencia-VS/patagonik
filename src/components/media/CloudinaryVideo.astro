@@ -1,0 +1,43 @@
+---
+import type { Locale } from '@/content.config';
+import { cloudinaryVideoPosterUrl, cloudinaryVideoUrl } from '@/lib/media/cloudinary';
+import { localizedAlt, type LandingAsset } from '@/lib/media/types';
+
+interface Props {
+  asset: LandingAsset;
+  locale: Locale;
+  hero?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  asset,
+  locale,
+  hero = false,
+  class: className,
+  style = 'width:100%;height:100%;object-fit:cover;display:block;',
+} = Astro.props;
+const src = cloudinaryVideoUrl(asset);
+const poster = cloudinaryVideoPosterUrl(asset);
+const focus = asset.focalPoint ?? { x: 0.5, y: 0.5 };
+const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-position:${focus.x * 100}% ${focus.y * 100}%;`;
+---
+
+{
+  src && (
+    <video
+      data-lazy-video=""
+      data-hero-video={hero ? '' : undefined}
+      data-src={src}
+      poster={poster}
+      muted
+      loop
+      playsinline
+      preload="none"
+      aria-label={localizedAlt(asset, locale)}
+      class={className}
+      style={finalStyle}
+    />
+  )
+}

@@ -15,7 +15,11 @@ src/
     ui.overrides.json  ← textos propios de esta versión; gana sobre lo generado
   layouts/           BaseLayout: canonical, hreflang, Open Graph
   components/        Header, Footer, ExperienceCard + páginas
+  lib/media/         manifiesto Cloudinary, presets y fallbacks
+  pages/admin/       panel autenticado de assets
+  pages/api/         firma Cloudinary, publicación y healthcheck
   pages/[...path].astro   una sola ruta genera las 57 páginas
+supabase/             migración, RLS, manifiestos y revisiones
 scripts/
   check-i18n.mjs     rompe el build si una clave llega al HTML sin resolver
 design/              el bundle de Claude Design: fuente de la que se migró
@@ -28,6 +32,9 @@ npm run dev       # servidor local
 npm run build     # build + comprobación de i18n
 npm run check     # astro check + tsc
 npm run content:export   # re-vuelca el contenido desde design/src/template.html
+npm run media:check      # catálogo y ausencia de src hardcodeados
+npm run media:migrate    # sube los assets actuales a Cloudinary/Supabase
+npm run media:export     # respaldo JSON del manifiesto publicado
 ```
 
 ## Cómo está montado el multi-idioma
@@ -66,11 +73,17 @@ página indexable y el selector de idioma es navegación real.
   el idioma en que se escribieron y la página lo indica cuando no coincide con
   el del visitante.
 
+## Assets editables
+
+El cliente administra fotos y hero-video desde `/admin`. Cloudinary entrega
+variantes optimizadas y Supabase guarda borradores/publicaciones con RLS. La
+landing pública sigue siendo estática: una pausa de Supabase no la derriba.
+
+La instalación, variables, migración, keepalive y backups están documentados
+en [`docs/media-admin.md`](docs/media-admin.md).
+
 ## Pendiente
 
-- **Fotos.** `src/components/ExperienceCard.astro` tiene el hueco marcado con
-  `data-image`; cuando lleguen, entra `<Image>` de `astro:assets` y genera
-  `srcset` y formatos modernos.
 - **GA4 y captura de leads** — a la espera de decisión del cliente. Hoy el
   formulario abre WhatsApp y no guarda nada.
 

@@ -1,0 +1,68 @@
+import type { LandingAssetMap } from './types';
+
+const experience = (slug: string, order: number): LandingAssetMap[string] => ({
+  slotKey: `experience.${slug}.cover`,
+  label: `Experiencia ${order}`,
+  preset: 'experience-card',
+  resourceType: 'image',
+  fallback: `/images/exp-${order}.webp`,
+  focalPoint: { x: 0.5, y: 0.5 },
+});
+
+export const LOCAL_LANDING_ASSETS: LandingAssetMap = {
+  'landing.hero': {
+    slotKey: 'landing.hero',
+    label: 'Hero principal',
+    preset: 'hero',
+    resourceType: 'image',
+    focalPoint: { x: 0.5, y: 0.5 },
+  },
+  'landing.band-valle': {
+    slotKey: 'landing.band-valle',
+    label: 'Franja Valle',
+    preset: 'band',
+    resourceType: 'image',
+    fallback: '/images/band-valle.webp',
+    focalPoint: { x: 0.5, y: 0.5 },
+  },
+  'landing.experiences-background': {
+    slotKey: 'landing.experiences-background',
+    label: 'Fondo de experiencias',
+    preset: 'experience-background',
+    resourceType: 'image',
+    fallback: '/images/exp-bg-extended.webp',
+    focalPoint: { x: 0.5, y: 0.5 },
+  },
+  'landing.final-cta': {
+    slotKey: 'landing.final-cta',
+    label: 'CTA final',
+    preset: 'final-cta',
+    resourceType: 'image',
+    fallback: '/images/final-band.webp',
+    focalPoint: { x: 0.5, y: 0.5 },
+  },
+  'about.essence': {
+    slotKey: 'about.essence',
+    label: 'Nuestra Esencia',
+    preset: 'essence',
+    resourceType: 'image',
+    fallback: '/images/esc-main.webp',
+    focalPoint: { x: 0.5, y: 0.5 },
+  },
+  'experience.base-torres-amanecer-regular.cover': experience('base-torres-amanecer-regular', 1),
+  'experience.valle-del-frances.cover': experience('valle-del-frances', 2),
+  'experience.glaciar-grey-navegacion.cover': experience('glaciar-grey-navegacion', 3),
+  'experience.excursiones-especiales.cover': experience('excursiones-especiales', 4),
+  'experience.avistamiento-de-fauna.cover': experience('avistamiento-de-fauna', 5),
+  'experience.chorrillo-los-salmones.cover': experience('chorrillo-los-salmones', 6),
+  'experience.aonikenk-laguna-azul.cover': experience('aonikenk-laguna-azul', 7),
+  'experience.balmaceda-serrano.cover': experience('balmaceda-serrano', 8),
+  'experience.full-day-perspectivas-cueva-del-milodon.cover': experience('full-day-perspectivas-cueva-del-milodon', 9),
+  'experience.laguna-cebolla-avistamiento-de-fauna.cover': experience('laguna-cebolla-avistamiento-de-fauna', 10),
+  'experience.lazo-weber.cover': experience('lazo-weber', 11),
+  'experience.trekking-escenico-torres-del-paine.cover': experience('trekking-escenico-torres-del-paine', 12),
+  'experience.mirador-ferrier.cover': experience('mirador-ferrier', 13),
+  'experience.paso-la-feria-weber.cover': experience('paso-la-feria-weber', 14),
+  'experience.full-day-perito-moreno.cover': experience('full-day-perito-moreno', 15),
+  'experience.astrofotografia.cover': experience('astrofotografia', 16),
+};

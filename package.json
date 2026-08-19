@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/check-i18n.mjs",
+    "build": "astro build && node scripts/check-i18n.mjs && node scripts/check-media.mjs",
     "preview": "astro preview",
     "check": "astro check && tsc --noEmit -p tsconfig.json",
     "content:export": "python3 design/tools/export_content.py",
     "design:build": "python3 design/tools/build.py --src design/src --out design/dist/PatagoniK_Landing.html",
-    "port": "node scripts/port-design.mjs && node scripts/port-markup.mjs && node scripts/port-behaviour.mjs"
+    "port": "node scripts/port-design.mjs && node scripts/port-markup.mjs && node scripts/port-behaviour.mjs",
+    "media:check": "node scripts/check-media.mjs",
+    "media:migrate": "node scripts/migrate-media-to-cloudinary.mjs",
+    "media:export": "node scripts/export-landing-manifest.mjs"
   },
   "repository": {
     "type": "git",
@@ -25,10 +28,14 @@
     "sharp": "^0.35.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@types/node": "^26.2.0",
     "playwright": "^1.62.1",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.0"
   },
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "private": true
 }

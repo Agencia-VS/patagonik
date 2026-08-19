@@ -87,8 +87,8 @@ function normalizeRuntimeTags(html) {
   return [out, counts];
 }
 
-/** <image-slot src="uuid"> -> <image-slot><img src="/images/…"></image-slot> */
-function convertImageSlots(html) {
+/** <image-slot src="uuid"> -> medio administrable o fallback local. */
+function convertImageSlots(html, component) {
   let n = 0;
   const out = html.replace(
     /<image-slot([^>]*)><\/image-slot>/g,
@@ -107,11 +107,39 @@ function convertImageSlots(html) {
       if (!src) return `<image-slot${attrs}></image-slot>`;
       n++;
       const keep = attrs.replace(/\s*\bsrc="[^"]*"/, '').replace(/\s*\bplaceholder="[^"]*"/, '');
+      let editable = null;
+      if (component === 'Landing') {
+        const fixed = {
+          'pt-band-valle': ["landing.band-valle", 'band'],
+          'pt-exp-bg-extended': ["landing.experiences-background", 'experience-background'],
+          'pt-exp-bg': ["landing.experiences-background", 'experience-background'],
+          'pt-final-band': ["landing.final-cta", 'final-cta'],
+        }[id];
+        const experience = id?.match(/^pt-exp-(\d+)$/)?.[1];
+        if (fixed) editable = `<CloudinaryImage asset={asset('${fixed[0]}')} locale={locale} preset="${fixed[1]}" decorative />`;
+        else if (experience) editable = `<CloudinaryImage asset={experienceAsset(${experience})} locale={locale} preset="experience-card" decorative />`;
+      } else if (component === 'AboutSections' && id === 'pt-esc-main') {
+        editable = `<CloudinaryImage asset={asset('about.essence')} locale={locale} preset="essence" decorative />`;
+      }
       // alt vacío: son fotos decorativas, el texto de la tarjeta va al lado.
-      return `<image-slot${keep}><img src="${src}" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:${fit};display:block;" /></image-slot>`;
+      const child = editable ?? `<img src="${src}" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:${fit};display:block;" />`;
+      return `<image-slot${keep}>${child}</image-slot>`;
     },
   );
   return [out, n];
+}
+
+function convertHero(html, component) {
+  if (component !== 'Landing') return html;
+  const hero = /<video\b[^>]*data-hero-video[^>]*><\/video>\s*<image-slot\b([^>]*\bid="pt-hero-video"[^>]*)><\/image-slot>/;
+  if (!hero.test(html)) throw new Error('Landing: no encuentro el hero para conectarlo al catálogo de medios');
+  return html.replace(hero, (_all, attrs) => {
+    const keep = attrs.replace(/\s*\bplaceholder="[^"]*"/, '').replace(/\s*\bstyle="[^"]*"/, '');
+    return `{heroAsset.resourceType === 'video' && <CloudinaryVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
+          <image-slot${keep} style="display:block;width:100%;height:100%;">
+            {heroAsset.resourceType === 'image' && <CloudinaryImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
+          </image-slot>`;
+  });
 }
 
 /** data-t="clave">texto<  ->  data-t="clave">{t('clave')}< */
@@ -224,10 +252,17 @@ function toComponent(name, html, { imports = '' } = {}) {
   assertBalanced(name, html);
   const [menued, hasMenu] = rewriteMenu(html);
   const [normalized, runtime] = normalizeRuntimeTags(menued);
-  const [withImages, imgs] = convertImageSlots(normalized);
-  const [withText, keys] = convertTranslations(withImages);
+  const [withImages, imgs] = convertImageSlots(normalized, name);
+  const [withTextRaw, keys] = convertTranslations(withImages);
+  const withText = convertHero(withTextRaw, name);
   const runtimeNote = Object.entries(runtime).map(([k, v]) => `${k}×${v}`).join(' ');
   const needsTour = /\btour\(/.test(withText);
+  const usesMedia = name === 'Landing' || name === 'AboutSections';
+  const mediaImports = usesMedia
+    ? `import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
+${name === 'Landing' ? "import CloudinaryVideo from '@/components/media/CloudinaryVideo.astro';\n" : ''}import type { LandingAssetMap } from '@/lib/media/types';
+`
+    : '';
   const menuFrontmatter = hasMenu
     ? `
 import { homePath, routePath } from '@/i18n/routes';
@@ -248,20 +283,26 @@ const MENU = [
   const body = `---
 import type { Locale } from '@/content.config';
 import { useTranslations } from '@/i18n';
-${needsTour ? "import { getCollection } from 'astro:content';\n" : ''}${imports}
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+${needsTour ? "import { getCollection } from 'astro:content';\n" : ''}${mediaImports}${imports}
+interface Props { locale: Locale${usesMedia ? '; assets: LandingAssetMap' : ''} }
+const { locale${usesMedia ? ', assets' : ''} } = Astro.props;
 const t = useTranslations(locale);
-${menuFrontmatter}${
+${usesMedia ? `const asset = (slotKey: string) => {
+  const value = assets[slotKey];
+  if (!value) throw new Error(\`Asset requerido no encontrado: \${slotKey}\`);
+  return value;
+};
+${name === 'Landing' ? "const heroAsset = asset('landing.hero');\n" : ''}` : ''}${menuFrontmatter}${
   needsTour
     ? `
 /* Textos de tarjeta: vienen de la colección de experiencias, en el idioma de
    la página. El diseño los pedía como tour.N.t/.s/.d/.c. */
-const byOrder = new Map(
-  (await getCollection('experiences')).map((e) => [String(e.data.order), e.data.content[locale]]),
-);
+const experiences = await getCollection('experiences');
+const byOrder = new Map(experiences.map((e) => [String(e.data.order), e.data.content[locale]]));
+const slugByOrder = new Map(experiences.map((e) => [String(e.data.order), e.data.slug]));
 const FIELD = { t: 'cardTitle', s: 'cardSummary', d: 'cardDetail', c: 'cardCategory' } as const;
 const tour = (n: string, f: keyof typeof FIELD) => byOrder.get(n)?.[FIELD[f]] ?? '';
+const experienceAsset = (order: number) => asset(\`experience.\${slugByOrder.get(String(order))}.cover\`);
 `
     : ''
 }---

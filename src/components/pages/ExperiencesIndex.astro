@@ -3,12 +3,15 @@ import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '@/content.config';
 import { useTranslations } from '@/i18n';
 import { experiencePath } from '@/i18n/routes';
+import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
+import type { LandingAssetMap } from '@/lib/media/types';
 
 interface Props {
   locale: Locale;
   experiences: CollectionEntry<'experiences'>[];
+  assets: LandingAssetMap;
 }
-const { locale, experiences } = Astro.props;
+const { locale, experiences, assets } = Astro.props;
 const t = useTranslations(locale);
 ---
 
@@ -28,11 +31,13 @@ const t = useTranslations(locale);
     {
       experiences.map((entry) => {
         const c = entry.data.content[locale];
+        const cover = assets[`experience.${entry.data.slug}.cover`];
+        if (!cover) throw new Error(`Asset requerido no encontrado: experience.${entry.data.slug}.cover`);
         return (
           <li class="pk-index__item">
             <a href={experiencePath(entry.data.slug, locale)}>
               <span class="pk-index__media">
-                <img src={`/images/exp-${entry.data.order}.webp`} alt="" loading="lazy" decoding="async" />
+                <CloudinaryImage asset={cover} locale={locale} preset="experience-index" />
               </span>
               <span class="pk-index__body">
                 {c.cardCategory && <span class="pk-index__cat">{c.cardCategory}</span>}

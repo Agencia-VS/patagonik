@@ -1,0 +1,7 @@
+# Estos patrones se anclan a la raíz. Sin la barra inicial, `design/`
+# también excluye los componentes productivos de `src/components/design/`.
+/design/
+/backups/
+/docs/
+/.github/
+# `supabase/` se incluye: scripts/check-media.mjs valida la migración en build.

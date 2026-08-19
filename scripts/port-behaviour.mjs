@@ -72,6 +72,97 @@ for (const name of DROP) {
 for (const name of dropped) {
   out = out.replace(new RegExp(`\\n\\s*this\\.${name}\\([^)]*\\);`, 'g'), '');
 }
+
+/* El bundle original precarga y fuerza a reproducir el hero; tampoco conoce
+ * los src diferidos que emite CloudinaryImage. Esta adaptación vive en el
+ * port para que `npm run port` no revierta la optimización. */
+const mediaMethods = `
+  /* Los clones desktop/móvil conservan data-lazy-*: se observan después de
+     construirlos para que cada variante cargue sólo al acercarse al viewport. */
+  setupLazyMedia() {
+    const images = this.q('img[data-lazy-media]');
+    if (!images.length) return;
+
+    const load = (img) => {
+      const srcset = img.getAttribute('data-lazy-srcset');
+      const src = img.getAttribute('data-lazy-src');
+      if (srcset) img.setAttribute('srcset', srcset);
+      if (src) img.setAttribute('src', src);
+      img.removeAttribute('data-lazy-srcset');
+      img.removeAttribute('data-lazy-src');
+      img.removeAttribute('data-lazy-media');
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      images.forEach(load);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        load(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '480px 0px' });
+    images.forEach((img) => observer.observe(img));
+    (this.cleanups = this.cleanups || []).push(() => observer.disconnect());
+  }
+
+  /* El hero sólo descarga vídeo cuando se aproxima al viewport. Respeta tanto
+     reduced-motion como Save-Data y deja visible el poster en esos casos. */
+  setupHeroVideo() {
+    const frame = this.one('[data-video-frame]');
+    const vid = this.one('[data-hero-video]');
+    if (!frame || !vid) return;
+    const src = vid.getAttribute('data-src');
+    if (!src) return;
+    vid.muted = true;
+    vid.defaultMuted = true;
+    vid.loop = true;
+    vid.playsInline = true;
+    vid.setAttribute('muted', '');
+    const slot = frame.querySelector('image-slot');
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const conserveData = this.reduced || !!(connection && connection.saveData);
+    if (conserveData) return;
+
+    let attached = false;
+    const attach = () => {
+      if (attached) return;
+      attached = true;
+      vid.src = src;
+      vid.removeAttribute('data-src');
+      vid.load();
+    };
+    const play = () => {
+      attach();
+      const promise = vid.play();
+      if (promise && promise.catch) promise.catch(() => {});
+    };
+    this.on(vid, 'loadeddata', () => { if (slot) slot.style.display = 'none'; }, { once: true });
+
+    if (!('IntersectionObserver' in window)) {
+      play();
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry) return;
+      if (entry.isIntersecting) play();
+      else if (!vid.paused) vid.pause();
+    }, { rootMargin: '180px 0px', threshold: 0.01 });
+    observer.observe(frame);
+    (this.cleanups = this.cleanups || []).push(() => observer.disconnect());
+  }`;
+
+const originalHero = cutMethod(out, 'setupHeroVideo');
+if (!originalHero) throw new Error('no encuentro setupHeroVideo en el bundle');
+out = out.slice(0, originalHero.start) + mediaMethods + out.slice(originalHero.end);
+out = out.replace('  /* Hero accepts an mp4: prop URL, or a video file dropped straight onto the frame */\n', '');
+out = out.replace(
+  '    this.setupMobileExperienceSwipe();',
+  '    this.setupMobileExperienceSwipe();\n    this.setupLazyMedia();',
+);
 /*
  * El modal de detalle se conserva, pero deja de leer EXPERIENCE_DATA: los
  * datos los inyecta Astro desde la content collection, ya en el idioma de la

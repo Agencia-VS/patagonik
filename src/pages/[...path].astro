@@ -13,6 +13,7 @@ import ExperiencesIndex from '@/components/pages/ExperiencesIndex.astro';
 import ExperienceData from '@/components/ExperienceData.astro';
 import ExperienceModal from '@/components/design/ExperienceModal.astro';
 import { useTranslations } from '@/i18n';
+import { getLandingAssets } from '@/lib/media/landing-assets';
 
 /**
  * Una sola ruta atrapa todo el sitio porque el segmento cambia de idioma a
@@ -59,6 +60,7 @@ const { kind, locale, slug, alternates } = Astro.props as {
 };
 
 const t = useTranslations(locale);
+const landingAssets = await getLandingAssets();
 const experiences = (await getCollection('experiences')).sort((a, b) => a.data.order - b.data.order);
 const entry = slug ? experiences.find((e) => e.data.slug === slug) : undefined;
 if (kind === 'experience' && !entry) throw new Error(`experiencia no encontrada: ${slug}`);
@@ -84,12 +86,12 @@ const meta = META[kind]!;
 
 <BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates}>
   <Header slot="header" locale={locale} />
-  {kind === 'home' && <Home locale={locale} />}
+  {kind === 'home' && <Home locale={locale} assets={landingAssets} />}
   {kind === 'home' && <ExperienceModal locale={locale} />}
   {kind === 'home' && <ExperienceData locale={locale} />}
-  {kind === 'about' && <About locale={locale} />}
+  {kind === 'about' && <About locale={locale} assets={landingAssets} />}
   {kind === 'faq' && <Faq locale={locale} />}
-  {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} />}
+  {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} assets={landingAssets} />}
   {kind === 'experience' && entry && <ExperienceDetail locale={locale} entry={entry} />}
   <Footer slot="footer" locale={locale} />
 </BaseLayout>

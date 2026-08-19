@@ -1,0 +1,26 @@
+name: Supabase keepalive
+
+on:
+  schedule:
+    - cron: '23 3,11,19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Consultar endpoint protegido
+        env:
+          KEEPALIVE_URL: ${{ secrets.SUPABASE_KEEPALIVE_URL }}
+          KEEPALIVE_SECRET: ${{ secrets.KEEPALIVE_SECRET }}
+        run: |
+          test -n "$KEEPALIVE_URL"
+          test -n "$KEEPALIVE_SECRET"
+          curl --fail --silent --show-error \
+            --retry 2 \
+            --header "Authorization: Bearer $KEEPALIVE_SECRET" \
+            "$KEEPALIVE_URL"

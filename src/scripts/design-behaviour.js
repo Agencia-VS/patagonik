@@ -54,6 +54,7 @@ class PatagonikUI {
     this.setupDesktopExperiences();
     this.setupMobileExperiences();
     this.setupMobileExperienceSwipe();
+    this.setupLazyMedia();
     /* Antes de cacheSpanish()/setLang(): monta las flechas del carrusel para
        que entren en el mismo barrido de traducción que el resto del DOM. */
     this.setupExperienceCarousel();
@@ -1008,44 +1009,82 @@ class PatagonikUI {
     this.carouselSync = (this.carouselSync || []).concat(sync);
   }
 
-  /* Hero accepts an mp4: prop URL, or a video file dropped straight onto the frame */
+  /* Los clones desktop/móvil conservan data-lazy-*: se observan después de
+     construirlos para que cada variante cargue sólo al acercarse al viewport. */
+  setupLazyMedia() {
+    const images = this.q('img[data-lazy-media]');
+    if (!images.length) return;
+
+    const load = (img) => {
+      const srcset = img.getAttribute('data-lazy-srcset');
+      const src = img.getAttribute('data-lazy-src');
+      if (srcset) img.setAttribute('srcset', srcset);
+      if (src) img.setAttribute('src', src);
+      img.removeAttribute('data-lazy-srcset');
+      img.removeAttribute('data-lazy-src');
+      img.removeAttribute('data-lazy-media');
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      images.forEach(load);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        load(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '480px 0px' });
+    images.forEach((img) => observer.observe(img));
+    (this.cleanups = this.cleanups || []).push(() => observer.disconnect());
+  }
+
+  /* El hero sólo descarga vídeo cuando se aproxima al viewport. Respeta tanto
+     reduced-motion como Save-Data y deja visible el poster en esos casos. */
   setupHeroVideo() {
     const frame = this.one('[data-video-frame]');
     const vid = this.one('[data-hero-video]');
     if (!frame || !vid) return;
+    const src = vid.getAttribute('data-src');
+    if (!src) return;
     vid.muted = true;
     vid.defaultMuted = true;
     vid.loop = true;
     vid.playsInline = true;
     vid.setAttribute('muted', '');
     const slot = frame.querySelector('image-slot');
-    const show = (src) => {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const conserveData = this.reduced || !!(connection && connection.saveData);
+    if (conserveData) return;
+
+    let attached = false;
+    const attach = () => {
+      if (attached) return;
+      attached = true;
       vid.src = src;
-      vid.style.display = 'block';
-      if (slot) slot.style.display = 'none';
-      vid.loop = true;
-      const p = vid.play();
-      if (p && p.catch) p.catch(() => {});
+      vid.removeAttribute('data-src');
+      vid.load();
     };
-    this.on(vid, 'ended', () => { vid.currentTime = 0; const p = vid.play(); if (p && p.catch) p.catch(() => {}); });
-    this.on(vid, 'pause', () => {
-      if (!vid.src || vid.style.display === 'none') return;
-      if (vid.currentTime >= vid.duration - 0.15) { vid.currentTime = 0; }
-      const p = vid.play(); if (p && p.catch) p.catch(() => {});
-    });
-    if (this.props.heroVideoUrl) show(this.props.heroVideoUrl);
-    const isVid = (t) => !!t && t.indexOf('video/') === 0;
-    this.on(frame, 'dragover', (e) => {
-      const dt = e.dataTransfer;
-      if (dt && Array.from(dt.items || []).some(i => isVid(i.type))) {
-        e.preventDefault(); e.stopPropagation();
-        dt.dropEffect = 'copy';
-      }
-    }, true);
-    this.on(frame, 'drop', (e) => {
-      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-      if (f && isVid(f.type)) { e.preventDefault(); e.stopPropagation(); show(URL.createObjectURL(f)); }
-    }, true);
+    const play = () => {
+      attach();
+      const promise = vid.play();
+      if (promise && promise.catch) promise.catch(() => {});
+    };
+    this.on(vid, 'loadeddata', () => { if (slot) slot.style.display = 'none'; }, { once: true });
+
+    if (!('IntersectionObserver' in window)) {
+      play();
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry) return;
+      if (entry.isIntersecting) play();
+      else if (!vid.paused) vid.pause();
+    }, { rootMargin: '180px 0px', threshold: 0.01 });
+    observer.observe(frame);
+    (this.cleanups = this.cleanups || []).push(() => observer.disconnect());
   }
 
   /* Translucent arrow cursor over the gallery cards */
