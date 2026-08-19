@@ -37,7 +37,7 @@ export function secretKey(): string {
   return env('SUPABASE_SECRET_KEY') ?? requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
 }
 
-function serviceHeaders(): HeadersInit {
+function serviceHeaders(): Record<string, string> {
   const key = secretKey();
   const headers: Record<string, string> = { apikey: key };
   // Las service_role antiguas son JWT; las nuevas sb_secret_* sólo se envían
