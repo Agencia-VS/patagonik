@@ -22,8 +22,7 @@ interface PublishedManifestRow {
 
 let manifestPromise: Promise<LandingAssetMap> | undefined;
 
-function env(name: string): string | undefined {
-  const value = import.meta.env[name];
+function cleanEnv(value: unknown): string | undefined {
   return typeof value === 'string' && value.length ? value : undefined;
 }
 
@@ -37,10 +36,10 @@ function normalizedPoint(point: PublishedManifestRow['focal_point']): LandingAss
 
 async function loadManifest(): Promise<LandingAssetMap> {
   const fallback = structuredClone(LOCAL_LANDING_ASSETS);
-  const supabaseUrl = env('SUPABASE_URL') ?? env('PUBLIC_SUPABASE_URL');
-  const secretKey = env('SUPABASE_SECRET_KEY') ?? env('SUPABASE_SERVICE_ROLE_KEY');
-  const cloudName = env('PUBLIC_CLOUDINARY_CLOUD_NAME');
-  const requireRemote = env('MEDIA_REMOTE_REQUIRED') === 'true';
+  const supabaseUrl = cleanEnv(import.meta.env.SUPABASE_URL) ?? cleanEnv(import.meta.env.PUBLIC_SUPABASE_URL);
+  const secretKey = cleanEnv(import.meta.env.SUPABASE_SECRET_KEY) ?? cleanEnv(import.meta.env.SUPABASE_SERVICE_ROLE_KEY);
+  const cloudName = cleanEnv(import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME);
+  const requireRemote = cleanEnv(import.meta.env.MEDIA_REMOTE_REQUIRED) === 'true';
 
   if (!supabaseUrl || !secretKey || !cloudName) {
     if (requireRemote) throw new Error('Faltan SUPABASE_URL, SUPABASE_SECRET_KEY o PUBLIC_CLOUDINARY_CLOUD_NAME para cargar los assets publicados.');

@@ -3,6 +3,27 @@ export interface SupabaseUser {
   email?: string;
 }
 
+// Vite sólo reemplaza accesos estáticos como `import.meta.env.MI_VARIABLE`.
+// process.env mantiene las variables disponibles en las funciones de Vercel
+// y este mapa conserva compatibilidad con .env durante desarrollo/build local.
+const BUILD_ENV = {
+  SUPABASE_URL: import.meta.env.SUPABASE_URL,
+  PUBLIC_SUPABASE_URL: import.meta.env.PUBLIC_SUPABASE_URL,
+  PUBLIC_SUPABASE_PUBLISHABLE_KEY: import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  PUBLIC_SUPABASE_ANON_KEY: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  SUPABASE_ANON_KEY: import.meta.env.SUPABASE_ANON_KEY,
+  SUPABASE_SECRET_KEY: import.meta.env.SUPABASE_SECRET_KEY,
+  SUPABASE_SERVICE_ROLE_KEY: import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
+  PUBLIC_CLOUDINARY_CLOUD_NAME: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY: import.meta.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: import.meta.env.CLOUDINARY_API_SECRET,
+  CLOUDINARY_ASSET_FOLDER: import.meta.env.CLOUDINARY_ASSET_FOLDER,
+  VERCEL_DEPLOY_HOOK_URL: import.meta.env.VERCEL_DEPLOY_HOOK_URL,
+  CRON_SECRET: import.meta.env.CRON_SECRET,
+} as const;
+
+type ServerEnvName = keyof typeof BUILD_ENV;
+
 export class ApiError extends Error {
   status: number;
 
@@ -12,12 +33,12 @@ export class ApiError extends Error {
   }
 }
 
-export function env(name: string): string | undefined {
-  const value = import.meta.env[name];
+export function env(name: ServerEnvName): string | undefined {
+  const value = process.env[name] ?? BUILD_ENV[name];
   return typeof value === 'string' && value.trim() ? value.trim() : undefined;
 }
 
-export function requiredEnv(name: string): string {
+export function requiredEnv(name: ServerEnvName): string {
   const value = env(name);
   if (!value) throw new ApiError(503, `Configuración incompleta: ${name}`);
   return value;
