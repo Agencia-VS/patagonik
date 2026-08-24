@@ -109,8 +109,9 @@ un período de siete días. No conviene depender de que el administrador entre:
 - `vercel.json` consulta una fila una vez al día (máximo práctico del plan
   Hobby) mediante `/api/internal/supabase-health` y `CRON_SECRET`.
 - `.github/workflows/supabase-keepalive.yml` añade tres consultas diarias.
-  Configurar `SUPABASE_KEEPALIVE_URL` con la URL completa del endpoint y
-  `KEEPALIVE_SECRET` con el mismo valor de `CRON_SECRET`.
+  Crear en GitHub → Settings → Secrets and variables → Actions un secret
+  llamado `CRON_SECRET`, con exactamente el mismo valor configurado en Vercel.
+  La URL pública del endpoint queda definida en el workflow y no es un secreto.
 - Para más independencia, un monitor externo puede consultar ese mismo
   endpoint con el header `Authorization: Bearer …`.
 
