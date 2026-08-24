@@ -2,9 +2,18 @@
 import type { Locale } from '@/content.config';
 import { useTranslations } from '@/i18n';
 
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+interface Props {
+  locale: Locale;
+  alternates: Record<Locale, string>;
+}
+const { locale, alternates } = Astro.props;
 const t = useTranslations(locale);
+
+const LANGUAGES: { code: Locale; label: string }[] = [
+  { code: 'es', label: 'Español' },
+  { code: 'en', label: 'English' },
+  { code: 'pt', label: 'Português' },
+];
 ---
 
 <footer id="contacto" data-nav="dark" style="background: #232725; color: rgba(245,242,236,.72); padding: clamp(52px, 12vw, 90px) clamp(22px, 6vw, 96px);">
@@ -36,9 +45,9 @@ const t = useTranslations(locale);
       <div>
         <p data-t="footer.lang" style="margin: 0 0 14px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.45);">{t('footer.lang')}</p>
         <div style="display: flex; gap: 14px; font-size: 14px; font-weight: 300;">
-          <button type="button" data-lang="es" style="appearance: none; background: none; border: 0; padding: 0; font: inherit; color: rgba(245,242,236,.86); cursor: pointer;">Español</button>
-          <button type="button" data-lang="en" style="appearance: none; background: none; border: 0; padding: 0; font: inherit; color: rgba(245,242,236,.86); cursor: pointer;">English</button>
-          <button type="button" data-lang="pt" style="appearance: none; background: none; border: 0; padding: 0; font: inherit; color: rgba(245,242,236,.86); cursor: pointer;">Português</button>
+          {LANGUAGES.map((language) => (
+            <a href={alternates[language.code]} data-lang={language.code} aria-current={language.code === locale ? 'page' : undefined} style="color: rgba(245,242,236,.86); text-decoration: none; cursor: pointer;">{language.label}</a>
+          ))}
         </div>
       </div>
     </div>

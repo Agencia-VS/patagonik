@@ -85,7 +85,7 @@ const meta = META[kind]!;
 ---
 
 <BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates}>
-  <Header slot="header" locale={locale} />
+  <Header slot="header" locale={locale} alternates={alternates} />
   {kind === 'home' && <Home locale={locale} assets={landingAssets} />}
   {kind === 'home' && <ExperienceModal locale={locale} />}
   {kind === 'home' && <ExperienceData locale={locale} />}
@@ -93,5 +93,5 @@ const meta = META[kind]!;
   {kind === 'faq' && <Faq locale={locale} />}
   {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} assets={landingAssets} />}
   {kind === 'experience' && entry && <ExperienceDetail locale={locale} entry={entry} />}
-  <Footer slot="footer" locale={locale} />
+  <Footer slot="footer" locale={locale} alternates={alternates} />
 </BaseLayout>
