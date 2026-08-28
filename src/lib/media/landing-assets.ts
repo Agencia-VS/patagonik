@@ -76,6 +76,9 @@ async function loadManifest(): Promise<LandingAssetMap> {
         posterPublicId: row.poster_public_id ?? undefined,
         posterVersion: row.poster_version ?? undefined,
         posterFormat: row.poster_format ?? undefined,
+        displayMode: row.slot_key === 'landing.experiences-background'
+          ? row.alt?._backgroundMode === 'photo' ? 'photo' : 'green'
+          : undefined,
         fallback: row.local_fallback ?? local?.fallback,
       };
     }

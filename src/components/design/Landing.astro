@@ -1,6 +1,7 @@
 ---
 import type { Locale } from '@/content.config';
 import { useTranslations, WHATSAPP_INTRO, whatsappUrl } from '@/i18n';
+import { routePath } from '@/i18n/routes';
 import { getCollection } from 'astro:content';
 import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
 import CloudinaryVideo from '@/components/media/CloudinaryVideo.astro';
@@ -15,6 +16,10 @@ const asset = (slotKey: string) => {
   return value;
 };
 const heroAsset = asset('landing.hero');
+const experiencesBackgroundAsset = asset('landing.experiences-background');
+const hasExperiencesBackgroundPhoto = Boolean(
+  experiencesBackgroundAsset.publicId && experiencesBackgroundAsset.displayMode === 'photo',
+);
 
 /* Textos de tarjeta: vienen de la colección de experiencias, en el idioma de
    la página. El diseño los pedía como tour.N.t/.s/.d/.c. */
@@ -73,14 +78,13 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
           <div class="pk-hero-copy" style="animation: logoIn 1.6s .3s both;">
             <span class="pk-hero-brand">PatagoniK</span>
             <h1 class="pk-hero-slogan" data-t="hero.slogan">{t('hero.slogan')}</h1>
-            <p class="pk-hero-subtitle" data-t="hero.sub">{t('hero.sub')}</p>
             <div class="pk-hero-actions">
               <a class="pk-hero-primary" data-wa="" data-btn="" href={heroWhatsappUrl} target="_blank" rel="noopener">
                 <span data-btn-bg="" aria-hidden="true"></span>
                 <span data-t="cta">{t('cta')}</span>
                 <svg data-btn-arrow="" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9C998F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(-45deg);transition:transform 1s cubic-bezier(.19,1,.22,1),stroke 1s ease;"><path d="M1.2 6h9.6M7.2 2.4 10.8 6l-3.6 3.6"></path></svg>
               </a>
-              <a class="pk-hero-secondary" href="#experiencias" data-t="hero.secondary">{t('hero.secondary')}</a>
+              <a class="pk-hero-secondary" href={routePath('experiences', locale)} data-t="hero.secondary">{t('hero.secondary')}</a>
             </div>
           </div>
         </div>
@@ -97,17 +101,21 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
     <section id="tours" data-hscroll="" data-nav="dark" data-screen-label="03 Experiencias" style="position: relative; height: 300vh; margin-top: clamp(12px, 2.6vw, 28px); background: #22282C;">
       <div data-hs-sticky="" style="position: sticky; top: 0; height: 100svh; overflow: hidden;">
-        <div style="position:absolute; inset:0; z-index:0; overflow:hidden; background:#5F584D;">
-          <!-- Extensión suave de la misma fotografía para eliminar laterales negros sin recortar la imagen principal -->
-          <div aria-hidden="true" style="position:absolute; inset:-5%; opacity:.78; filter:blur(24px); transform:scale(1.08);">
-            <image-slot id="pt-exp-bg-extended" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.experiences-background')} locale={locale} preset="experience-background" decorative /></image-slot>
-          </div>
-          <div aria-hidden="true" style="position:absolute; inset:0; background:rgba(95,88,77,.08);"></div>
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
-            <image-slot id="pt-exp-bg" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.experiences-background')} locale={locale} preset="experience-background" decorative /></image-slot>
-          </div>
+        <div data-exp-background-mode={hasExperiencesBackgroundPhoto ? 'photo' : 'green'} style="position:absolute; inset:0; z-index:0; overflow:hidden; background:#6B7A5E;">
+          {hasExperiencesBackgroundPhoto && (
+            <>
+              <!-- Extensión suave de la fotografía elegida desde el panel admin. -->
+              <div aria-hidden="true" style="position:absolute; inset:-5%; opacity:.78; filter:blur(24px); transform:scale(1.08);">
+                <image-slot id="pt-exp-bg-extended" shape="rect" fit="cover"><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+              </div>
+              <div aria-hidden="true" style="position:absolute; inset:0; background:rgba(62,78,58,.10);"></div>
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                <image-slot id="pt-exp-bg" shape="rect" fit="cover"><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+              </div>
+            </>
+          )}
         </div>
-        <div aria-hidden="true" style="position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(28,34,31,.24) 0%, rgba(28,34,31,.10) 42%, rgba(28,34,31,.22) 100%);"></div>
+        <div aria-hidden="true" style={`position:absolute; inset:0; z-index:1; pointer-events:none; background:${hasExperiencesBackgroundPhoto ? 'linear-gradient(180deg, rgba(28,34,31,.24) 0%, rgba(28,34,31,.10) 42%, rgba(28,34,31,.22) 100%)' : 'linear-gradient(180deg, rgba(49,65,45,.08) 0%, rgba(49,65,45,.02) 44%, rgba(49,65,45,.14) 100%)'};`}></div>
 
         <div data-exp-kicker="" style="position: absolute; z-index: 3; top: clamp(78px, 13vh, 124px); left: clamp(22px, 6vw, 96px); right: clamp(22px, 6vw, 96px); text-align: right; color: #F5F2EC; pointer-events: none;">
           <p data-t="exp.kicker" style="margin: 0; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: rgba(245,242,236,.66);">{t('exp.kicker')}</p>

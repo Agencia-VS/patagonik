@@ -172,6 +172,7 @@ const adminConfig = {
 
           <footer class="asset-card__actions">
             <p class="card-status" data-card-status role="status" aria-live="polite"></p>
+            <button type="button" class="button button--secondary button--green-background" data-clear-resource hidden>Usar bloque verde</button>
             <button type="submit" class="button button--primary button--save">
               <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m5 10 3 3 7-7" /></svg>
               <span>Guardar borrador</span>
@@ -317,6 +318,7 @@ const adminConfig = {
   .asset-card:hover { transform: translateY(-2px); border-color: #c9cdc5; box-shadow: 0 15px 38px rgba(38, 48, 42, .08); }
   .asset-card__preview { position: relative; overflow: hidden; aspect-ratio: 16 / 9; color: #758078; background: #dde1d9; }
   .asset-card__media { position: absolute; inset: 0; display: grid; place-items: center; font-size: .78rem; }
+  .asset-card__media[data-green-background="true"] { color: rgba(255, 255, 255, .88); background: #6b7a5e; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
   .asset-card__media img, .asset-card__media video { width: 100%; height: 100%; display: block; object-fit: cover; }
   .asset-card__badges { position: absolute; z-index: 2; top: .8rem; right: .8rem; left: .8rem; display: flex; justify-content: space-between; gap: .5rem; pointer-events: none; }
   .state-badge, .type-badge { padding: .34rem .58rem; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; color: #344138; background: rgba(250, 249, 245, .9); box-shadow: 0 3px 12px rgba(38, 48, 42, .13); backdrop-filter: blur(8px); font-size: .64rem; font-weight: 800; }
@@ -352,6 +354,7 @@ const adminConfig = {
   .asset-card__actions { display: flex; align-items: center; justify-content: flex-end; gap: .8rem; padding-top: .05rem; }
   .card-status { flex: 1; min-width: 0; margin: 0; color: var(--danger); font-size: .72rem; line-height: 1.35; }
   .button--save { flex: none; }
+  .button--green-background { flex: none; }
 
   @keyframes button-pulse { to { opacity: .35; } }
 
@@ -387,7 +390,7 @@ const adminConfig = {
   @media (max-width: 500px) {
     .source-fields, fieldset { grid-template-columns: 1fr; }
     .asset-card__actions { align-items: stretch; flex-direction: column; }
-    .button--save { width: 100%; }
+    .button--save, .button--green-background { width: 100%; }
     .card-status:empty { display: none; }
   }
 

@@ -24,7 +24,7 @@ const SECTIONS: Record<SectionId, { title: string; kicker: string; description: 
   experiences: {
     title: 'Experiencias',
     kicker: 'Catálogo visual',
-    description: 'Fondo de la sección y portadas de todas las experiencias disponibles.',
+    description: 'Bloque verde por defecto, fondo fotográfico opcional y portadas de todas las experiencias.',
   },
   essence: {
     title: 'Nuestra esencia',
@@ -245,6 +245,11 @@ async function insertAsset(asset: CloudinaryUpload): Promise<string> {
 }
 
 function preview(row: ManifestRow, container: HTMLElement) {
+  if (row.slot_key === 'landing.experiences-background' && row.draft_alt?._backgroundMode !== 'photo') {
+    container.dataset.greenBackground = 'true';
+    container.textContent = 'Bloque verde';
+    return;
+  }
   const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
   const derived = row.draft_public_id && config.cloudName
     ? `https://res.cloudinary.com/${encodeURIComponent(config.cloudName)}/${resourceType}/upload/w_720,c_limit/f_auto/q_auto/${row.draft_public_id.split('/').map(encodeURIComponent).join('/')}`
@@ -270,6 +275,7 @@ function renderCard(row: ManifestRow): HTMLElement {
   const stateBadge = card.querySelector<HTMLElement>('[data-state]')!;
   const resourceLabel = card.querySelector<HTMLElement>('[data-resource-label]')!;
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+  const clearResource = form.querySelector<HTMLButtonElement>('[data-clear-resource]')!;
   const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
   const dirty = isDirty(row);
 
@@ -284,6 +290,7 @@ function renderCard(row: ManifestRow): HTMLElement {
   publicIdInput.value = row.draft_public_id || '';
   typeInput.value = resourceType;
   fileInput.accept = row.accepted_types.includes('video') ? 'image/*,video/mp4,video/webm' : 'image/*';
+  clearResource.hidden = row.slot_key !== 'landing.experiences-background';
   [...typeInput.options].forEach((option) => { option.disabled = !row.accepted_types.includes(option.value as 'image'|'video'); });
   for (const locale of ['es','en','pt']) card.querySelector<HTMLInputElement>(`[data-alt="${locale}"]`)!.value = row.draft_alt?.[locale] || '';
   for (const axis of ['x','y'] as const) card.querySelector<HTMLInputElement>(`[data-focal="${axis}"]`)!.value = String(row.draft_focal_point?.[axis] ?? .5);
@@ -296,6 +303,26 @@ function renderCard(row: ManifestRow): HTMLElement {
     if (!selected) return;
     typeInput.value = selected.type.startsWith('video/') ? 'video' : 'image';
     resourceLabel.textContent = typeInput.value === 'video' ? 'Video' : 'Imagen';
+  });
+
+  clearResource.addEventListener('click', async () => {
+    message(cardStatus, 'Preparando bloque verde…', 'success');
+    setBusy(clearResource, true);
+    try {
+      const response = await supabase(`/rest/v1/landing_slot_assignments?slot_key=eq.${encodeURIComponent(row.slot_key)}`, {
+        method:'PATCH', headers:{ 'Content-Type':'application/json', Prefer:'return=minimal' },
+        body:JSON.stringify({
+          draft_asset_id:null,
+          draft_alt:{ ...row.draft_alt, _backgroundMode:'green' },
+          updated_by:session!.user.id,
+          updated_at:new Date().toISOString(),
+        }),
+      });
+      if (!response.ok) throw new Error(await parseError(response));
+      message(cardStatus, 'Bloque verde guardado como borrador.', 'success');
+      window.setTimeout(() => loadManifest().catch((error) => message(dashboardStatus, error.message)), 500);
+    } catch (error) { message(cardStatus, error instanceof Error ? error.message : 'No se pudo cambiar el fondo.'); }
+    finally { setBusy(clearResource, false); }
   });
 
   form.addEventListener('submit', async (event) => {
@@ -316,6 +343,9 @@ function renderCard(row: ManifestRow): HTMLElement {
         assetId = await insertAsset(parsed);
       }
       const alt = Object.fromEntries(['es','en','pt'].map((locale) => [locale, card.querySelector<HTMLInputElement>(`[data-alt="${locale}"]`)!.value.trim()]));
+      if (row.slot_key === 'landing.experiences-background' && (selected || publicIdInput.value.trim())) {
+        alt._backgroundMode = 'photo';
+      }
       const focal = Object.fromEntries(['x','y'].map((axis) => [axis, Number(card.querySelector<HTMLInputElement>(`[data-focal="${axis}"]`)!.value)]));
       const response = await supabase(`/rest/v1/landing_slot_assignments?slot_key=eq.${encodeURIComponent(row.slot_key)}`, {
         method:'PATCH', headers:{ 'Content-Type':'application/json', Prefer:'return=minimal' },

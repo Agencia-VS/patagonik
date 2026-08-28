@@ -76,26 +76,16 @@ a {
 }
 
 .pk-hero-slogan {
-  max-width: 15ch;
-  margin: clamp(16px, 2.2vw, 24px) 0 0;
-  font-family: var(--pk-serif) !important;
-  font-size: clamp(28px, 5.4vw, 58px) !important;
-  font-weight: 300 !important;
-  line-height: 0.98 !important;
-  letter-spacing: -0.018em !important;
-  color: var(--pk-cream) !important;
-  text-shadow: 0 3px 30px rgba(12, 16, 20, 0.42);
-}
-
-.pk-hero-subtitle {
-  max-width: 54ch;
-  margin: clamp(12px, 1.8vw, 18px) 0 0;
+  max-width: none;
+  margin: clamp(12px, 1.6vw, 18px) 0 0;
   font-family: var(--pk-sans) !important;
-  font-size: clamp(12px, 1.7vw, 15px) !important;
-  line-height: 1.55 !important;
-  font-weight: 400 !important;
-  color: rgba(245, 242, 236, 0.84) !important;
-  text-shadow: 0 2px 22px rgba(12, 16, 20, 0.5);
+  font-size: clamp(12px, 1.4vw, 16px) !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.82) !important;
+  text-shadow: 0 2px 20px rgba(12, 16, 20, 0.48);
 }
 
 .pk-hero-actions {
@@ -212,7 +202,7 @@ a {
 #pk-mobile-exp-track [data-exp-detail] image-slot,
 .pk-index__media {
   overflow: hidden;
-  border-radius: calc(var(--pk-radius-md) - 1px) calc(var(--pk-radius-md) - 1px) var(--pk-radius-sm) var(--pk-radius-sm) !important;
+  border-radius: 0 !important;
 }
 
 [data-f2-img] {
@@ -379,13 +369,9 @@ footer#contacto a {
   }
 
   .pk-hero-slogan {
-    max-width: 13ch;
-    font-size: clamp(28px, 9.2vw, 42px) !important;
-  }
-
-  .pk-hero-subtitle {
-    max-width: 37ch;
-    font-size: 12px !important;
+    max-width: 28ch;
+    font-size: clamp(11px, 3.2vw, 14px) !important;
+    letter-spacing: 0.1em !important;
   }
 
   .pk-hero-actions {

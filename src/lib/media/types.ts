@@ -24,6 +24,7 @@ export interface LandingAsset {
   posterPublicId?: string;
   posterVersion?: number;
   posterFormat?: string;
+  displayMode?: 'green' | 'photo';
   fallback?: string;
 }
 
