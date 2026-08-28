@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '@/content.config';
-import { useTranslations } from '@/i18n';
+import { useTranslations, WHATSAPP_INTRO, whatsappUrl } from '@/i18n';
 import { getCollection } from 'astro:content';
 import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
 import CloudinaryVideo from '@/components/media/CloudinaryVideo.astro';
@@ -24,6 +24,7 @@ const slugByOrder = new Map(experiences.map((e) => [String(e.data.order), e.data
 const FIELD = { t: 'cardTitle', s: 'cardSummary', d: 'cardDetail', c: 'cardCategory' } as const;
 const tour = (n: string, f: keyof typeof FIELD) => byOrder.get(n)?.[FIELD[f]] ?? '';
 const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(String(order))}.cover`);
+const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 ---
 
 <div id="pk-landing">
@@ -69,9 +70,18 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
         </div>
 
         <div data-center-logo="" style="position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-          <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(8px,1.2vw,12px); text-align:center; animation: logoIn 1.6s .3s both;">
-            <span style="font-family: Georgia, 'Times New Roman', serif; font-size: clamp(28px, 5.6vw, 54px); line-height: 1; letter-spacing: .26em; color: #F5F2EC; opacity: .86; text-shadow: 0 4px 40px rgba(12,16,20,.38);">PatagoniK</span>
-            <span style="font-family: Georgia, 'Times New Roman', serif; font-size: clamp(11px, 1.5vw, 16px); line-height:1.2; font-style:italic; letter-spacing:.08em; color:rgba(245,242,236,.78); text-shadow:0 3px 24px rgba(12,16,20,.45);">encuentros en la zona</span>
+          <div class="pk-hero-copy" style="animation: logoIn 1.6s .3s both;">
+            <span class="pk-hero-brand">PatagoniK</span>
+            <h1 class="pk-hero-slogan" data-t="hero.slogan">{t('hero.slogan')}</h1>
+            <p class="pk-hero-subtitle" data-t="hero.sub">{t('hero.sub')}</p>
+            <div class="pk-hero-actions">
+              <a class="pk-hero-primary" data-wa="" data-btn="" href={heroWhatsappUrl} target="_blank" rel="noopener">
+                <span data-btn-bg="" aria-hidden="true"></span>
+                <span data-t="cta">{t('cta')}</span>
+                <svg data-btn-arrow="" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9C998F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(-45deg);transition:transform 1s cubic-bezier(.19,1,.22,1),stroke 1s ease;"><path d="M1.2 6h9.6M7.2 2.4 10.8 6l-3.6 3.6"></path></svg>
+              </a>
+              <a class="pk-hero-secondary" href="#experiencias" data-t="hero.secondary">{t('hero.secondary')}</a>
+            </div>
           </div>
         </div>
 
@@ -112,7 +122,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
               <h3 data-t="tour.1.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('1', 't')}</h3>
               <p data-t="tour.1.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('1', 's')}</p>
               <p data-t="tour.1.d" style="margin: 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('1', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="2" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; display: flex; align-items: stretch; gap: clamp(3px, .5vw, 8px); height: clamp(330px, 56vh, 520px); cursor: none; color: #F5F2EC;">
             <div style="display: flex; align-items: flex-end; writing-mode: vertical-rl; transform: rotate(180deg); padding-bottom: 28px;">
@@ -125,7 +135,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
               <p data-t="tour.2.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('2', 's')}</p>
               <p data-t="tour.2.d" style="margin: 9px 0 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('2', 'd')}</p>
             </div>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="3" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #6E8CA6, #A8B4B0);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
@@ -134,7 +144,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
               <h3 data-t="tour.3.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('3', 't')}</h3>
               <p data-t="tour.3.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('3', 's')}</p>
               <p data-t="tour.3.d" style="margin: 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('3', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="4" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; display: flex; align-items: stretch; gap: clamp(3px, .5vw, 8px); height: clamp(330px, 56vh, 520px); cursor: none; color: #F5F2EC;">
             <div style="display: flex; align-items: flex-end; writing-mode: vertical-rl; transform: rotate(180deg); padding-bottom: 28px;">
@@ -147,7 +157,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
               <p data-t="tour.4.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('4', 's')}</p>
               <p data-t="tour.4.d" style="margin: 9px 0 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('4', 'd')}</p>
             </div>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="5" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #55636B, #B4835F);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
@@ -156,7 +166,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
               <h3 data-t="tour.5.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('5', 't')}</h3>
               <p data-t="tour.5.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('5', 's')}</p>
               <p data-t="tour.5.d" style="margin: 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('5', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="6" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -166,7 +176,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.6.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('6', 't')}</h3>
             <p data-t="tour.6.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('6', 's')}</p>
               <p data-t="tour.6.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('6', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="7" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -176,7 +186,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.7.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('7', 't')}</h3>
             <p data-t="tour.7.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('7', 's')}</p>
               <p data-t="tour.7.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('7', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="8" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -186,7 +196,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.8.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('8', 't')}</h3>
             <p data-t="tour.8.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('8', 's')}</p>
               <p data-t="tour.8.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('8', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="9" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -196,7 +206,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.9.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('9', 't')}</h3>
             <p data-t="tour.9.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('9', 's')}</p>
               <p data-t="tour.9.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('9', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="10" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -206,7 +216,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.10.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('10', 't')}</h3>
             <p data-t="tour.10.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('10', 's')}</p>
               <p data-t="tour.10.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('10', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="11" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -216,7 +226,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.11.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('11', 't')}</h3>
             <p data-t="tour.11.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('11', 's')}</p>
               <p data-t="tour.11.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('11', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="12" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -226,7 +236,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.12.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('12', 't')}</h3>
             <p data-t="tour.12.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('12', 's')}</p>
               <p data-t="tour.12.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('12', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="13" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -236,7 +246,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.13.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('13', 't')}</h3>
             <p data-t="tour.13.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('13', 's')}</p>
               <p data-t="tour.13.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('13', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="14" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -246,7 +256,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.14.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('14', 't')}</h3>
             <p data-t="tour.14.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('14', 's')}</p>
               <p data-t="tour.14.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('14', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="15" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
@@ -256,7 +266,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.15.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('15', 't')}</h3>
             <p data-t="tour.15.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('15', 's')}</p>
               <p data-t="tour.15.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('15', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
         
 
@@ -268,7 +278,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             <h3 data-t="tour.16.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('16', 't')}</h3>
             <p data-t="tour.16.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('16', 's')}</p>
             <p data-t="tour.16.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('16', 'd')}</p>
-            <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span>
+            <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span>
           </a>
 
           <div aria-hidden="true" style="flex: 0 0 auto; width: clamp(8px, 3vw, 40px);"></div>
@@ -283,8 +293,8 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
     <section id="tours-mobile" data-nav="dark" data-screen-label="03 Experiencias móvil" style="display:none; background:#22282C; color:#F5F2EC; padding:66px 0 54px; margin-top:clamp(12px,2.6vw,28px);">
       <div style="padding:0 22px 22px;">
         <p data-t="exp.kicker" style="margin:0 0 10px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:rgba(245,242,236,.62);">{t('exp.kicker')}</p>
-        <h2 style="margin:0; max-width:12ch; font-family:Georgia,'Times New Roman',serif; font-size:clamp(30px,9vw,42px); line-height:1.02; font-weight:300;">Elige, desliza y descubre.</h2>
-        <p style="margin:12px 0 0; font-size:12px; color:rgba(245,242,236,.58);">Desliza hacia la izquierda para ver más.</p>
+        <h2 data-t="exp.swipeTitle" style="margin:0; max-width:12ch; font-family:Georgia,'Times New Roman',serif; font-size:clamp(30px,9vw,42px); line-height:1.02; font-weight:300;">{t('exp.swipeTitle')}</h2>
+        <p data-t="exp.swipeHint" style="margin:12px 0 0; font-size:12px; color:rgba(245,242,236,.58);">{t('exp.swipeHint')}</p>
       </div>
       <div id="pk-mobile-exp-track" aria-label="Experiencias PatagoniK"></div>
     </section>
@@ -363,10 +373,10 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
           <div data-reveal="" style="opacity:0; transform:translateY(26px); transition:opacity .9s ease, transform .9s ease;">
             <p data-t="quote.kicker" style="margin:0 0 12px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#A8B39A;">{t('quote.kicker')}</p>
             <h3 data-t="quote.title" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(34px,6vw,60px); line-height:1.02;">{t('quote.title')}</h3>
-            <div id="pk-quote-steps-v47" aria-label="Cómo funciona" style="display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,242,236,.72);">
-              <span>Elige</span><span aria-hidden="true" style="opacity:.45;">·</span>
-              <span>Cotiza</span><span aria-hidden="true" style="opacity:.45;">·</span>
-              <span>Vive la Patagonia</span>
+            <div id="pk-quote-steps-v47" aria-label={t('quote.stepsLabel')} style="display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,242,236,.72);">
+              <span data-t="quote.step1">{t('quote.step1')}</span><span aria-hidden="true" style="opacity:.45;">·</span>
+              <span data-t="quote.step2">{t('quote.step2')}</span><span aria-hidden="true" style="opacity:.45;">·</span>
+              <span data-t="quote.step3">{t('quote.step3')}</span>
             </div>
             <p data-t="quote.intro" style="margin:18px 0 0; max-width:42ch; font-size:15px; line-height:1.72; color:rgba(245,242,236,.68); font-weight:300;">{t('quote.intro')}</p>
           </div>
@@ -456,7 +466,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
           <span aria-hidden="true" style="display: block; width: clamp(48px, 8vw, 96px); height: 1px; margin-bottom: clamp(18px, 3vw, 30px); background: rgba(245,242,236,.5);"></span>
           <span data-t="f1.a" style="display: block; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(3rem, 11vw, 7rem); line-height: .88; letter-spacing: .03em; text-transform: uppercase; color: rgba(245,242,236,.4);">{t('f1.a')}</span>
           <span data-t="f1.b" style="display: block; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.05rem, 3.2vw, 2.1rem); line-height: 1.1; letter-spacing: .1em; text-transform: uppercase; color: #F5F2EC;">{t('f1.b')}</span>
-          <a data-wa="" data-btn="" href="https://wa.me/56931712780" target="_blank" rel="noopener" style="position: relative; display: inline-flex; align-items: center; gap: 14px; margin-top: clamp(28px, 5vw, 46px); min-height: 60px; padding: 0 30px; color: #4F5D45; font-size: clamp(11px, 3vw, 13px); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;">
+          <a data-wa="" data-btn="" href={heroWhatsappUrl} target="_blank" rel="noopener" style="position: relative; display: inline-flex; align-items: center; gap: 14px; margin-top: clamp(28px, 5vw, 46px); min-height: 60px; padding: 0 30px; color: #4F5D45; font-size: clamp(11px, 3vw, 13px); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;">
             <span data-btn-bg="" aria-hidden="true" style="position: absolute; inset: 0; border-radius: 999px; background: #EDE7DA; transition: transform .9s cubic-bezier(.19,1,.22,1); will-change: transform;"></span>
             <span data-t="cta" style="position: relative;">{t('cta')}</span>
             <svg data-btn-arrow="" width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="#9C998F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: relative; transform: rotate(-45deg); transition: transform 1s cubic-bezier(.19,1,.22,1), stroke 1s ease;"><path d="M1.2 6h9.6M7.2 2.4 10.8 6l-3.6 3.6"></path></svg>

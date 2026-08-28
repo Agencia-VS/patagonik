@@ -54,11 +54,15 @@ export const HTML_LANG: Record<Locale, string> = {
 export const WHATSAPP_NUMBER = '56931712780';
 
 export const WHATSAPP_INTRO: Record<Locale, string> = {
-  es: 'Hola, quiero cotizar una experiencia con PatagoniK',
-  en: 'Hi, I would like a quote for a PatagoniK experience',
-  pt: 'Olá, quero cotar uma experiência com a PatagoniK',
+  es: 'Hola, quiero diseñar mi viaje por la Patagonia con PatagoniK.',
+  en: 'Hi, I would like to build my Patagonia trip with PatagoniK.',
+  pt: 'Olá, quero planejar minha viagem pela Patagônia com a PatagoniK.',
 };
 
+export function whatsappUrlFor(number: string, message: string): string {
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
 export function whatsappUrl(message: string): string {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return whatsappUrlFor(WHATSAPP_NUMBER, message);
 }
