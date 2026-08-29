@@ -51,7 +51,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
           <div data-franja="2" style="display: grid; align-items: center; gap: clamp(14px, 2.6vw, 38px); padding: 0 clamp(22px, 6vw, 96px) 0 0;">
             <div data-f2-img="" data-nav="dark" style="pointer-events: auto; position: relative; height: clamp(112px, 21vh, 240px); overflow: hidden; background: linear-gradient(160deg, #5B7C99 0%, #6B7A5E 100%); clip-path: inset(0 100% 0 0); will-change: clip-path;">
               <div data-par="0.16" style="position: absolute; inset: -16% 0;">
-                <image-slot id="pt-band-valle" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.band-valle')} locale={locale} preset="band" decorative /></image-slot>
+                <image-slot id="pt-band-valle" shape="rect" fit={asset('landing.band-valle').fitMode ?? 'cover'}><CloudinaryImage asset={asset('landing.band-valle')} locale={locale} preset="band" decorative /></image-slot>
               </div>
             </div>
             <div data-f2-text="" style="opacity: 0; transform: translateY(30px); transition: opacity 1s cubic-bezier(.19,1,.22,1), transform 1.1s cubic-bezier(.19,1,.22,1);">
@@ -68,7 +68,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
         <div data-video-frame="" style="position: absolute; z-index: 2; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; background: #2E3B47; will-change: top, left, width, height;">
           {heroAsset.resourceType === 'video' && <CloudinaryVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
-          <image-slot id="pt-hero-video" shape="rect" fit="cover" style="display:block;width:100%;height:100%;">
+          <image-slot id="pt-hero-video" shape="rect" fit={heroAsset.fitMode ?? 'cover'} style="display:block;width:100%;height:100%;">
             {heroAsset.resourceType === 'image' && <CloudinaryImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
           </image-slot>
           <div data-video-scrim="" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(20,24,28,.5) 0%, rgba(20,24,28,.22) 34%, rgba(20,24,28,.26) 64%, rgba(20,24,28,.58) 100%);"></div>
@@ -106,11 +106,11 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
             <>
               <!-- Extensión suave de la fotografía elegida desde el panel admin. -->
               <div aria-hidden="true" style="position:absolute; inset:-5%; opacity:.78; filter:blur(24px); transform:scale(1.08);">
-                <image-slot id="pt-exp-bg-extended" shape="rect" fit="cover"><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+                <image-slot id="pt-exp-bg-extended" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
               </div>
               <div aria-hidden="true" style="position:absolute; inset:0; background:rgba(62,78,58,.10);"></div>
               <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
-                <image-slot id="pt-exp-bg" shape="rect" fit="cover"><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+                <image-slot id="pt-exp-bg" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
               </div>
             </>
           )}
@@ -125,7 +125,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="1" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #3D4E5C, #7E8C7A);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
-              <image-slot id="pt-exp-1" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(1)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-1" shape="rect" fit={experienceAsset(1).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(1)} locale={locale} preset="experience-card" decorative /></image-slot>
             </div>
               <h3 data-t="tour.1.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('1', 't')}</h3>
               <p data-t="tour.1.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('1', 's')}</p>
@@ -138,7 +138,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
             </div>
             <div style="display: flex; flex-direction: column; width: clamp(196px, 25vw, 336px);">
               <div style="position: relative; flex: 1 1 auto; overflow: hidden; background: linear-gradient(165deg, #5B7C99, #6B7A5E);">
-                <image-slot id="pt-exp-2" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(2)} locale={locale} preset="experience-card" decorative /></image-slot>
+                <image-slot id="pt-exp-2" shape="rect" fit={experienceAsset(2).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(2)} locale={locale} preset="experience-card" decorative /></image-slot>
               </div>
               <p data-t="tour.2.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('2', 's')}</p>
               <p data-t="tour.2.d" style="margin: 9px 0 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('2', 'd')}</p>
@@ -147,7 +147,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="3" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #6E8CA6, #A8B4B0);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
-              <image-slot id="pt-exp-3" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(3)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-3" shape="rect" fit={experienceAsset(3).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(3)} locale={locale} preset="experience-card" decorative /></image-slot>
             </div>
               <h3 data-t="tour.3.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('3', 't')}</h3>
               <p data-t="tour.3.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('3', 's')}</p>
@@ -160,7 +160,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
             </div>
             <div style="display: flex; flex-direction: column; width: clamp(230px, 30vw, 400px);">
               <div style="position: relative; flex: 1 1 auto; overflow: hidden; background: linear-gradient(165deg, #8A7A66, #C08B63);">
-                <image-slot id="pt-exp-4" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(4)} locale={locale} preset="experience-card" decorative /></image-slot>
+                <image-slot id="pt-exp-4" shape="rect" fit={experienceAsset(4).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(4)} locale={locale} preset="experience-card" decorative /></image-slot>
               </div>
               <p data-t="tour.4.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('4', 's')}</p>
               <p data-t="tour.4.d" style="margin: 9px 0 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('4', 'd')}</p>
@@ -169,7 +169,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="5" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #55636B, #B4835F);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
-              <image-slot id="pt-exp-5" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(5)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-5" shape="rect" fit={experienceAsset(5).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(5)} locale={locale} preset="experience-card" decorative /></image-slot>
             </div>
               <h3 data-t="tour.5.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('5', 't')}</h3>
               <p data-t="tour.5.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('5', 's')}</p>
@@ -178,7 +178,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="6" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-6" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(6)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-6" shape="rect" fit={experienceAsset(6).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(6)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.6.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('6', 'c')}</span>
             </div>
             <h3 data-t="tour.6.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('6', 't')}</h3>
@@ -188,7 +188,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="7" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-7" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(7)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-7" shape="rect" fit={experienceAsset(7).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(7)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.7.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('7', 'c')}</span>
             </div>
             <h3 data-t="tour.7.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('7', 't')}</h3>
@@ -198,7 +198,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="8" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-8" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(8)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-8" shape="rect" fit={experienceAsset(8).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(8)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.8.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('8', 'c')}</span>
             </div>
             <h3 data-t="tour.8.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('8', 't')}</h3>
@@ -208,7 +208,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="9" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-9" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(9)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-9" shape="rect" fit={experienceAsset(9).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(9)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.9.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('9', 'c')}</span>
             </div>
             <h3 data-t="tour.9.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('9', 't')}</h3>
@@ -218,7 +218,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="10" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-10" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(10)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-10" shape="rect" fit={experienceAsset(10).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(10)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.10.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('10', 'c')}</span>
             </div>
             <h3 data-t="tour.10.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('10', 't')}</h3>
@@ -228,7 +228,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="11" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-11" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(11)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-11" shape="rect" fit={experienceAsset(11).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(11)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.11.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('11', 'c')}</span>
             </div>
             <h3 data-t="tour.11.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('11', 't')}</h3>
@@ -238,7 +238,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="12" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-12" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(12)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-12" shape="rect" fit={experienceAsset(12).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(12)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.12.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('12', 'c')}</span>
             </div>
             <h3 data-t="tour.12.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('12', 't')}</h3>
@@ -248,7 +248,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="13" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-13" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(13)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-13" shape="rect" fit={experienceAsset(13).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(13)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.13.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('13', 'c')}</span>
             </div>
             <h3 data-t="tour.13.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('13', 't')}</h3>
@@ -258,7 +258,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="14" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-14" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(14)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-14" shape="rect" fit={experienceAsset(14).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(14)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.14.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('14', 'c')}</span>
             </div>
             <h3 data-t="tour.14.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('14', 't')}</h3>
@@ -268,7 +268,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="15" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-15" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(15)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-15" shape="rect" fit={experienceAsset(15).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(15)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.15.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('15', 'c')}</span>
             </div>
             <h3 data-t="tour.15.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('15', 't')}</h3>
@@ -280,7 +280,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
           <a data-hs-card="" data-exp-detail="16" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-16" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(16)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-16" shape="rect" fit={experienceAsset(16).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(16)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.16.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('16', 'c')}</span>
             </div>
             <h3 data-t="tour.16.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('16', 't')}</h3>
@@ -465,7 +465,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
     <section data-nav="dark" data-screen-label="10 CTA final" style="position: relative; min-height: 92svh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(110px, 22vh, 200px) clamp(22px, 6vw, 96px) clamp(72px, 12vw, 118px); background: linear-gradient(180deg, #2E3B47 0%, #55636B 55%, #B4835F 100%);">
       <div data-par="0.16" style="position: absolute; inset: -12% 0;">
-        <image-slot id="pt-final-band" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.final-cta')} locale={locale} preset="final-cta" decorative /></image-slot>
+        <image-slot id="pt-final-band" shape="rect" fit={asset('landing.final-cta').fitMode ?? 'cover'}><CloudinaryImage asset={asset('landing.final-cta')} locale={locale} preset="final-cta" decorative /></image-slot>
       </div>
       <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(18,22,26,.5) 0%, rgba(18,22,26,.2) 42%, rgba(18,22,26,.72) 100%);"></div>
 

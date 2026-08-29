@@ -42,6 +42,17 @@ a {
   outline-offset: 3px;
 }
 
+/* El encuadre elegido en el admin prevalece sobre el CSS heredado. */
+img[data-pk-media-fit="cover"],
+video[data-pk-media-fit="cover"] {
+  object-fit: cover !important;
+}
+
+img[data-pk-media-fit="contain"],
+video[data-pk-media-fit="contain"] {
+  object-fit: contain !important;
+}
+
 /* Hero: la composición y el fade dependen de data-center-logo. */
 @keyframes pkHeroCopyIn {
   from {

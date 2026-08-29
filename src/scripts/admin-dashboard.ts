@@ -263,6 +263,7 @@ function normalizedFraming(point: Framing | null | undefined): Required<Framing>
 }
 
 function applyPreviewPresentation(container: HTMLElement, framing: Required<Framing>) {
+  container.dataset.fit = framing.fit;
   const media = container.querySelector<HTMLElement>('img, video');
   if (!media) return;
   media.style.objectFit = framing.fit;
@@ -334,6 +335,11 @@ function renderCard(row: ManifestRow): HTMLElement {
   stateBadge.dataset.state = dirty ? 'draft' : row.published_at ? 'published' : 'local';
   resourceLabel.textContent = resourceType === 'video' ? 'Video' : 'Imagen';
   previewFrame.dataset.previewViewport = 'desktop';
+  previewFrame.dataset.previewKind = row.slot_key.startsWith('experience.')
+    ? 'card'
+    : row.slot_key === 'about.essence'
+      ? 'portrait'
+      : ['landing.band-valle', 'landing.final-cta'].includes(row.slot_key) ? 'band' : 'wide';
   preview(row, previewMedia, framing);
   publicIdInput.value = row.draft_public_id || '';
   typeInput.value = resourceType;

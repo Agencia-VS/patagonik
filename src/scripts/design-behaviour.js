@@ -292,7 +292,6 @@ class PatagonikUI {
       if (source) {
         const clone = source.cloneNode(true);
         clone.removeAttribute('id');
-        clone.setAttribute('fit', 'cover');
         clone.style.width = '100%';
         clone.style.height = '100%';
         imageWrap.appendChild(clone);
@@ -370,7 +369,6 @@ class PatagonikUI {
       image.setAttribute('data-desktop-exp-image', '');
       const clone = slot.cloneNode(true);
       clone.removeAttribute('id');
-      clone.setAttribute('fit', 'cover');
       image.appendChild(clone);
 
       const title = document.createElement('h3');
@@ -455,7 +453,6 @@ class PatagonikUI {
       if (slot) {
         const clone = slot.cloneNode(true);
         clone.removeAttribute('id');
-        clone.setAttribute('fit', 'cover');
         image.appendChild(clone);
       }
 

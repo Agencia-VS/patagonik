@@ -37,6 +37,7 @@ const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-fit:$
       playsinline
       preload="none"
       aria-label={localizedAlt(asset, locale)}
+      data-pk-media-fit={fit}
       class={className}
       style={finalStyle}
     />

@@ -49,6 +49,7 @@ const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-fit:$
       fetchpriority={eager ? 'high' : 'low'}
       width={asset.width}
       height={asset.height}
+      data-pk-media-fit={fit}
       class={className}
       style={finalStyle}
     />

@@ -41,7 +41,7 @@ const asset = (slotKey: string) => {
 
         <div data-esc-stack="" style="grid-column: 2 / 9; grid-row: 2; position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: linear-gradient(165deg, #3D4E5C 0%, #7E8C7A 100%);">
           <div data-par="0.12" style="position: absolute; inset: -13% 0;">
-            <image-slot id="pt-esc-main" shape="rect" fit="cover"><CloudinaryImage asset={asset('about.essence')} locale={locale} preset="essence" decorative /></image-slot>
+            <image-slot id="pt-esc-main" shape="rect" fit={asset('about.essence').fitMode ?? 'cover'}><CloudinaryImage asset={asset('about.essence')} locale={locale} preset="essence" decorative /></image-slot>
           </div>
         </div>
 
