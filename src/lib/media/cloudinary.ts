@@ -68,9 +68,10 @@ export function cloudinaryImageUrl(
   if (!cloudName || !asset.publicId) return asset.fallback;
 
   const preset = IMAGE_PRESETS[presetName] ?? IMAGE_PRESETS.hero;
+  const crop = asset.fitMode === 'contain' ? 'fit' : preset.crop;
   const parts = [`w_${width}`];
-  if (preset.crop) parts.push(`c_${preset.crop}`);
-  if (preset.crop === 'fill') parts.push(`g_${preset.gravity ?? 'auto'}`);
+  if (crop) parts.push(`c_${crop}`);
+  if (crop === 'fill') parts.push(`g_${preset.gravity ?? 'auto'}`);
 
   const version = asset.version ? `/v${asset.version}` : '';
   return `https://res.cloudinary.com/${encodeURIComponent(cloudName)}/image/upload/${parts.join(',')}/f_auto/q_auto${version}/${encodePublicId(asset.publicId)}`;

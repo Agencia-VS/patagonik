@@ -124,6 +124,11 @@ const adminConfig = {
             <span class="type-badge" data-resource-label></span>
           </div>
         </div>
+        <div class="preview-switch" role="group" aria-label="Formato de vista previa">
+          <span>Vista previa</span>
+          <button type="button" data-preview-viewport="desktop" aria-pressed="true">Escritorio</button>
+          <button type="button" data-preview-viewport="mobile" aria-pressed="false">Móvil</button>
+        </div>
 
         <form class="asset-card__form" data-asset-form>
           <header class="asset-card__heading">
@@ -154,19 +159,49 @@ const adminConfig = {
           </section>
 
           <details class="asset-card__settings">
-            <summary><span>Accesibilidad y encuadre</span><small>Opcional</small></summary>
+            <summary><span>Encuadre y accesibilidad</span><small>Preview en vivo</small></summary>
             <div class="settings-body">
+              <section class="framing" aria-label="Cómo se muestra">
+                <div class="settings-heading">
+                  <h4>Cómo se muestra</h4>
+                  <p>Prueba el ajuste y la posición sin modificar el archivo original.</p>
+                </div>
+                <input data-fit type="hidden" value="cover" />
+                <div class="fit-options" role="group" aria-label="Ajuste del recurso">
+                  <button type="button" data-fit-option="cover" aria-pressed="true">
+                    <strong>Rellenar</strong><span>Ocupa todo el marco</span>
+                  </button>
+                  <button type="button" data-fit-option="contain" aria-pressed="false">
+                    <strong>Ver completo</strong><span>Sin recortar</span>
+                  </button>
+                </div>
+                <div class="position-control">
+                  <div class="position-control__heading">
+                    <span>Posición</span>
+                    <output data-focal-label>Centro</output>
+                  </div>
+                  <input data-focal="x" type="hidden" value="0.5" />
+                  <input data-focal="y" type="hidden" value="0.5" />
+                  <div class="focal-grid" role="group" aria-label="Posición del recurso">
+                    <button type="button" data-focal-option="0,0" aria-label="Arriba a la izquierda"></button>
+                    <button type="button" data-focal-option="0.5,0" aria-label="Arriba al centro"></button>
+                    <button type="button" data-focal-option="1,0" aria-label="Arriba a la derecha"></button>
+                    <button type="button" data-focal-option="0,0.5" aria-label="Centro a la izquierda"></button>
+                    <button type="button" data-focal-option="0.5,0.5" aria-label="Centro" aria-pressed="true"></button>
+                    <button type="button" data-focal-option="1,0.5" aria-label="Centro a la derecha"></button>
+                    <button type="button" data-focal-option="0,1" aria-label="Abajo a la izquierda"></button>
+                    <button type="button" data-focal-option="0.5,1" aria-label="Abajo al centro"></button>
+                    <button type="button" data-focal-option="1,1" aria-label="Abajo a la derecha"></button>
+                  </div>
+                </div>
+              </section>
               <fieldset>
                 <legend>Texto alternativo</legend>
                 <label class="field">ES <input data-alt="es" type="text" placeholder="Descripción en español" /></label>
                 <label class="field">EN <input data-alt="en" type="text" placeholder="English description" /></label>
                 <label class="field">PT <input data-alt="pt" type="text" placeholder="Descrição em português" /></label>
               </fieldset>
-              <div class="focal">
-                <label class="field">Foco X <input data-focal="x" type="number" min="0" max="1" step="0.05" /></label>
-                <label class="field">Foco Y <input data-focal="y" type="number" min="0" max="1" step="0.05" /></label>
-              </div>
-              <p class="hint">El foco controla qué parte del recurso se mantiene visible al recortarlo.</p>
+              <p class="hint">El texto alternativo describe la imagen para personas que usan lectores de pantalla.</p>
             </div>
           </details>
 
@@ -316,14 +351,20 @@ const adminConfig = {
   .asset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); align-items: start; gap: 1.15rem; }
   .asset-card { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 10px 30px rgba(38, 48, 42, .055); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
   .asset-card:hover { transform: translateY(-2px); border-color: #c9cdc5; box-shadow: 0 15px 38px rgba(38, 48, 42, .08); }
-  .asset-card__preview { position: relative; overflow: hidden; aspect-ratio: 16 / 9; color: #758078; background: #dde1d9; }
-  .asset-card__media { position: absolute; inset: 0; display: grid; place-items: center; font-size: .78rem; }
+  .asset-card__preview { position: relative; overflow: hidden; aspect-ratio: 16 / 9; color: #758078; background: #d9ddd5; }
+  .asset-card__media { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; font-size: .78rem; background: #303833; transition: inset .3s ease, width .3s ease, box-shadow .3s ease; }
+  .asset-card__preview[data-preview-viewport="mobile"] .asset-card__media { inset: 0 auto 0 50%; width: 31.64%; transform: translateX(-50%); box-shadow: 0 0 0 1px rgba(255, 255, 255, .35), 0 12px 30px rgba(38, 48, 42, .22); }
   .asset-card__media[data-green-background="true"] { color: rgba(255, 255, 255, .88); background: #6b7a5e; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
-  .asset-card__media img, .asset-card__media video { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .asset-card__media img, .asset-card__media video { width: 100%; height: 100%; display: block; object-fit: cover; transition: object-position .25s ease; }
   .asset-card__badges { position: absolute; z-index: 2; top: .8rem; right: .8rem; left: .8rem; display: flex; justify-content: space-between; gap: .5rem; pointer-events: none; }
   .state-badge, .type-badge { padding: .34rem .58rem; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; color: #344138; background: rgba(250, 249, 245, .9); box-shadow: 0 3px 12px rgba(38, 48, 42, .13); backdrop-filter: blur(8px); font-size: .64rem; font-weight: 800; }
   .state-badge[data-state="draft"] { color: #744e13; background: rgba(255, 244, 219, .94); }
   .state-badge[data-state="published"] { color: #35603c; background: rgba(229, 242, 230, .94); }
+  .preview-switch { display: flex; align-items: center; justify-content: flex-end; gap: .35rem; min-height: 44px; padding: .45rem .75rem; border-bottom: 1px solid #dfe0da; background: #f2f2ec; }
+  .preview-switch > span { margin-right: auto; color: var(--soft); font-size: .65rem; font-weight: 760; letter-spacing: .06em; text-transform: uppercase; }
+  .preview-switch button { min-height: 30px; padding: .38rem .6rem; border: 1px solid transparent; border-radius: 8px; cursor: pointer; color: #687169; background: transparent; font-size: .68rem; font-weight: 760; }
+  .preview-switch button:hover { color: var(--ink); background: #e7e9e3; }
+  .preview-switch button[aria-pressed="true"] { color: #fff; border-color: var(--olive-dark); background: var(--olive); }
   .asset-card__form { display: grid; gap: 1rem; padding: 1.2rem; }
   .asset-card__heading { min-width: 0; }
   .asset-card__heading p { margin: 0 0 .35rem; color: var(--soft); font: 650 .62rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
@@ -346,9 +387,27 @@ const adminConfig = {
   .asset-card__settings[open] summary::after { transform: rotate(225deg) translate(-2px, -2px); }
   .asset-card__settings summary small { color: var(--soft); font-size: .64rem; font-weight: 650; }
   .settings-body { display: grid; gap: .85rem; padding: 0 .85rem .9rem; border-top: 1px solid #e1e2dc; }
+  .framing { display: grid; grid-template-columns: minmax(0, 1fr) 112px; gap: .8rem 1rem; margin-top: .85rem; padding-bottom: .9rem; border-bottom: 1px solid #e1e2dc; }
+  .settings-heading { grid-column: 1 / -1; }
+  .settings-heading h4 { margin: 0 0 .25rem; font-size: .76rem; }
+  .settings-heading p { margin: 0; color: var(--muted); font-size: .69rem; line-height: 1.45; }
+  .fit-options { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; align-self: start; }
+  .fit-options button { display: grid; gap: .2rem; min-height: 66px; padding: .7rem; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; text-align: left; color: #4f5b52; background: #f8f8f4; }
+  .fit-options button:hover { border-color: #aeb5aa; background: #fff; }
+  .fit-options button[aria-pressed="true"] { border-color: var(--olive); color: var(--olive-dark); background: var(--olive-light); box-shadow: 0 0 0 2px rgba(83, 99, 73, .08); }
+  .fit-options strong { font-size: .73rem; }
+  .fit-options span { color: var(--muted); font-size: .62rem; line-height: 1.3; }
+  .position-control { display: grid; gap: .42rem; }
+  .position-control__heading { display: flex; justify-content: space-between; gap: .5rem; color: #69736b; font-size: .65rem; font-weight: 760; }
+  .position-control__heading output { color: var(--olive); font-weight: 800; }
+  .focal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; aspect-ratio: 1; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: #eef0ea; }
+  .focal-grid button { position: relative; min-width: 0; min-height: 0; padding: 0; border: 0; border-radius: 5px; cursor: pointer; background: rgba(255, 255, 255, .74); }
+  .focal-grid button::after { position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; border-radius: 50%; background: #a2aaa1; content: ""; transform: translate(-50%, -50%); }
+  .focal-grid button:hover { background: #fff; }
+  .focal-grid button[aria-pressed="true"] { background: var(--olive); }
+  .focal-grid button[aria-pressed="true"]::after { background: #fff; box-shadow: 0 0 0 2px rgba(255, 255, 255, .22); }
   fieldset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; margin: .8rem 0 0; padding: 0; border: 0; }
   legend { margin-bottom: .55rem; padding: 0; color: #69736b; font-size: .69rem; font-weight: 760; }
-  .focal { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
   .hint { margin: -.25rem 0 0; color: #7c847d; font-size: .67rem; line-height: 1.45; }
 
   .asset-card__actions { display: flex; align-items: center; justify-content: flex-end; gap: .8rem; padding-top: .05rem; }
@@ -389,6 +448,10 @@ const adminConfig = {
 
   @media (max-width: 500px) {
     .source-fields, fieldset { grid-template-columns: 1fr; }
+    .framing { grid-template-columns: 1fr; }
+    .position-control { grid-template-columns: 1fr 112px; align-items: start; }
+    .position-control__heading { align-self: center; flex-direction: column; justify-content: center; }
+    .focal-grid { grid-column: 2; grid-row: 1; }
     .asset-card__actions { align-items: stretch; flex-direction: column; }
     .button--save, .button--green-background { width: 100%; }
     .card-status:empty { display: none; }

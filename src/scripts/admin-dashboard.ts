@@ -1,11 +1,13 @@
 interface AdminConfig { supabaseUrl: string; supabaseKey: string; cloudName: string }
 interface Session { access_token: string; refresh_token: string; expires_at?: number; user: { id: string; email?: string } }
+type FitMode = 'cover' | 'contain';
+interface Framing { x?: number; y?: number; fit?: FitMode }
 interface ManifestRow {
   slot_key: string; label: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
   draft_asset_id: string | null; draft_public_id: string | null; draft_resource_type: 'image'|'video'|null;
-  draft_secure_url: string | null; draft_alt: Record<string,string>; draft_focal_point: {x?:number;y?:number};
+  draft_secure_url: string | null; draft_alt: Record<string,string>; draft_focal_point: Framing;
   published_asset_id: string | null; published_resource_type: 'image'|'video'|null; published_secure_url: string | null; published_at: string | null;
-  published_alt: Record<string,string>; published_focal_point: {x?:number;y?:number};
+  published_alt: Record<string,string>; published_focal_point: Framing;
 }
 interface CloudinaryUpload {
   public_id: string; resource_type: 'image'|'video'; version: number; format?: string;
@@ -61,6 +63,17 @@ const publishButton = document.querySelector<HTMLButtonElement>('#publish-button
 const refreshButton = document.querySelector<HTMLButtonElement>('#refresh-button')!;
 const logoutButton = document.querySelector<HTMLButtonElement>('#logout-button')!;
 const STORAGE_KEY = 'patagonik-admin-session';
+const FOCAL_LABELS: Record<string, string> = {
+  '0,0': 'Arriba izquierda',
+  '0.5,0': 'Arriba centro',
+  '1,0': 'Arriba derecha',
+  '0,0.5': 'Centro izquierda',
+  '0.5,0.5': 'Centro',
+  '1,0.5': 'Centro derecha',
+  '0,1': 'Abajo izquierda',
+  '0.5,1': 'Abajo centro',
+  '1,1': 'Abajo derecha',
+};
 let session: Session | null = null;
 let activeSection: SectionId = 'hero';
 
@@ -244,7 +257,40 @@ async function insertAsset(asset: CloudinaryUpload): Promise<string> {
   return rows[0].id;
 }
 
-function preview(row: ManifestRow, container: HTMLElement) {
+function normalizedFraming(point: Framing | null | undefined): Required<Framing> {
+  const clamp = (value: number | undefined) => Math.min(1, Math.max(0, Number(value ?? .5)));
+  return { x:clamp(point?.x), y:clamp(point?.y), fit:point?.fit === 'contain' ? 'contain' : 'cover' };
+}
+
+function applyPreviewPresentation(container: HTMLElement, framing: Required<Framing>) {
+  const media = container.querySelector<HTMLElement>('img, video');
+  if (!media) return;
+  media.style.objectFit = framing.fit;
+  media.style.objectPosition = `${framing.x * 100}% ${framing.y * 100}%`;
+}
+
+function renderPreviewMedia(container: HTMLElement, resourceType: 'image'|'video', url: string, framing: Required<Framing>) {
+  delete container.dataset.greenBackground;
+  container.replaceChildren();
+  if (resourceType === 'video') {
+    const video = document.createElement('video');
+    video.src = url;
+    video.muted = true;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    container.append(video);
+  } else {
+    const image = document.createElement('img');
+    image.src = url;
+    image.alt = '';
+    image.loading = 'lazy';
+    container.append(image);
+  }
+  applyPreviewPresentation(container, framing);
+}
+
+function preview(row: ManifestRow, container: HTMLElement, framing: Required<Framing>) {
   if (row.slot_key === 'landing.experiences-background' && row.draft_alt?._backgroundMode !== 'photo') {
     container.dataset.greenBackground = 'true';
     container.textContent = 'Bloque verde';
@@ -256,13 +302,7 @@ function preview(row: ManifestRow, container: HTMLElement) {
     : null;
   const url = row.draft_secure_url || derived || row.published_secure_url || row.local_fallback;
   if (!url) { container.textContent = 'Sin recurso asignado'; return; }
-  if (resourceType === 'video') {
-    const video = document.createElement('video'); video.src = url; video.muted = true; video.controls = true; video.preload = 'metadata';
-    container.append(video);
-  } else {
-    const image = document.createElement('img'); image.src = url; image.alt = ''; image.loading = 'lazy';
-    container.append(image);
-  }
+  renderPreviewMedia(container, resourceType, url, framing);
 }
 
 function renderCard(row: ManifestRow): HTMLElement {
@@ -276,7 +316,14 @@ function renderCard(row: ManifestRow): HTMLElement {
   const resourceLabel = card.querySelector<HTMLElement>('[data-resource-label]')!;
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
   const clearResource = form.querySelector<HTMLButtonElement>('[data-clear-resource]')!;
+  const previewFrame = card.querySelector<HTMLElement>('.asset-card__preview')!;
+  const previewMedia = card.querySelector<HTMLElement>('[data-preview-media]')!;
+  const fitInput = card.querySelector<HTMLInputElement>('[data-fit]')!;
+  const focalXInput = card.querySelector<HTMLInputElement>('[data-focal="x"]')!;
+  const focalYInput = card.querySelector<HTMLInputElement>('[data-focal="y"]')!;
+  const focalLabel = card.querySelector<HTMLOutputElement>('[data-focal-label]')!;
   const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
+  const framing = normalizedFraming(row.draft_focal_point ?? row.published_focal_point);
   const dirty = isDirty(row);
 
   card.dataset.section = sectionForSlot(row.slot_key);
@@ -286,14 +333,60 @@ function renderCard(row: ManifestRow): HTMLElement {
   stateBadge.textContent = dirty ? 'Borrador' : row.published_at ? 'Publicado' : 'Local';
   stateBadge.dataset.state = dirty ? 'draft' : row.published_at ? 'published' : 'local';
   resourceLabel.textContent = resourceType === 'video' ? 'Video' : 'Imagen';
-  preview(row, card.querySelector<HTMLElement>('[data-preview-media]')!);
+  previewFrame.dataset.previewViewport = 'desktop';
+  preview(row, previewMedia, framing);
   publicIdInput.value = row.draft_public_id || '';
   typeInput.value = resourceType;
   fileInput.accept = row.accepted_types.includes('video') ? 'image/*,video/mp4,video/webm' : 'image/*';
   clearResource.hidden = row.slot_key !== 'landing.experiences-background';
   [...typeInput.options].forEach((option) => { option.disabled = !row.accepted_types.includes(option.value as 'image'|'video'); });
   for (const locale of ['es','en','pt']) card.querySelector<HTMLInputElement>(`[data-alt="${locale}"]`)!.value = row.draft_alt?.[locale] || '';
-  for (const axis of ['x','y'] as const) card.querySelector<HTMLInputElement>(`[data-focal="${axis}"]`)!.value = String(row.draft_focal_point?.[axis] ?? .5);
+  fitInput.value = framing.fit;
+  focalXInput.value = String(framing.x);
+  focalYInput.value = String(framing.y);
+
+  const updateFitControls = (fit: FitMode) => {
+    fitInput.value = fit;
+    for (const button of card.querySelectorAll<HTMLButtonElement>('[data-fit-option]')) {
+      button.setAttribute('aria-pressed', String(button.dataset.fitOption === fit));
+    }
+    applyPreviewPresentation(previewMedia, { ...framing, x:Number(focalXInput.value), y:Number(focalYInput.value), fit });
+  };
+
+  const updateFocalControls = (x: number, y: number) => {
+    focalXInput.value = String(x);
+    focalYInput.value = String(y);
+    const key = `${x},${y}`;
+    focalLabel.value = FOCAL_LABELS[key] || 'Personalizada';
+    for (const button of card.querySelectorAll<HTMLButtonElement>('[data-focal-option]')) {
+      button.setAttribute('aria-pressed', String(button.dataset.focalOption === key));
+    }
+    applyPreviewPresentation(previewMedia, { x, y, fit:fitInput.value === 'contain' ? 'contain' : 'cover' });
+  };
+
+  updateFitControls(framing.fit);
+  updateFocalControls(framing.x, framing.y);
+
+  for (const button of card.querySelectorAll<HTMLButtonElement>('button[data-preview-viewport]')) {
+    button.addEventListener('click', () => {
+      const viewport = button.dataset.previewViewport === 'mobile' ? 'mobile' : 'desktop';
+      previewFrame.dataset.previewViewport = viewport;
+      for (const option of card.querySelectorAll<HTMLButtonElement>('button[data-preview-viewport]')) {
+        option.setAttribute('aria-pressed', String(option === button));
+      }
+    });
+  }
+
+  for (const button of card.querySelectorAll<HTMLButtonElement>('[data-fit-option]')) {
+    button.addEventListener('click', () => updateFitControls(button.dataset.fitOption === 'contain' ? 'contain' : 'cover'));
+  }
+
+  for (const button of card.querySelectorAll<HTMLButtonElement>('[data-focal-option]')) {
+    button.addEventListener('click', () => {
+      const [x, y] = (button.dataset.focalOption || '.5,.5').split(',').map(Number);
+      updateFocalControls(x, y);
+    });
+  }
 
   typeInput.addEventListener('change', () => {
     resourceLabel.textContent = typeInput.value === 'video' ? 'Video' : 'Imagen';
@@ -303,6 +396,12 @@ function renderCard(row: ManifestRow): HTMLElement {
     if (!selected) return;
     typeInput.value = selected.type.startsWith('video/') ? 'video' : 'image';
     resourceLabel.textContent = typeInput.value === 'video' ? 'Video' : 'Imagen';
+    renderPreviewMedia(
+      previewMedia,
+      typeInput.value as 'image'|'video',
+      URL.createObjectURL(selected),
+      { x:Number(focalXInput.value), y:Number(focalYInput.value), fit:fitInput.value === 'contain' ? 'contain' : 'cover' },
+    );
   });
 
   clearResource.addEventListener('click', async () => {
@@ -346,7 +445,11 @@ function renderCard(row: ManifestRow): HTMLElement {
       if (row.slot_key === 'landing.experiences-background' && (selected || publicIdInput.value.trim())) {
         alt._backgroundMode = 'photo';
       }
-      const focal = Object.fromEntries(['x','y'].map((axis) => [axis, Number(card.querySelector<HTMLInputElement>(`[data-focal="${axis}"]`)!.value)]));
+      const focal = {
+        x:Number(focalXInput.value),
+        y:Number(focalYInput.value),
+        fit:fitInput.value === 'contain' ? 'contain' : 'cover',
+      };
       const response = await supabase(`/rest/v1/landing_slot_assignments?slot_key=eq.${encodeURIComponent(row.slot_key)}`, {
         method:'PATCH', headers:{ 'Content-Type':'application/json', Prefer:'return=minimal' },
         body:JSON.stringify({ draft_asset_id:assetId, draft_alt:alt, draft_focal_point:focal, updated_by:session!.user.id, updated_at:new Date().toISOString() }),

@@ -1,5 +1,5 @@
 import { LOCAL_LANDING_ASSETS } from './landing-assets.local';
-import type { LandingAsset, LandingAssetMap, MediaResourceType } from './types';
+import type { LandingAsset, LandingAssetMap, MediaFitMode, MediaResourceType } from './types';
 
 interface PublishedManifestRow {
   slot_key: string;
@@ -14,7 +14,7 @@ interface PublishedManifestRow {
   height: number | null;
   duration: number | null;
   alt: Record<string, string> | null;
-  focal_point: { x?: number; y?: number } | null;
+  focal_point: { x?: number; y?: number; fit?: MediaFitMode } | null;
   poster_public_id: string | null;
   poster_version: number | null;
   poster_format: string | null;
@@ -58,8 +58,22 @@ async function loadManifest(): Promise<LandingAssetMap> {
 
     const rows = (await response.json()) as PublishedManifestRow[];
     for (const row of rows) {
-      if (!row.public_id || !row.resource_type) continue;
       const local = fallback[row.slot_key];
+      const fitMode = row.focal_point?.fit === 'contain' ? 'contain' : local?.fitMode ?? 'cover';
+      if (!row.public_id || !row.resource_type) {
+        if (local) {
+          fallback[row.slot_key] = {
+            ...local,
+            alt: row.alt ?? local.alt,
+            focalPoint: normalizedPoint(row.focal_point) ?? local.focalPoint,
+            fitMode,
+            displayMode: row.slot_key === 'landing.experiences-background'
+              ? row.alt?._backgroundMode === 'photo' ? 'photo' : 'green'
+              : local.displayMode,
+          };
+        }
+        continue;
+      }
       fallback[row.slot_key] = {
         slotKey: row.slot_key,
         label: row.label,
@@ -73,6 +87,7 @@ async function loadManifest(): Promise<LandingAssetMap> {
         duration: row.duration ?? undefined,
         alt: row.alt ?? undefined,
         focalPoint: normalizedPoint(row.focal_point) ?? local?.focalPoint,
+        fitMode,
         posterPublicId: row.poster_public_id ?? undefined,
         posterVersion: row.poster_version ?? undefined,
         posterFormat: row.poster_format ?? undefined,

@@ -1,6 +1,7 @@
 import type { Locale } from '@/content.config';
 
 export type MediaResourceType = 'image' | 'video';
+export type MediaFitMode = 'cover' | 'contain';
 
 export interface MediaAlt {
   es?: string;
@@ -21,6 +22,7 @@ export interface LandingAsset {
   duration?: number;
   alt?: MediaAlt;
   focalPoint?: { x: number; y: number };
+  fitMode?: MediaFitMode;
   posterPublicId?: string;
   posterVersion?: number;
   posterFormat?: string;
