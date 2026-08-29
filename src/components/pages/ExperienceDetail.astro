@@ -87,46 +87,79 @@ const WA_ASK: Record<Locale, (title: string) => string> = {
     color: var(--pk-ink-soft);
   }
   .pk-facts {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 1px;
-    background: rgba(43, 43, 43, 0.12);
-    border: 1px solid rgba(43, 43, 43, 0.12);
-    margin: 2rem 0;
+    display: block;
+    margin: clamp(2rem, 5vw, 3rem) 0;
+    border-top: 1px solid rgba(43, 43, 43, 0.14);
+    border-radius: 0 !important;
   }
   .pk-facts > div {
-    background: var(--pk-cream);
-    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: minmax(150px, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(18px, 4vw, 42px);
+    align-items: start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(43, 43, 43, 0.14);
   }
   .pk-facts dt {
-    font-size: 0.56rem;
-    letter-spacing: 0.18em;
+    padding-top: 2px;
+    font-size: 0.58rem;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(43, 43, 43, 0.45);
-    margin-bottom: 5px;
+    color: rgba(43, 43, 43, 0.48);
   }
   .pk-facts dd {
     margin: 0;
-    font-size: 0.82rem;
-    font-weight: 500;
+    font-size: 0.88rem;
+    font-weight: 450;
+    line-height: 1.55;
+    color: rgba(43, 43, 43, 0.88);
   }
   .pk-lists {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.6rem;
+    gap: clamp(1.6rem, 5vw, 3rem);
+  }
+  .pk-lists > section {
+    padding: 18px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(43, 43, 43, 0.14);
+    border-radius: 0 !important;
+    background: transparent;
   }
   .pk-lists h2 {
     font-family: var(--pk-sans);
-    font-size: 0.62rem;
-    letter-spacing: 0.22em;
+    margin: 0 0 0.8rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: rgba(43, 43, 43, 0.5);
   }
   .pk-lists ul {
-    margin: 0.6rem 0 0;
-    padding-left: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
     font-size: 0.85rem;
     line-height: 1.65;
+    color: rgba(43, 43, 43, 0.76);
+  }
+  .pk-lists li {
+    position: relative;
+    padding-left: 15px;
+  }
+  .pk-lists li + li {
+    margin-top: 7px;
+  }
+  .pk-lists li::before {
+    position: absolute;
+    top: 0.72em;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--pk-green);
+    content: '';
   }
   .pk-detail__note {
     font-family: var(--pk-serif);
@@ -144,5 +177,12 @@ const WA_ASK: Record<Locale, (title: string) => string> = {
     font-size: 0.68rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+  }
+  @media (max-width: 620px) {
+    .pk-facts > div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 14px 0;
+    }
   }
 </style>

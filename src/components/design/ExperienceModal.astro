@@ -12,16 +12,16 @@ const t = useTranslations(locale);
       <button id="pk-exp-close" type="button" aria-label={t('exp.modal.close')} data-t-attr="aria-label:exp.modal.close" style="position:sticky; top:14px; float:right; z-index:4; margin:14px 14px -58px 0; width:44px; height:44px; border-radius:999px; border:1px solid rgba(43,43,43,.14); background:rgba(245,242,236,.94); color:#2B2B2B; font-size:24px; line-height:1; cursor:pointer;">×</button>
       <div style="display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr); min-height:610px;" id="pk-exp-grid">
         <div style="position:relative; min-height:420px; background:#111; overflow:hidden;" id="pk-exp-image"></div>
-        <div style="padding:clamp(30px,5vw,62px); display:flex; flex-direction:column;">
+        <div class="pk-exp-content" style="padding:clamp(30px,5vw,62px); display:flex; flex-direction:column;">
           <p data-t="exp.modal.kicker" style="margin:0 0 12px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#6B7A5E;">{t('exp.modal.kicker')}</p>
           <h2 id="pk-exp-title" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(32px,5vw,56px); line-height:1.02; letter-spacing:-.02em;"></h2>
           <p id="pk-exp-lead" style="margin:18px 0 0; font-family:Georgia,'Times New Roman',serif; font-size:clamp(18px,2vw,24px); line-height:1.35; color:#6B7A5E;"></p>
           <p id="pk-exp-body" style="margin:22px 0 0; font-size:15px; line-height:1.72; font-weight:300; color:rgba(43,43,43,.78);"></p>
-          <div id="pk-exp-facts" style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin-top:28px; background:rgba(43,43,43,.12); border:1px solid rgba(43,43,43,.12);"></div>
+          <dl id="pk-exp-facts"></dl>
           
-          <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px; margin-top:30px;" id="pk-exp-lists">
-            <div><p data-t="exp.modal.includes" style="margin:0 0 10px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:rgba(43,43,43,.5);">{t('exp.modal.includes')}</p><ul id="pk-exp-includes" style="margin:0; padding-left:18px; font-size:13px; line-height:1.65;"></ul></div>
-            <div><p data-t="exp.modal.excludes" style="margin:0 0 10px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:rgba(43,43,43,.5);">{t('exp.modal.excludes')}</p><ul id="pk-exp-excludes" style="margin:0; padding-left:18px; font-size:13px; line-height:1.65;"></ul></div>
+          <div class="pk-exp-lists" id="pk-exp-lists">
+            <div class="pk-exp-list"><p data-t="exp.modal.includes">{t('exp.modal.includes')}</p><ul id="pk-exp-includes"></ul></div>
+            <div class="pk-exp-list"><p data-t="exp.modal.excludes">{t('exp.modal.excludes')}</p><ul id="pk-exp-excludes"></ul></div>
           </div>
           <p id="pk-exp-modality" style="margin:28px 0 0; padding-top:20px; border-top:1px solid rgba(43,43,43,.14); font-size:13px; line-height:1.6;"></p>
           <p id="pk-exp-note" style="margin:18px 0 0; font-family:Georgia,'Times New Roman',serif; font-size:18px; line-height:1.4; font-style:italic; color:#6B7A5E;"></p>

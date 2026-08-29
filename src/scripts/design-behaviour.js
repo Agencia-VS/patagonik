@@ -252,16 +252,18 @@ class PatagonikUI {
 
     const facts = q('pk-exp-facts');
     if (facts) {
-      facts.innerHTML = '';
-      (d.facts || []).forEach((pair) => {
+      facts.replaceChildren();
+      const factRows = d.facts || [];
+      facts.hidden = !factRows.length;
+      factRows.forEach((pair) => {
         const box = document.createElement('div');
-        box.style.cssText = 'padding:14px 16px;background:#F5F2EC;';
-        const label = document.createElement('span');
+        box.className = 'pk-exp-fact-row';
+        const label = document.createElement('dt');
+        label.className = 'pk-exp-fact-label';
         label.textContent = pair[0];
-        label.style.cssText = 'display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(43,43,43,.45);margin-bottom:5px;';
-        const value = document.createElement('strong');
+        const value = document.createElement('dd');
+        value.className = 'pk-exp-fact-value';
         value.textContent = pair[1];
-        value.style.cssText = 'font-size:13px;font-weight:500;';
         box.append(label, value);
         facts.appendChild(box);
       });

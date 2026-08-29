@@ -206,7 +206,7 @@ a {
 }
 
 [data-f2-img] {
-  border-radius: var(--pk-radius-md);
+  border-radius: 0 !important;
 }
 
 #tours [data-hs-card] > h3,
@@ -297,7 +297,11 @@ a {
 }
 
 #pk-exp-panel {
-  overflow: hidden !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid rgba(245, 242, 236, 0.16);
   border-radius: var(--pk-radius-lg);
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36) !important;
@@ -308,16 +312,98 @@ a {
 }
 
 #pk-exp-facts {
-  overflow: hidden;
-  border-radius: var(--pk-radius-sm);
+  display: block !important;
+  margin: clamp(26px, 4vw, 34px) 0 0 !important;
+  overflow: visible;
+  border: 0 !important;
+  border-top: 1px solid var(--pk-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
 }
 
-#pk-exp-lists > div,
-.pk-lists > section {
-  padding: clamp(18px, 2.5vw, 24px);
-  border: 1px solid var(--pk-line);
-  border-radius: var(--pk-radius-md);
-  background: rgba(255, 253, 249, 0.64);
+#pk-exp-facts .pk-exp-fact-row {
+  display: grid;
+  grid-template-columns: minmax(112px, 0.72fr) minmax(0, 1.35fr);
+  gap: clamp(14px, 2vw, 24px);
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--pk-line);
+}
+
+#pk-exp-facts .pk-exp-fact-label,
+#pk-exp-facts .pk-exp-fact-value {
+  margin: 0;
+}
+
+#pk-exp-facts .pk-exp-fact-label {
+  padding-top: 2px;
+  color: rgba(43, 43, 43, 0.48);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+#pk-exp-facts .pk-exp-fact-value {
+  color: rgba(43, 43, 43, 0.88);
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.55;
+}
+
+#pk-exp-lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 3vw, 34px);
+  margin-top: clamp(28px, 4vw, 38px) !important;
+}
+
+#pk-exp-lists > .pk-exp-list {
+  padding: 17px 0 0;
+  border: 0;
+  border-top: 1px solid var(--pk-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+#pk-exp-lists .pk-exp-list > p {
+  margin: 0 0 12px;
+  color: rgba(43, 43, 43, 0.5);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+#pk-exp-lists ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(43, 43, 43, 0.76);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#pk-exp-lists li {
+  position: relative;
+  padding-left: 15px;
+}
+
+#pk-exp-lists li + li {
+  margin-top: 7px;
+}
+
+#pk-exp-lists li::before {
+  position: absolute;
+  top: 0.68em;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--pk-green);
+  content: '';
 }
 
 .pk-detail__cta,
@@ -382,6 +468,23 @@ footer#contacto a {
 
   .pk-hero-primary {
     width: 100%;
+  }
+
+  #pk-exp-panel {
+    border: 0;
+    border-radius: 0;
+    scrollbar-gutter: auto;
+  }
+
+  #pk-exp-facts .pk-exp-fact-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 13px 0;
+  }
+
+  #pk-exp-lists {
+    grid-template-columns: 1fr;
+    gap: 24px !important;
   }
 
   #pk-landing #cotiza #pk-quiz-grid > div,
