@@ -1,11 +1,14 @@
 ---
 import type { Locale } from '@/content.config';
 import { HTML_LANG } from '@/i18n';
-import { LOCALES, DEFAULT_LOCALE, localePrefix } from '@/i18n/routes';
+import { LOCALES, DEFAULT_LOCALE } from '@/i18n/routes';
 import '@/styles/global.css';
 // El CSS del diseño va después: 51 bloques en su orden original, y ese orden
 // es el que resuelve las capas pk-*-vNN entre sí.
 import '@/styles/design.css';
+// Capa de pulido visual: se carga al final para normalizar el CSS heredado
+// sin modificar las reglas que controlan animaciones y layouts del diseño.
+import '@/styles/polish.css';
 
 interface Props {
   locale: Locale;
@@ -29,7 +32,7 @@ const canonical = new URL(selfPath, Astro.site);
 ---
 
 <!doctype html>
-<html lang={HTML_LANG[locale]}>
+<html lang={HTML_LANG[locale]} data-locale={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,6 +68,7 @@ const canonical = new URL(selfPath, Astro.site);
     {/* Comportamientos del diseño: hero, revelados, carrusel, cabecera. */}
     <script>
       import '@/scripts/design-behaviour.js';
+      import '@/scripts/language-preference.js';
     </script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '@/content.config';
-import { useTranslations } from '@/i18n';
+import { useTranslations, WHATSAPP_INTRO, whatsappUrlFor } from '@/i18n';
 
 interface Props {
   locale: Locale;
@@ -8,6 +8,9 @@ interface Props {
 }
 const { locale, alternates } = Astro.props;
 const t = useTranslations(locale);
+const whatsappMessage = WHATSAPP_INTRO[locale];
+const primaryWhatsappUrl = whatsappUrlFor('56931712780', whatsappMessage);
+const secondaryWhatsappUrl = whatsappUrlFor('56974357864', whatsappMessage);
 
 const LANGUAGES: { code: Locale; label: string }[] = [
   { code: 'es', label: 'Español' },
@@ -25,8 +28,8 @@ const LANGUAGES: { code: Locale; label: string }[] = [
       <div>
         <p data-t="footer.contact" style="margin: 0 0 14px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.45);">{t('footer.contact')}</p>
         <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 300;">
-          <a href="https://wa.me/56931712780?text=Hola%2C%20quiero%20cotizar%20una%20experiencia%20con%20PatagoniK" target="_blank" rel="noopener" style="color: rgba(245,242,236,.86);">WhatsApp · +56 9 3171 2780</a>
-          <a href="https://wa.me/56974357864?text=Hola%2C%20quiero%20cotizar%20una%20experiencia%20con%20PatagoniK" target="_blank" rel="noopener" style="color: rgba(245,242,236,.86);">WhatsApp · +56 9 7435 7864</a>
+          <a href={primaryWhatsappUrl} target="_blank" rel="noopener" style="color: rgba(245,242,236,.86);">WhatsApp · +56 9 3171 2780</a>
+          <a href={secondaryWhatsappUrl} target="_blank" rel="noopener" style="color: rgba(245,242,236,.86);">WhatsApp · +56 9 7435 7864</a>
           <a href="mailto:patagoniknatales@gmail.com" style="color: rgba(245,242,236,.86);">patagoniknatales@gmail.com</a>
           <span>Puerto Natales, Chile</span>
         </div>

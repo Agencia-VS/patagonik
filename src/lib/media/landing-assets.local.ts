@@ -27,10 +27,10 @@ export const LOCAL_LANDING_ASSETS: LandingAssetMap = {
   },
   'landing.experiences-background': {
     slotKey: 'landing.experiences-background',
-    label: 'Fondo de experiencias',
+    label: 'Fondo fotográfico de experiencias (opcional)',
     preset: 'experience-background',
     resourceType: 'image',
-    fallback: '/images/exp-bg-extended.webp',
+    displayMode: 'green',
     focalPoint: { x: 0.5, y: 0.5 },
   },
   'landing.final-cta': {

@@ -1,6 +1,7 @@
 ---
 import type { Locale } from '@/content.config';
-import { useTranslations } from '@/i18n';
+import { useTranslations, WHATSAPP_INTRO, whatsappUrl } from '@/i18n';
+import { routePath } from '@/i18n/routes';
 import { getCollection } from 'astro:content';
 import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
 import CloudinaryVideo from '@/components/media/CloudinaryVideo.astro';
@@ -15,6 +16,10 @@ const asset = (slotKey: string) => {
   return value;
 };
 const heroAsset = asset('landing.hero');
+const experiencesBackgroundAsset = asset('landing.experiences-background');
+const hasExperiencesBackgroundPhoto = Boolean(
+  experiencesBackgroundAsset.publicId && experiencesBackgroundAsset.displayMode === 'photo',
+);
 
 /* Textos de tarjeta: vienen de la colección de experiencias, en el idioma de
    la página. El diseño los pedía como tour.N.t/.s/.d/.c. */
@@ -24,6 +29,7 @@ const slugByOrder = new Map(experiences.map((e) => [String(e.data.order), e.data
 const FIELD = { t: 'cardTitle', s: 'cardSummary', d: 'cardDetail', c: 'cardCategory' } as const;
 const tour = (n: string, f: keyof typeof FIELD) => byOrder.get(n)?.[FIELD[f]] ?? '';
 const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(String(order))}.cover`);
+const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 ---
 
 <div id="pk-landing">
@@ -45,7 +51,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
           <div data-franja="2" style="display: grid; align-items: center; gap: clamp(14px, 2.6vw, 38px); padding: 0 clamp(22px, 6vw, 96px) 0 0;">
             <div data-f2-img="" data-nav="dark" style="pointer-events: auto; position: relative; height: clamp(112px, 21vh, 240px); overflow: hidden; background: linear-gradient(160deg, #5B7C99 0%, #6B7A5E 100%); clip-path: inset(0 100% 0 0); will-change: clip-path;">
               <div data-par="0.16" style="position: absolute; inset: -16% 0;">
-                <image-slot id="pt-band-valle" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.band-valle')} locale={locale} preset="band" decorative /></image-slot>
+                <image-slot id="pt-band-valle" shape="rect" fit={asset('landing.band-valle').fitMode ?? 'cover'}><CloudinaryImage asset={asset('landing.band-valle')} locale={locale} preset="band" decorative /></image-slot>
               </div>
             </div>
             <div data-f2-text="" style="opacity: 0; transform: translateY(30px); transition: opacity 1s cubic-bezier(.19,1,.22,1), transform 1.1s cubic-bezier(.19,1,.22,1);">
@@ -62,16 +68,24 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
 
         <div data-video-frame="" style="position: absolute; z-index: 2; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; background: #2E3B47; will-change: top, left, width, height;">
           {heroAsset.resourceType === 'video' && <CloudinaryVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
-          <image-slot id="pt-hero-video" shape="rect" fit="cover" style="display:block;width:100%;height:100%;">
+          <image-slot id="pt-hero-video" shape="rect" fit={heroAsset.fitMode ?? 'cover'} style="display:block;width:100%;height:100%;">
             {heroAsset.resourceType === 'image' && <CloudinaryImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
           </image-slot>
           <div data-video-scrim="" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(20,24,28,.5) 0%, rgba(20,24,28,.22) 34%, rgba(20,24,28,.26) 64%, rgba(20,24,28,.58) 100%);"></div>
         </div>
 
         <div data-center-logo="" style="position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-          <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(8px,1.2vw,12px); text-align:center; animation: logoIn 1.6s .3s both;">
-            <span style="font-family: Georgia, 'Times New Roman', serif; font-size: clamp(28px, 5.6vw, 54px); line-height: 1; letter-spacing: .26em; color: #F5F2EC; opacity: .86; text-shadow: 0 4px 40px rgba(12,16,20,.38);">PatagoniK</span>
-            <span style="font-family: Georgia, 'Times New Roman', serif; font-size: clamp(11px, 1.5vw, 16px); line-height:1.2; font-style:italic; letter-spacing:.08em; color:rgba(245,242,236,.78); text-shadow:0 3px 24px rgba(12,16,20,.45);">encuentros en la zona</span>
+          <div class="pk-hero-copy" style="animation: logoIn 1.6s .3s both;">
+            <span class="pk-hero-brand">PatagoniK</span>
+            <h1 class="pk-hero-slogan" data-t="hero.slogan">{t('hero.slogan')}</h1>
+            <div class="pk-hero-actions">
+              <a class="pk-hero-primary" data-wa="" data-btn="" href={heroWhatsappUrl} target="_blank" rel="noopener">
+                <span data-btn-bg="" aria-hidden="true"></span>
+                <span data-t="cta">{t('cta')}</span>
+                <svg data-btn-arrow="" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9C998F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(-45deg);transition:transform 1s cubic-bezier(.19,1,.22,1),stroke 1s ease;"><path d="M1.2 6h9.6M7.2 2.4 10.8 6l-3.6 3.6"></path></svg>
+              </a>
+              <a class="pk-hero-secondary" href={routePath('experiences', locale)} data-t="hero.secondary">{t('hero.secondary')}</a>
+            </div>
           </div>
         </div>
 
@@ -87,17 +101,21 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
 
     <section id="tours" data-hscroll="" data-nav="dark" data-screen-label="03 Experiencias" style="position: relative; height: 300vh; margin-top: clamp(12px, 2.6vw, 28px); background: #22282C;">
       <div data-hs-sticky="" style="position: sticky; top: 0; height: 100svh; overflow: hidden;">
-        <div style="position:absolute; inset:0; z-index:0; overflow:hidden; background:#5F584D;">
-          <!-- Extensión suave de la misma fotografía para eliminar laterales negros sin recortar la imagen principal -->
-          <div aria-hidden="true" style="position:absolute; inset:-5%; opacity:.78; filter:blur(24px); transform:scale(1.08);">
-            <image-slot id="pt-exp-bg-extended" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.experiences-background')} locale={locale} preset="experience-background" decorative /></image-slot>
-          </div>
-          <div aria-hidden="true" style="position:absolute; inset:0; background:rgba(95,88,77,.08);"></div>
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
-            <image-slot id="pt-exp-bg" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.experiences-background')} locale={locale} preset="experience-background" decorative /></image-slot>
-          </div>
+        <div data-exp-background-mode={hasExperiencesBackgroundPhoto ? 'photo' : 'green'} style="position:absolute; inset:0; z-index:0; overflow:hidden; background:#6B7A5E;">
+          {hasExperiencesBackgroundPhoto && (
+            <>
+              <!-- Extensión suave de la fotografía elegida desde el panel admin. -->
+              <div aria-hidden="true" style="position:absolute; inset:-5%; opacity:.78; filter:blur(24px); transform:scale(1.08);">
+                <image-slot id="pt-exp-bg-extended" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+              </div>
+              <div aria-hidden="true" style="position:absolute; inset:0; background:rgba(62,78,58,.10);"></div>
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                <image-slot id="pt-exp-bg" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+              </div>
+            </>
+          )}
         </div>
-        <div aria-hidden="true" style="position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(28,34,31,.24) 0%, rgba(28,34,31,.10) 42%, rgba(28,34,31,.22) 100%);"></div>
+        <div aria-hidden="true" style={`position:absolute; inset:0; z-index:1; pointer-events:none; background:${hasExperiencesBackgroundPhoto ? 'linear-gradient(180deg, rgba(28,34,31,.24) 0%, rgba(28,34,31,.10) 42%, rgba(28,34,31,.22) 100%)' : 'linear-gradient(180deg, rgba(49,65,45,.08) 0%, rgba(49,65,45,.02) 44%, rgba(49,65,45,.14) 100%)'};`}></div>
 
         <div data-exp-kicker="" style="position: absolute; z-index: 3; top: clamp(78px, 13vh, 124px); left: clamp(22px, 6vw, 96px); right: clamp(22px, 6vw, 96px); text-align: right; color: #F5F2EC; pointer-events: none;">
           <p data-t="exp.kicker" style="margin: 0; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: rgba(245,242,236,.66);">{t('exp.kicker')}</p>
@@ -107,12 +125,12 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
 
           <a data-hs-card="" data-exp-detail="1" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #3D4E5C, #7E8C7A);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
-              <image-slot id="pt-exp-1" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(1)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-1" shape="rect" fit={experienceAsset(1).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(1)} locale={locale} preset="experience-card" decorative /></image-slot>
             </div>
               <h3 data-t="tour.1.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('1', 't')}</h3>
               <p data-t="tour.1.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('1', 's')}</p>
               <p data-t="tour.1.d" style="margin: 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('1', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="2" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; display: flex; align-items: stretch; gap: clamp(3px, .5vw, 8px); height: clamp(330px, 56vh, 520px); cursor: none; color: #F5F2EC;">
             <div style="display: flex; align-items: flex-end; writing-mode: vertical-rl; transform: rotate(180deg); padding-bottom: 28px;">
@@ -120,21 +138,21 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             </div>
             <div style="display: flex; flex-direction: column; width: clamp(196px, 25vw, 336px);">
               <div style="position: relative; flex: 1 1 auto; overflow: hidden; background: linear-gradient(165deg, #5B7C99, #6B7A5E);">
-                <image-slot id="pt-exp-2" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(2)} locale={locale} preset="experience-card" decorative /></image-slot>
+                <image-slot id="pt-exp-2" shape="rect" fit={experienceAsset(2).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(2)} locale={locale} preset="experience-card" decorative /></image-slot>
               </div>
               <p data-t="tour.2.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('2', 's')}</p>
               <p data-t="tour.2.d" style="margin: 9px 0 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('2', 'd')}</p>
             </div>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="3" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #6E8CA6, #A8B4B0);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
-              <image-slot id="pt-exp-3" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(3)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-3" shape="rect" fit={experienceAsset(3).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(3)} locale={locale} preset="experience-card" decorative /></image-slot>
             </div>
               <h3 data-t="tour.3.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('3', 't')}</h3>
               <p data-t="tour.3.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('3', 's')}</p>
               <p data-t="tour.3.d" style="margin: 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('3', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="4" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; display: flex; align-items: stretch; gap: clamp(3px, .5vw, 8px); height: clamp(330px, 56vh, 520px); cursor: none; color: #F5F2EC;">
             <div style="display: flex; align-items: flex-end; writing-mode: vertical-rl; transform: rotate(180deg); padding-bottom: 28px;">
@@ -142,133 +160,133 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
             </div>
             <div style="display: flex; flex-direction: column; width: clamp(230px, 30vw, 400px);">
               <div style="position: relative; flex: 1 1 auto; overflow: hidden; background: linear-gradient(165deg, #8A7A66, #C08B63);">
-                <image-slot id="pt-exp-4" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(4)} locale={locale} preset="experience-card" decorative /></image-slot>
+                <image-slot id="pt-exp-4" shape="rect" fit={experienceAsset(4).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(4)} locale={locale} preset="experience-card" decorative /></image-slot>
               </div>
               <p data-t="tour.4.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('4', 's')}</p>
               <p data-t="tour.4.d" style="margin: 9px 0 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('4', 'd')}</p>
             </div>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="5" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC; --g: linear-gradient(165deg, #55636B, #B4835F);">
             <div data-hs-img="" style="position: relative; flex: 1 1 auto; overflow: hidden; background: var(--g);">
-              <image-slot id="pt-exp-5" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(5)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-5" shape="rect" fit={experienceAsset(5).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(5)} locale={locale} preset="experience-card" decorative /></image-slot>
             </div>
               <h3 data-t="tour.5.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('5', 't')}</h3>
               <p data-t="tour.5.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('5', 's')}</p>
               <p data-t="tour.5.d" style="margin: 0; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('5', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="6" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-6" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(6)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-6" shape="rect" fit={experienceAsset(6).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(6)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.6.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('6', 'c')}</span>
             </div>
             <h3 data-t="tour.6.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('6', 't')}</h3>
             <p data-t="tour.6.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('6', 's')}</p>
               <p data-t="tour.6.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('6', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="7" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-7" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(7)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-7" shape="rect" fit={experienceAsset(7).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(7)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.7.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('7', 'c')}</span>
             </div>
             <h3 data-t="tour.7.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('7', 't')}</h3>
             <p data-t="tour.7.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('7', 's')}</p>
               <p data-t="tour.7.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('7', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="8" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-8" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(8)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-8" shape="rect" fit={experienceAsset(8).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(8)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.8.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('8', 'c')}</span>
             </div>
             <h3 data-t="tour.8.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('8', 't')}</h3>
             <p data-t="tour.8.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('8', 's')}</p>
               <p data-t="tour.8.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('8', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="9" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-9" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(9)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-9" shape="rect" fit={experienceAsset(9).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(9)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.9.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('9', 'c')}</span>
             </div>
             <h3 data-t="tour.9.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('9', 't')}</h3>
             <p data-t="tour.9.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('9', 's')}</p>
               <p data-t="tour.9.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('9', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="10" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-10" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(10)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-10" shape="rect" fit={experienceAsset(10).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(10)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.10.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('10', 'c')}</span>
             </div>
             <h3 data-t="tour.10.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('10', 't')}</h3>
             <p data-t="tour.10.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('10', 's')}</p>
               <p data-t="tour.10.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('10', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="11" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-11" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(11)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-11" shape="rect" fit={experienceAsset(11).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(11)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.11.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('11', 'c')}</span>
             </div>
             <h3 data-t="tour.11.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('11', 't')}</h3>
             <p data-t="tour.11.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('11', 's')}</p>
               <p data-t="tour.11.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('11', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="12" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-12" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(12)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-12" shape="rect" fit={experienceAsset(12).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(12)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.12.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('12', 'c')}</span>
             </div>
             <h3 data-t="tour.12.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('12', 't')}</h3>
             <p data-t="tour.12.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('12', 's')}</p>
               <p data-t="tour.12.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('12', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="13" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-13" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(13)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-13" shape="rect" fit={experienceAsset(13).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(13)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.13.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('13', 'c')}</span>
             </div>
             <h3 data-t="tour.13.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('13', 't')}</h3>
             <p data-t="tour.13.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('13', 's')}</p>
               <p data-t="tour.13.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('13', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="14" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-14" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(14)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-14" shape="rect" fit={experienceAsset(14).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(14)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.14.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('14', 'c')}</span>
             </div>
             <h3 data-t="tour.14.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('14', 't')}</h3>
             <p data-t="tour.14.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('14', 's')}</p>
               <p data-t="tour.14.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('14', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
           <a data-hs-card="" data-exp-detail="15" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-15" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(15)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-15" shape="rect" fit={experienceAsset(15).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(15)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.15.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('15', 'c')}</span>
             </div>
             <h3 data-t="tour.15.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('15', 't')}</h3>
             <p data-t="tour.15.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('15', 's')}</p>
               <p data-t="tour.15.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('15', 'd')}</p>
-          <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span></a>
+          <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span></a>
 
         
 
           <a data-hs-card="" data-exp-detail="16" aria-haspopup="dialog" href="#" style="pointer-events: auto; position: relative; flex: 0 0 auto; width: clamp(228px, 29vw, 390px); height: clamp(310px, 52vh, 480px); display: flex; flex-direction: column; cursor: none; color: #F5F2EC;">
             <div data-hs-img="" style="position: relative; flex: 0 0 auto; height: clamp(170px, 23vw, 275px); overflow: hidden; background:#111;">
-              <image-slot id="pt-exp-16" shape="rect" fit="cover"><CloudinaryImage asset={experienceAsset(16)} locale={locale} preset="experience-card" decorative /></image-slot>
+              <image-slot id="pt-exp-16" shape="rect" fit={experienceAsset(16).fitMode ?? 'cover'}><CloudinaryImage asset={experienceAsset(16)} locale={locale} preset="experience-card" decorative /></image-slot>
               <span data-t="tour.16.c" style="position:absolute; left:12px; bottom:10px; z-index:2; padding:6px 8px; background:rgba(12,16,20,.58); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-size:9px; letter-spacing:.16em; text-transform:uppercase; line-height:1.4; color:rgba(245,242,236,.9);">{tour('16', 'c')}</span>
             </div>
             <h3 data-t="tour.16.t" style="margin: 9px 0 3px; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(21px, 2.1vw, 29px); line-height: 1.1;">{tour('16', 't')}</h3>
             <p data-t="tour.16.s" style="margin: 4px 0 8px; font-size: 12px; line-height: 1.46; font-weight: 300; color: rgba(245,242,236,.8); max-width: 34ch; text-wrap: pretty;">{tour('16', 's')}</p>
             <p data-t="tour.16.d" style="margin: 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,242,236,.62);">{tour('16', 'd')}</p>
-            <span style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">Ver detalles</span>
+            <span class="pk-exp-detail-link" data-t="exp.detail" style="margin-top:8px; font-size:9px; letter-spacing:.20em; text-transform:uppercase; color:rgba(245,242,236,.46);">{t('exp.detail')}</span>
           </a>
 
           <div aria-hidden="true" style="flex: 0 0 auto; width: clamp(8px, 3vw, 40px);"></div>
@@ -283,8 +301,8 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
     <section id="tours-mobile" data-nav="dark" data-screen-label="03 Experiencias móvil" style="display:none; background:#22282C; color:#F5F2EC; padding:66px 0 54px; margin-top:clamp(12px,2.6vw,28px);">
       <div style="padding:0 22px 22px;">
         <p data-t="exp.kicker" style="margin:0 0 10px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:rgba(245,242,236,.62);">{t('exp.kicker')}</p>
-        <h2 style="margin:0; max-width:12ch; font-family:Georgia,'Times New Roman',serif; font-size:clamp(30px,9vw,42px); line-height:1.02; font-weight:300;">Elige, desliza y descubre.</h2>
-        <p style="margin:12px 0 0; font-size:12px; color:rgba(245,242,236,.58);">Desliza hacia la izquierda para ver más.</p>
+        <h2 data-t="exp.swipeTitle" style="margin:0; max-width:12ch; font-family:Georgia,'Times New Roman',serif; font-size:clamp(30px,9vw,42px); line-height:1.02; font-weight:300;">{t('exp.swipeTitle')}</h2>
+        <p data-t="exp.swipeHint" style="margin:12px 0 0; font-size:12px; color:rgba(245,242,236,.58);">{t('exp.swipeHint')}</p>
       </div>
       <div id="pk-mobile-exp-track" aria-label="Experiencias PatagoniK"></div>
     </section>
@@ -363,10 +381,10 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
           <div data-reveal="" style="opacity:0; transform:translateY(26px); transition:opacity .9s ease, transform .9s ease;">
             <p data-t="quote.kicker" style="margin:0 0 12px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#A8B39A;">{t('quote.kicker')}</p>
             <h3 data-t="quote.title" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-weight:300; font-size:clamp(34px,6vw,60px); line-height:1.02;">{t('quote.title')}</h3>
-            <div id="pk-quote-steps-v47" aria-label="Cómo funciona" style="display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,242,236,.72);">
-              <span>Elige</span><span aria-hidden="true" style="opacity:.45;">·</span>
-              <span>Cotiza</span><span aria-hidden="true" style="opacity:.45;">·</span>
-              <span>Vive la Patagonia</span>
+            <div id="pk-quote-steps-v47" aria-label={t('quote.stepsLabel')} style="display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0; font-family:var(--pk-catalog-sans); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,242,236,.72);">
+              <span data-t="quote.step1">{t('quote.step1')}</span><span aria-hidden="true" style="opacity:.45;">·</span>
+              <span data-t="quote.step2">{t('quote.step2')}</span><span aria-hidden="true" style="opacity:.45;">·</span>
+              <span data-t="quote.step3">{t('quote.step3')}</span>
             </div>
             <p data-t="quote.intro" style="margin:18px 0 0; max-width:42ch; font-size:15px; line-height:1.72; color:rgba(245,242,236,.68); font-weight:300;">{t('quote.intro')}</p>
           </div>
@@ -447,7 +465,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
 
     <section data-nav="dark" data-screen-label="10 CTA final" style="position: relative; min-height: 92svh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(110px, 22vh, 200px) clamp(22px, 6vw, 96px) clamp(72px, 12vw, 118px); background: linear-gradient(180deg, #2E3B47 0%, #55636B 55%, #B4835F 100%);">
       <div data-par="0.16" style="position: absolute; inset: -12% 0;">
-        <image-slot id="pt-final-band" shape="rect" fit="cover"><CloudinaryImage asset={asset('landing.final-cta')} locale={locale} preset="final-cta" decorative /></image-slot>
+        <image-slot id="pt-final-band" shape="rect" fit={asset('landing.final-cta').fitMode ?? 'cover'}><CloudinaryImage asset={asset('landing.final-cta')} locale={locale} preset="final-cta" decorative /></image-slot>
       </div>
       <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(18,22,26,.5) 0%, rgba(18,22,26,.2) 42%, rgba(18,22,26,.72) 100%);"></div>
 
@@ -456,7 +474,7 @@ const experienceAsset = (order: number) => asset(`experience.${slugByOrder.get(S
           <span aria-hidden="true" style="display: block; width: clamp(48px, 8vw, 96px); height: 1px; margin-bottom: clamp(18px, 3vw, 30px); background: rgba(245,242,236,.5);"></span>
           <span data-t="f1.a" style="display: block; font-family: Georgia, 'Times New Roman', serif; font-weight: 300; font-size: clamp(3rem, 11vw, 7rem); line-height: .88; letter-spacing: .03em; text-transform: uppercase; color: rgba(245,242,236,.4);">{t('f1.a')}</span>
           <span data-t="f1.b" style="display: block; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.05rem, 3.2vw, 2.1rem); line-height: 1.1; letter-spacing: .1em; text-transform: uppercase; color: #F5F2EC;">{t('f1.b')}</span>
-          <a data-wa="" data-btn="" href="https://wa.me/56931712780" target="_blank" rel="noopener" style="position: relative; display: inline-flex; align-items: center; gap: 14px; margin-top: clamp(28px, 5vw, 46px); min-height: 60px; padding: 0 30px; color: #4F5D45; font-size: clamp(11px, 3vw, 13px); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;">
+          <a data-wa="" data-btn="" href={heroWhatsappUrl} target="_blank" rel="noopener" style="position: relative; display: inline-flex; align-items: center; gap: 14px; margin-top: clamp(28px, 5vw, 46px); min-height: 60px; padding: 0 30px; color: #4F5D45; font-size: clamp(11px, 3vw, 13px); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;">
             <span data-btn-bg="" aria-hidden="true" style="position: absolute; inset: 0; border-radius: 999px; background: #EDE7DA; transition: transform .9s cubic-bezier(.19,1,.22,1); will-change: transform;"></span>
             <span data-t="cta" style="position: relative;">{t('cta')}</span>
             <svg data-btn-arrow="" width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="#9C998F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: relative; transform: rotate(-45deg); transition: transform 1s cubic-bezier(.19,1,.22,1), stroke 1s ease;"><path d="M1.2 6h9.6M7.2 2.4 10.8 6l-3.6 3.6"></path></svg>

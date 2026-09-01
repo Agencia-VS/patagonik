@@ -44,6 +44,7 @@ const t = useTranslations(locale);
                 <h2>{c.cardTitle}</h2>
                 <span class="pk-index__summary">{c.cardSummary}</span>
                 <span class="pk-index__meta">{c.cardDetail}</span>
+                <span class="pk-index__cta">{t('exp.detail')} <span aria-hidden="true">↗</span></span>
               </span>
             </a>
           </li>
@@ -150,5 +151,16 @@ const t = useTranslations(locale);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: rgba(245, 242, 236, 0.6);
+  }
+  .pk-index__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.72);
   }
 </style>

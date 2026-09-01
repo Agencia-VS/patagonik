@@ -30,7 +30,8 @@ const srcset = cloudinaryImageSrcset(asset, preset);
 const alt = decorative ? '' : localizedAlt(asset, locale);
 const eager = loading === 'eager';
 const focus = asset.focalPoint ?? { x: 0.5, y: 0.5 };
-const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-position:${focus.x * 100}% ${focus.y * 100}%;`;
+const fit = asset.fitMode ?? 'cover';
+const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-fit:${fit};object-position:${focus.x * 100}% ${focus.y * 100}%;`;
 ---
 
 {
@@ -48,6 +49,7 @@ const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-posit
       fetchpriority={eager ? 'high' : 'low'}
       width={asset.width}
       height={asset.height}
+      data-pk-media-fit={fit}
       class={className}
       style={finalStyle}
     />
