@@ -3,7 +3,7 @@ interface Session { access_token: string; refresh_token: string; expires_at?: nu
 type FitMode = 'cover' | 'contain';
 type PreviewContext = 'desktop' | 'mobile' | 'modal';
 type MediaOrientation = 'landscape' | 'portrait' | 'square';
-type FrameShape = 'landscape' | 'portrait' | 'square' | 'band';
+type FrameShape = 'landscape' | 'portrait' | 'phone' | 'square' | 'band' | 'modal-side';
 interface FocalPoint { x?: number; y?: number }
 interface Framing extends FocalPoint {
   fit?: FitMode;
@@ -24,6 +24,13 @@ interface PreviewGeometry {
   ratio: string;
   label: string;
   shape: FrameShape;
+}
+interface PreviewPlacement {
+  width: number;
+  height: number;
+  left: number;
+  top: number;
+  overflow: { x: number; y: number };
 }
 interface ManifestRow {
   slot_key: string; label: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
@@ -86,11 +93,18 @@ const publishButton = document.querySelector<HTMLButtonElement>('#publish-button
 const refreshButton = document.querySelector<HTMLButtonElement>('#refresh-button')!;
 const logoutButton = document.querySelector<HTMLButtonElement>('#logout-button')!;
 const STORAGE_KEY = 'patagonik-admin-session';
+const previewResizeCallbacks = new WeakMap<Element, () => void>();
+const previewResizeObserver = typeof ResizeObserver === 'undefined'
+  ? null
+  : new ResizeObserver((entries) => {
+      for (const entry of entries) previewResizeCallbacks.get(entry.target)?.();
+    });
 const PREVIEW_CONTEXT_LABELS: Record<PreviewContext, string> = {
   desktop: 'Card escritorio',
   mobile: 'Card móvil',
   modal: 'Modal',
 };
+const CROP_THRESHOLD = 2;
 let session: Session | null = null;
 let activeSection: SectionId = 'hero';
 
@@ -298,25 +312,95 @@ function normalizedFraming(point: Framing | null | undefined): NormalizedFraming
   };
 }
 
-function previewPositionLabel(context: PreviewContext, point: NormalizedPoint): string {
+function previewContextLabel(row: ManifestRow, context: PreviewContext): string {
+  if (row.slot_key.startsWith('experience.')) return PREVIEW_CONTEXT_LABELS[context];
+  if (row.slot_key === 'landing.hero') return context === 'mobile' ? 'Hero móvil' : 'Hero escritorio';
+  if (row.slot_key === 'landing.experiences-background') return context === 'mobile' ? 'Fondo móvil' : 'Fondo escritorio';
+  if (row.slot_key === 'landing.band-valle') return context === 'mobile' ? 'Franja móvil' : 'Franja escritorio';
+  if (row.slot_key === 'landing.final-cta') return context === 'mobile' ? 'Cierre móvil' : 'Cierre escritorio';
+  if (row.slot_key === 'about.essence') return context === 'mobile' ? 'Esencia móvil' : 'Esencia escritorio';
+  return context === 'mobile' ? 'Vista móvil' : 'Vista escritorio';
+}
+
+function previewPositionLabel(row: ManifestRow, context: PreviewContext, point: NormalizedPoint): string {
   const position = Math.abs(point.x - .5) < .005 && Math.abs(point.y - .5) < .005
     ? 'Centro'
     : `${Math.round(point.x * 100)}% / ${Math.round(point.y * 100)}%`;
-  return `${PREVIEW_CONTEXT_LABELS[context]} · ${position}`;
-}
-
-function applyPreviewPresentation(container: HTMLElement, fit: FitMode, point: NormalizedPoint) {
-  container.dataset.fit = fit;
-  const media = container.querySelector<HTMLElement>('img, video');
-  if (!media) return;
-  media.style.objectFit = fit;
-  media.style.objectPosition = `${point.x * 100}% ${point.y * 100}%`;
+  return `${previewContextLabel(row, context)} · ${position}`;
 }
 
 function mediaDimensions(media: HTMLImageElement | HTMLVideoElement): { width: number; height: number } {
   return media instanceof HTMLVideoElement
     ? { width:media.videoWidth || Number(media.getAttribute('width')), height:media.videoHeight || Number(media.getAttribute('height')) }
     : { width:media.naturalWidth || Number(media.getAttribute('width')), height:media.naturalHeight || Number(media.getAttribute('height')) };
+}
+
+function calculatePreviewPlacement(
+  frame: { width: number; height: number },
+  source: { width: number; height: number },
+  fit: FitMode,
+  point: NormalizedPoint,
+): PreviewPlacement | null {
+  if (!frame.width || !frame.height || !source.width || !source.height) return null;
+  const scale = fit === 'cover'
+    ? Math.max(frame.width / source.width, frame.height / source.height)
+    : Math.min(frame.width / source.width, frame.height / source.height);
+  const width = source.width * scale;
+  const height = source.height * scale;
+  const overflow = {
+    x:Math.max(0, width - frame.width),
+    y:Math.max(0, height - frame.height),
+  };
+  return {
+    width,
+    height,
+    left:fit === 'cover' ? -overflow.x * point.x : (frame.width - width) / 2,
+    top:fit === 'cover' ? -overflow.y * point.y : (frame.height - height) / 2,
+    overflow,
+  };
+}
+
+function previewPlacement(container: HTMLElement, fit: FitMode, point: NormalizedPoint): PreviewPlacement | null {
+  const media = container.querySelector<HTMLImageElement | HTMLVideoElement>('img, video');
+  if (!media) return null;
+  return calculatePreviewPlacement(
+    { width:container.clientWidth, height:container.clientHeight },
+    mediaDimensions(media),
+    fit,
+    point,
+  );
+}
+
+function applyPreviewPresentation(container: HTMLElement, fit: FitMode, point: NormalizedPoint) {
+  container.dataset.fit = fit;
+  const media = container.querySelector<HTMLImageElement | HTMLVideoElement>('img, video');
+  if (!media) return;
+  const placement = previewPlacement(container, fit, point);
+
+  media.style.position = 'absolute';
+  media.style.maxWidth = 'none';
+  media.style.maxHeight = 'none';
+  media.style.margin = '0';
+  media.style.transform = 'none';
+
+  if (!placement) {
+    media.style.inset = '0';
+    media.style.width = '100%';
+    media.style.height = '100%';
+    media.style.setProperty('object-fit', fit, 'important');
+    media.style.setProperty('object-position', `${point.x * 100}% ${point.y * 100}%`, 'important');
+    return;
+  }
+
+  // El bitmap se dimensiona y desplaza de forma explícita. Así sigue al
+  // puntero píxel a píxel y el marco representa exactamente el recorte.
+  media.style.inset = 'auto';
+  media.style.width = `${placement.width}px`;
+  media.style.height = `${placement.height}px`;
+  media.style.left = `${placement.left}px`;
+  media.style.top = `${placement.top}px`;
+  media.style.setProperty('object-fit', 'fill', 'important');
+  media.style.setProperty('object-position', '50% 50%', 'important');
 }
 
 function mediaOrientation(media: HTMLImageElement | HTMLVideoElement | null): MediaOrientation {
@@ -341,34 +425,52 @@ function updatePreviewOrientation(container: HTMLElement, media: HTMLImageElemen
   else media.addEventListener('load', apply, { once:true });
 }
 
+function desktopViewportRatio(): number {
+  if (window.innerWidth >= 860 && window.innerHeight > 0) return window.innerWidth / window.innerHeight;
+  return 16 / 10;
+}
+
+// Estos ratios siguen la caja real del img/video en el landing. En recursos
+// con parallax incluyen el sobrebarrido (inset negativo), no sólo el bloque
+// visible, porque ésa es la caja contra la que object-fit calcula el recorte.
 function previewGeometry(row: ManifestRow, context: PreviewContext, orientation: MediaOrientation): PreviewGeometry {
   if (row.slot_key.startsWith('experience.')) {
-    if (context !== 'modal') {
-      return {
-        ratio:'4 / 3',
-        label:`${PREVIEW_CONTEXT_LABELS[context]} · 4:3 real`,
-        shape:'landscape',
-      };
-    }
-    if (orientation === 'portrait') return { ratio:'3 / 4', label:'Modal vertical · vista lateral', shape:'portrait' };
+    if (context === 'desktop') return { ratio:'169 / 107', label:'Card escritorio · formato actual', shape:'landscape' };
+    if (context === 'mobile') return { ratio:'4 / 3', label:'Card móvil · 4:3 actual', shape:'landscape' };
+    if (orientation === 'portrait') return { ratio:'2 / 5', label:'Modal escritorio · columna lateral', shape:'modal-side' };
     if (orientation === 'square') return { ratio:'1 / 1', label:'Modal · imagen final 1:1', shape:'square' };
     return { ratio:'4 / 3', label:'Modal · imagen final 4:3', shape:'landscape' };
   }
 
-  if (row.slot_key === 'landing.hero' || row.slot_key === 'landing.experiences-background') {
+  if (row.slot_key === 'landing.hero') {
     return context === 'mobile'
-      ? { ratio:'9 / 16', label:'Móvil · pantalla vertical 9:16', shape:'portrait' }
-      : { ratio:'16 / 9', label:'Escritorio · pantalla 16:9', shape:'landscape' };
+      ? { ratio:'390 / 844', label:'Primera pantalla completa · móvil', shape:'phone' }
+      : { ratio:`${desktopViewportRatio()} / 1`, label:'Primera pantalla completa · escritorio', shape:'landscape' };
   }
 
-  if (row.slot_key === 'landing.band-valle' || row.slot_key === 'landing.final-cta') {
+  if (row.slot_key === 'landing.experiences-background') {
     return context === 'mobile'
-      ? { ratio:'4 / 3', label:'Móvil · bloque 4:3', shape:'landscape' }
-      : { ratio:'3 / 1', label:'Escritorio · franja 3:1', shape:'band' };
+      ? { ratio:'390 / 844', label:'Fondo de experiencias · pantalla móvil', shape:'phone' }
+      : { ratio:`${desktopViewportRatio()} / 1`, label:'Fondo de experiencias · pantalla escritorio', shape:'landscape' };
+  }
+
+  if (row.slot_key === 'landing.band-valle') {
+    return context === 'mobile'
+      ? { ratio:'2.58 / 1', label:'Franja móvil · formato actual', shape:'band' }
+      : { ratio:'3.7 / 1', label:'Franja escritorio · formato actual', shape:'band' };
+  }
+
+  if (row.slot_key === 'landing.final-cta') {
+    const ratio = context === 'mobile'
+      ? (390 / 844) / (.92 * 1.24)
+      : desktopViewportRatio() / (.92 * 1.24);
+    return context === 'mobile'
+      ? { ratio:`${ratio} / 1`, label:'Cierre móvil · pantalla con parallax', shape:'phone' }
+      : { ratio:`${ratio} / 1`, label:'Cierre escritorio · pantalla con parallax', shape:'landscape' };
   }
 
   if (row.slot_key === 'about.essence') {
-    return { ratio:'3 / 2', label:`${context === 'mobile' ? 'Móvil' : 'Escritorio'} · imagen 3:2`, shape:'landscape' };
+    return { ratio:'1.19 / 1', label:`${context === 'mobile' ? 'Móvil' : 'Escritorio'} · lienzo parallax actual`, shape:'landscape' };
   }
 
   return context === 'mobile'
@@ -420,22 +522,18 @@ function preview(row: ManifestRow, container: HTMLElement, framing: NormalizedFr
   renderPreviewMedia(container, resourceType, url, framing.fit, framing.desktop);
 }
 
-function previewOverflow(container: HTMLElement): { x: number; y: number } {
-  const media = container.querySelector<HTMLImageElement | HTMLVideoElement>('img, video');
-  if (!media) return { x:0, y:0 };
-  const width = media instanceof HTMLVideoElement
-    ? media.videoWidth || Number(media.getAttribute('width'))
-    : media.naturalWidth || Number(media.getAttribute('width'));
-  const height = media instanceof HTMLVideoElement
-    ? media.videoHeight || Number(media.getAttribute('height'))
-    : media.naturalHeight || Number(media.getAttribute('height'));
-  const bounds = container.getBoundingClientRect();
-  if (!width || !height || !bounds.width || !bounds.height) return { x:0, y:0 };
-  const scale = Math.max(bounds.width / width, bounds.height / height);
-  return {
-    x:Math.max(0, width * scale - bounds.width),
-    y:Math.max(0, height * scale - bounds.height),
-  };
+function previewOverflow(container: HTMLElement, fit: FitMode, point: NormalizedPoint): { x: number; y: number } {
+  return previewPlacement(container, fit, point)?.overflow ?? { x:0, y:0 };
+}
+
+function previewKind(row: ManifestRow): string {
+  if (row.slot_key.startsWith('experience.')) return 'experience';
+  if (row.slot_key === 'landing.hero') return 'hero';
+  if (row.slot_key === 'landing.experiences-background') return 'experience-background';
+  if (row.slot_key === 'about.essence') return 'essence';
+  if (row.slot_key === 'landing.band-valle') return 'band';
+  if (row.slot_key === 'landing.final-cta') return 'final-cta';
+  return 'wide';
 }
 
 function renderCard(row: ManifestRow): HTMLElement {
@@ -473,11 +571,7 @@ function renderCard(row: ManifestRow): HTMLElement {
   stateBadge.dataset.state = dirty ? 'draft' : row.published_at ? 'published' : 'local';
   resourceLabel.textContent = resourceType === 'video' ? 'Video' : 'Imagen';
   previewFrame.dataset.previewContext = activeContext;
-  previewFrame.dataset.previewKind = isExperience
-    ? 'card'
-    : row.slot_key === 'about.essence'
-      ? 'portrait'
-      : ['landing.band-valle', 'landing.final-cta'].includes(row.slot_key) ? 'band' : 'wide';
+  previewFrame.dataset.previewKind = previewKind(row);
   const desktopContextButton = contextButtons.find((button) => button.dataset.previewContext === 'desktop')!;
   const mobileContextButton = contextButtons.find((button) => button.dataset.previewContext === 'mobile')!;
   const modalContextButton = contextButtons.find((button) => button.dataset.previewContext === 'modal')!;
@@ -512,10 +606,13 @@ function renderCard(row: ManifestRow): HTMLElement {
     const hasMedia = Boolean(media);
     const dimensions = media ? mediaDimensions(media) : { width:0, height:0 };
     const mediaReady = dimensions.width > 0 && dimensions.height > 0;
-    const overflow = previewOverflow(previewMedia);
-    const hasCrop = mediaReady && (overflow.x >= 1 || overflow.y >= 1);
+    const overflow = previewOverflow(previewMedia, fitInput.value as FitMode, activePoint());
+    const canMoveX = overflow.x >= CROP_THRESHOLD;
+    const canMoveY = overflow.y >= CROP_THRESHOLD;
+    const hasCrop = mediaReady && (canMoveX || canMoveY);
     const enabled = fitInput.value === 'cover' && hasMedia && hasCrop && previewMedia.dataset.greenBackground !== 'true';
     previewFrame.dataset.dragEnabled = String(enabled);
+    previewFrame.dataset.dragAxis = canMoveX && canMoveY ? 'both' : canMoveX ? 'x' : canMoveY ? 'y' : 'none';
     previewMedia.tabIndex = enabled ? 0 : -1;
     resetFocal.disabled = !enabled;
     let instruction = 'La proporción de la foto ya coincide con este marco; no hay una zona recortada para mover.';
@@ -530,8 +627,9 @@ function renderCard(row: ManifestRow): HTMLElement {
       instruction = 'Ver completo está activo: la foto no se recorta.';
       hint = 'Ver completo · sin recorte';
     } else if (hasCrop) {
-      instruction = `Encuadre ${PREVIEW_CONTEXT_LABELS[activeContext]}. Mantén presionado y arrastra la foto, o usa las flechas del teclado.`;
-      hint = 'Mantén presionado y arrastra la foto';
+      const direction = canMoveX && canMoveY ? 'en cualquier dirección' : canMoveX ? 'hacia los lados' : 'arriba o abajo';
+      instruction = `Encuadre ${previewContextLabel(row, activeContext)}. Mantén presionado y arrastra ${direction}, o usa las flechas del teclado.`;
+      hint = `Arrastra ${direction}`;
     }
     dragHintText.textContent = hint;
     previewMedia.setAttribute('aria-label', instruction);
@@ -557,7 +655,7 @@ function renderCard(row: ManifestRow): HTMLElement {
     if (context !== activeContext) return;
     focalXInput.value = String(point.x);
     focalYInput.value = String(point.y);
-    focalLabel.value = previewPositionLabel(context, point);
+    focalLabel.value = previewPositionLabel(row, context, point);
     applyPreviewPresentation(previewMedia, framing.fit, point);
   };
 
@@ -571,15 +669,22 @@ function renderCard(row: ManifestRow): HTMLElement {
     applyFrameGeometry();
     focalXInput.value = String(point.x);
     focalYInput.value = String(point.y);
-    focalLabel.value = previewPositionLabel(context, point);
+    focalLabel.value = previewPositionLabel(row, context, point);
     applyPreviewPresentation(previewMedia, framing.fit, point);
     updateDragAvailability();
   };
 
   previewMedia.addEventListener('preview-media-ready', () => {
     applyFrameGeometry();
+    applyPreviewPresentation(previewMedia, framing.fit, activePoint());
     updateDragAvailability();
   });
+  previewResizeCallbacks.set(previewMedia, () => {
+    applyFrameGeometry();
+    applyPreviewPresentation(previewMedia, framing.fit, activePoint());
+    updateDragAvailability();
+  });
+  previewResizeObserver?.observe(previewMedia);
   preview(row, previewMedia, framing);
   applyFrameGeometry();
   updateFitControls(framing.fit);
@@ -611,8 +716,8 @@ function renderCard(row: ManifestRow): HTMLElement {
 
   previewMedia.addEventListener('pointerdown', (event) => {
     if (previewFrame.dataset.dragEnabled !== 'true' || event.button !== 0) return;
-    const overflow = previewOverflow(previewMedia);
-    if (overflow.x < 1 && overflow.y < 1) {
+    const overflow = previewOverflow(previewMedia, framing.fit, activePoint());
+    if (overflow.x < CROP_THRESHOLD && overflow.y < CROP_THRESHOLD) {
       updateDragAvailability();
       return;
     }
@@ -631,10 +736,10 @@ function renderCard(row: ManifestRow): HTMLElement {
 
   previewMedia.addEventListener('pointermove', (event) => {
     if (!drag || drag.pointerId !== event.pointerId) return;
-    const nextX = drag.overflow.x >= 1
+    const nextX = drag.overflow.x >= CROP_THRESHOLD
       ? drag.point.x - (event.clientX - drag.startX) / drag.overflow.x
       : drag.point.x;
-    const nextY = drag.overflow.y >= 1
+    const nextY = drag.overflow.y >= CROP_THRESHOLD
       ? drag.point.y - (event.clientY - drag.startY) / drag.overflow.y
       : drag.point.y;
     updateFocalControls(nextX, nextY);
@@ -746,6 +851,7 @@ function renderCard(row: ManifestRow): HTMLElement {
   });
   window.requestAnimationFrame(() => {
     applyFrameGeometry();
+    applyPreviewPresentation(previewMedia, framing.fit, activePoint());
     updateDragAvailability();
   });
   return card;
@@ -756,6 +862,7 @@ async function loadManifest(): Promise<void> {
   const response = await supabase('/rest/v1/landing_admin_manifest?select=*&order=sort_order.asc');
   if (!response.ok) throw new Error(await parseError(response));
   const rows = await response.json() as ManifestRow[];
+  for (const existing of grid.querySelectorAll('[data-preview-media]')) previewResizeObserver?.unobserve(existing);
   grid.replaceChildren(...rows.map(renderCard));
   updateManifestSummary(rows);
   activateSection(activeSection);
