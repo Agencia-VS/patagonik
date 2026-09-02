@@ -125,11 +125,12 @@ const adminConfig = {
           </div>
           <div class="asset-card__drag-hint" data-drag-hint aria-hidden="true">
             <svg viewBox="0 0 20 20"><path d="M10 3v14M3 10h14M7 6l3-3 3 3M7 14l3 3 3-3M6 7l-3 3 3 3M14 7l3 3-3 3" /></svg>
-            <span>Arrastra para encuadrar</span>
+            <span data-drag-hint-text>Mantén presionado y arrastra la foto</span>
           </div>
+          <span class="asset-card__frame-label" data-frame-label>Vista real · 4:3</span>
         </div>
         <div class="preview-switch" role="group" aria-label="Formato de vista previa">
-          <span>Encuadre</span>
+          <span>¿Dónde quieres revisar?</span>
           <button type="button" data-preview-context="desktop" aria-pressed="true">Card escritorio</button>
           <button type="button" data-preview-context="mobile" aria-pressed="false">Card móvil</button>
           <button type="button" data-preview-context="modal" aria-pressed="false" hidden>Modal</button>
@@ -347,29 +348,32 @@ const adminConfig = {
   .asset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); align-items: start; gap: 1.15rem; }
   .asset-card { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 10px 30px rgba(38, 48, 42, .055); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
   .asset-card:hover { transform: translateY(-2px); border-color: #c9cdc5; box-shadow: 0 15px 38px rgba(38, 48, 42, .08); }
-  .asset-card__preview { position: relative; overflow: hidden; aspect-ratio: 16 / 9; color: #758078; background: #d9ddd5; }
-  .asset-card__media { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; font-size: .78rem; background-color: #303833; background-image: linear-gradient(45deg, rgba(255, 255, 255, .035) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .035) 75%), linear-gradient(45deg, rgba(255, 255, 255, .035) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .035) 75%); background-position: 0 0, 10px 10px; background-size: 20px 20px; transition: inset .3s ease, width .3s ease, box-shadow .3s ease; }
-  .asset-card__preview[data-preview-context="desktop"][data-preview-kind="card"] .asset-card__media { inset: 0 auto 0 50%; width: 75%; transform: translateX(-50%); box-shadow: 0 0 0 1px rgba(255, 255, 255, .25), 0 12px 30px rgba(38, 48, 42, .18); }
-  .asset-card__preview[data-preview-context="desktop"][data-preview-kind="portrait"] .asset-card__media { inset: 0 auto 0 50%; width: 45%; transform: translateX(-50%); box-shadow: 0 0 0 1px rgba(255, 255, 255, .25), 0 12px 30px rgba(38, 48, 42, .18); }
-  .asset-card__preview[data-preview-context="desktop"][data-preview-kind="band"] .asset-card__media { inset: 32% 0; box-shadow: 0 0 0 1px rgba(255, 255, 255, .25), 0 12px 30px rgba(38, 48, 42, .18); }
-  .asset-card__preview[data-preview-context="mobile"] .asset-card__media { inset: 0 auto 0 50%; width: 31.64%; transform: translateX(-50%); box-shadow: 0 0 0 1px rgba(255, 255, 255, .35), 0 12px 30px rgba(38, 48, 42, .22); }
-  .asset-card__preview[data-preview-context="modal"] .asset-card__media { inset: 0 auto 0 50%; transform: translateX(-50%); box-shadow: 0 0 0 1px rgba(255, 255, 255, .3), 0 12px 30px rgba(38, 48, 42, .2); }
-  .asset-card__preview[data-preview-context="modal"][data-media-orientation="landscape"] .asset-card__media { width: 75%; }
-  .asset-card__preview[data-preview-context="modal"][data-media-orientation="portrait"] .asset-card__media { width: 42.2%; }
-  .asset-card__preview[data-preview-context="modal"][data-media-orientation="square"] .asset-card__media { width: 56.25%; }
+  .asset-card__preview { position: relative; display: grid; place-items: center; min-height: 370px; overflow: hidden; padding: 48px 18px 52px; color: #758078; background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, .72), rgba(255, 255, 255, 0) 48%), linear-gradient(145deg, #dfe2db, #cdd2ca); }
+  .asset-card__preview::before { position: absolute; inset: 0; opacity: .42; pointer-events: none; background-image: linear-gradient(rgba(64, 78, 68, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(64, 78, 68, .08) 1px, transparent 1px); background-size: 24px 24px; content: ""; }
+  .asset-card__media { position: relative; z-index: 1; display: grid; place-items: center; width: min(100%, 440px); aspect-ratio: var(--preview-aspect-ratio, 4 / 3); overflow: hidden; border: 2px solid rgba(255, 255, 255, .92); border-radius: 3px; color: rgba(255, 255, 255, .8); background-color: #303833; background-image: linear-gradient(45deg, rgba(255, 255, 255, .035) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .035) 75%), linear-gradient(45deg, rgba(255, 255, 255, .035) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .035) 75%); background-position: 0 0, 10px 10px; background-size: 20px 20px; box-shadow: 0 18px 44px rgba(38, 48, 42, .22), 0 0 0 1px rgba(46, 57, 49, .22); font-size: .78rem; transition: box-shadow .18s ease; }
+  .asset-card__preview[data-frame-shape="portrait"] .asset-card__media { width: min(48%, 205px); }
+  .asset-card__preview[data-frame-shape="square"] .asset-card__media { width: min(78%, 330px); }
+  .asset-card__preview[data-frame-shape="band"] .asset-card__media { width: min(100%, 440px); }
+  .asset-card__media::after { position: absolute; z-index: 2; inset: 8px; border: 1px solid rgba(255, 255, 255, .52); opacity: .72; pointer-events: none; background-image: linear-gradient(to right, transparent calc(33.333% - .5px), rgba(255, 255, 255, .38) 33.333%, transparent calc(33.333% + .5px), transparent calc(66.667% - .5px), rgba(255, 255, 255, .38) 66.667%, transparent calc(66.667% + .5px)), linear-gradient(to bottom, transparent calc(33.333% - .5px), rgba(255, 255, 255, .38) 33.333%, transparent calc(33.333% + .5px), transparent calc(66.667% - .5px), rgba(255, 255, 255, .38) 66.667%, transparent calc(66.667% + .5px)); content: ""; transition: opacity .18s ease; }
+  .asset-card__preview[data-drag-enabled="true"] .asset-card__media:hover::after,
+  .asset-card__preview[data-dragging="true"] .asset-card__media::after { opacity: 1; }
   .asset-card__media[data-green-background="true"] { color: rgba(255, 255, 255, .88); background: #6b7a5e; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
-  .asset-card__media img, .asset-card__media video { width: 100%; height: 100%; display: block; object-fit: cover; transition: object-position .25s ease; }
+  .asset-card__media img, .asset-card__media video { width: 100%; height: 100%; display: block; object-fit: cover; transition: object-position .12s ease-out; }
   .asset-card__media[data-fit="cover"] img, .asset-card__media[data-fit="cover"] video { object-fit: cover !important; }
   .asset-card__media[data-fit="contain"] img, .asset-card__media[data-fit="contain"] video { object-fit: contain !important; }
   .asset-card__preview[data-drag-enabled="true"] .asset-card__media { cursor: grab; touch-action: none; }
-  .asset-card__preview[data-dragging="true"] .asset-card__media { cursor: grabbing; }
+  .asset-card__preview[data-dragging="true"] .asset-card__media { cursor: grabbing; box-shadow: 0 22px 50px rgba(38, 48, 42, .29), 0 0 0 3px rgba(83, 99, 73, .32); }
+  .asset-card__preview[data-dragging="true"] .asset-card__media img,
+  .asset-card__preview[data-dragging="true"] .asset-card__media video { transition: none; }
   .asset-card__preview[data-drag-enabled="true"] .asset-card__media img,
   .asset-card__preview[data-drag-enabled="true"] .asset-card__media video { pointer-events: none; user-select: none; }
   .asset-card__badges { position: absolute; z-index: 2; top: .8rem; right: .8rem; left: .8rem; display: flex; justify-content: space-between; gap: .5rem; pointer-events: none; }
-  .asset-card__drag-hint { position: absolute; z-index: 3; right: 50%; bottom: .75rem; display: inline-flex; align-items: center; gap: .4rem; min-height: 30px; padding: .35rem .65rem; border: 1px solid rgba(255, 255, 255, .42); border-radius: 999px; color: #fff; background: rgba(33, 41, 36, .7); box-shadow: 0 5px 15px rgba(0, 0, 0, .14); opacity: 0; pointer-events: none; transform: translateX(50%) translateY(5px); transition: opacity .18s ease, transform .18s ease; backdrop-filter: blur(8px); font-size: .65rem; font-weight: 760; white-space: nowrap; }
+  .asset-card__drag-hint { position: absolute; z-index: 4; bottom: 14px; left: 12px; display: inline-flex; align-items: center; gap: .4rem; min-height: 32px; max-width: calc(100% - 142px); padding: .38rem .68rem; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; color: #fff; background: rgba(33, 41, 36, .78); box-shadow: 0 5px 15px rgba(0, 0, 0, .14); pointer-events: none; transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease; backdrop-filter: blur(8px); font-size: .66rem; font-weight: 760; white-space: nowrap; }
   .asset-card__drag-hint svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.4; }
-  .asset-card__preview[data-drag-enabled="true"] .asset-card__drag-hint { opacity: 1; transform: translateX(50%); }
-  .asset-card__preview[data-dragging="true"] .asset-card__drag-hint { opacity: 0; }
+  .asset-card__drag-hint span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .asset-card__preview[data-drag-enabled="false"] .asset-card__drag-hint { color: #4d574f; border-color: rgba(83, 99, 73, .17); background: rgba(247, 246, 240, .9); }
+  .asset-card__preview[data-dragging="true"] .asset-card__drag-hint { color: #fff; border-color: rgba(255, 255, 255, .35); background: rgba(83, 99, 73, .94); transform: scale(1.02); }
+  .asset-card__frame-label { position: absolute; z-index: 3; right: 12px; bottom: 17px; padding: .3rem .5rem; border: 1px solid rgba(65, 79, 59, .14); border-radius: 7px; color: #515c53; background: rgba(246, 246, 240, .82); backdrop-filter: blur(8px); font-size: .59rem; font-weight: 800; letter-spacing: .04em; pointer-events: none; text-transform: uppercase; }
   .state-badge, .type-badge { padding: .34rem .58rem; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; color: #344138; background: rgba(250, 249, 245, .9); box-shadow: 0 3px 12px rgba(38, 48, 42, .13); backdrop-filter: blur(8px); font-size: .64rem; font-weight: 800; }
   .state-badge[data-state="draft"] { color: #744e13; background: rgba(255, 244, 219, .94); }
   .state-badge[data-state="published"] { color: #35603c; background: rgba(229, 242, 230, .94); }
