@@ -20,6 +20,8 @@ const BUILD_ENV = {
   CLOUDINARY_ASSET_FOLDER: import.meta.env.CLOUDINARY_ASSET_FOLDER,
   VERCEL_DEPLOY_HOOK_URL: import.meta.env.VERCEL_DEPLOY_HOOK_URL,
   CRON_SECRET: import.meta.env.CRON_SECRET,
+  OPENAI_API_KEY: import.meta.env.OPENAI_API_KEY,
+  OPENAI_TRANSLATION_MODEL: import.meta.env.OPENAI_TRANSLATION_MODEL,
 } as const;
 
 type ServerEnvName = keyof typeof BUILD_ENV;
