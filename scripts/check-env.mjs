@@ -14,7 +14,7 @@ for (const file of files) {
 }
 
 const serverEnv = readFileSync('src/lib/server/supabase-admin.ts', 'utf8');
-for (const name of ['VERCEL_DEPLOY_HOOK_URL', 'SUPABASE_SECRET_KEY', 'CLOUDINARY_API_SECRET', 'CRON_SECRET']) {
+for (const name of ['VERCEL_DEPLOY_HOOK_URL', 'SUPABASE_SECRET_KEY', 'CLOUDINARY_API_SECRET', 'CRON_SECRET', 'OPENAI_API_KEY', 'OPENAI_TRANSLATION_MODEL']) {
   if (!serverEnv.includes(`import.meta.env.${name}`)) errors.push(`falta acceso estático para ${name}`);
 }
 if (!serverEnv.includes('process.env[name] ?? BUILD_ENV[name]')) {

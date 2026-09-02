@@ -1,4 +1,4 @@
-# Administración de assets de la landing
+# Administración de contenido y recursos
 
 ## Arquitectura
 
@@ -8,9 +8,10 @@ el plano de control del panel, no una dependencia de cada visita:
 
 1. El administrador entra en `/admin` con Supabase Auth.
 2. Sube una imagen/video con firma privada o pega una URL/public ID de Cloudinary.
-3. Guarda un borrador por slot. RLS limita las lecturas y escrituras al rol `admin`.
-4. `Publicar cambios` copia el borrador a la versión publicada, guarda una revisión y llama un Deploy Hook de Vercel.
-5. El nuevo build genera `srcset`/`sizes` de Cloudinary y conserva el fallback local si el servicio remoto no está configurado.
+3. Crea o edita experiencias, genera EN/PT y define su prioridad editorial.
+4. Guarda borradores. RLS limita las lecturas y escrituras al rol `admin`.
+5. `Publicar cambios` promueve contenido, orden y recursos en una misma transacción, guarda una revisión y llama un Deploy Hook de Vercel.
+6. El nuevo build genera `srcset`/`sizes` de Cloudinary y conserva el fallback local si el servicio remoto no está configurado.
 
 Por eso, si el proyecto gratuito de Supabase se pausa, la landing continúa
 sirviendo la última versión. Sólo quedan temporalmente fuera de servicio el
@@ -75,12 +76,32 @@ Variables. Aplicarlas a Production y Preview según corresponda:
 | `CLOUDINARY_ASSET_FOLDER` | privada | carpeta destino |
 | `VERCEL_DEPLOY_HOOK_URL` | privada | rebuild al publicar |
 | `CRON_SECRET` | privada | autenticar cron/healthcheck |
+| `OPENAI_API_KEY` | privada | generar traducciones EN/PT |
+| `OPENAI_TRANSLATION_MODEL` | privada/opcional | modelo de traducción; por defecto `gpt-5.6-luna` |
 | `MEDIA_REMOTE_REQUIRED` | build | fallback o fallo estricto |
+| `EXPERIENCES_REMOTE_REQUIRED` | build | fallback local o fallo estricto del catálogo |
 
 Crear el Deploy Hook en Vercel → Settings → Git → Deploy Hooks y apuntarlo a
 la rama de producción. No pegar secretos en issues, PR ni chat.
 
-## 4. Migrar las fotos existentes
+## 4. Gestionar experiencias
+
+En la pestaña **Experiencias** del admin:
+
+1. Pulsar **Nueva experiencia** y completar la versión española.
+2. Pulsar **Generar EN/PT**. Las traducciones se muestran en pestañas y se
+   pueden corregir antes de guardar.
+3. Guardar el borrador y asignar una portada en la tarjeta de recurso creada
+   automáticamente debajo de la lista.
+4. Arrastrar las filas o usar ↑/↓ para definir la prioridad. Es el mismo orden
+   de la portada y del catálogo.
+5. Pulsar **Publicar cambios**. El sistema bloquea la publicación si una
+   experiencia activa no tiene contenido completo o portada.
+
+Archivar es reversible y sólo afecta la web al publicar. El slug se fija al
+crear porque forma parte de las URLs indexables de los tres idiomas.
+
+## 5. Migrar las fotos existentes
 
 Con las variables privadas cargadas en un `.env` local (no versionado):
 
@@ -95,13 +116,15 @@ El script sube las 20 imágenes actuales, crea filas `media_assets` y las deja
 como borrador. Revisarlas en `/admin` y pulsar **Publicar cambios**. El hero no
 tiene un archivo local y se gestiona directamente desde el panel.
 
-Después de comprobar Production se puede poner `MEDIA_REMOTE_REQUIRED=true`.
+Después de comprobar Production se puede poner `MEDIA_REMOTE_REQUIRED=true` y
+`EXPERIENCES_REMOTE_REQUIRED=true`, para que un build falle en vez de publicar
+el respaldo local si no logra leer la versión editorial de Supabase.
 No se borran automáticamente los fallbacks locales: son el mecanismo de
 recuperación y no se descargan cuando un slot publicado tiene `public_id`.
 `.vercelignore` evita, además, enviar el pesado archivo fuente `design/` al
 despliegue.
 
-## 5. Evitar pausa y mantener backups
+## 6. Evitar pausa y mantener backups
 
 Supabase indica que un proyecto Free puede pausarse por baja actividad durante
 un período de siete días. No conviene depender de que el administrador entre:
@@ -147,6 +170,8 @@ npm run media:export
 
 - **Guardar borrador** no altera la web pública.
 - **Publicar** guarda un batch en `landing_slot_revisions` y dispara Vercel.
+- Contenido, orden y portada de experiencias se publican juntos; no puede
+  quedar una card nueva apuntando a un modal o página incompletos.
 - Si la base se creó con la primera versión del panel y Publicar responde
   `UPDATE requires a WHERE clause`, ejecutar una vez
   `supabase/migrations/20260819210000_fix_publish_safe_update.sql` en SQL Editor.

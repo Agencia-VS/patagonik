@@ -1,9 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
 import type { Locale } from '@/content.config';
+import type { ExperienceRecord } from '@/lib/experiences/catalog';
 
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+interface Props { locale: Locale; experiences: ExperienceRecord[] }
+const { locale, experiences } = Astro.props;
 
 /*
   Datos que el modal de detalle necesita en el navegador.
@@ -13,12 +13,11 @@ const { locale } = Astro.props;
   página ya está en un idioma, así que se sirve sólo ese: menos peso y una
   cosa menos que se pueda desincronizar.
 */
-const experiences = await getCollection('experiences');
 const data = Object.fromEntries(
   experiences.map((entry) => {
-    const c = entry.data.content[locale];
+    const c = entry.content[locale];
     return [
-      String(entry.data.order),
+      entry.slug,
       {
         title: c.title,
         lead: c.lead,
@@ -38,12 +37,16 @@ const LABELS: Record<Locale, { modality: string; wa: string }> = {
   en: { modality: 'Format:', wa: 'Hi, I would like information about {t} with PatagoniK.' },
   pt: { modality: 'Modalidade:', wa: 'Olá, gostaria de informações sobre {t} com a PatagoniK.' },
 };
+const inlineJson = (value: unknown) => JSON.stringify(value)
+  .replace(/</g, '\\u003c')
+  .replace(/\u2028/g, '\\u2028')
+  .replace(/\u2029/g, '\\u2029');
 ---
 
 <script is:inline set:html={`
-  window.__PK_EXPERIENCES = ${JSON.stringify(data)};
+  window.__PK_EXPERIENCES = ${inlineJson(data)};
   window.__PK_LABELS = {
-    modality: ${JSON.stringify(LABELS[locale].modality)},
-    wa: function (t) { return ${JSON.stringify(LABELS[locale].wa)}.replace('{t}', t); }
+    modality: ${inlineJson(LABELS[locale].modality)},
+    wa: function (t) { return ${inlineJson(LABELS[locale].wa)}.replace('{t}', t); }
   };
 `} />

@@ -37,6 +37,15 @@ export const POST: APIRoute = async ({ request }) => {
       if (detail.includes('UPDATE requires a WHERE clause')) {
         throw new ApiError(409, 'Supabase todavía usa la función de publicación anterior. Aplica la migración 20260819210000_fix_publish_safe_update.sql y vuelve a intentar.');
       }
+      if (detail.includes('experience_cover_missing')) {
+        throw new ApiError(422, 'Hay una experiencia activa sin portada. Asígnale una imagen y guarda el encuadre antes de publicar.');
+      }
+      if (detail.includes('experience_content_missing')) {
+        throw new ApiError(422, 'Hay una experiencia activa con contenido incompleto. Revisa español, inglés y portugués.');
+      }
+      if (detail.includes('experience_order_duplicate')) {
+        throw new ApiError(422, 'El orden de experiencias tiene posiciones repetidas. Actualiza el panel y vuelve a ordenarlas.');
+      }
       throw new ApiError(rpcResponse.status === 403 ? 403 : 422, `No se pudo publicar: ${detail}`);
     }
     const [result] = (await rpcResponse.json()) as PublishResult[];

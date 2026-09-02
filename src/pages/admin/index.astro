@@ -25,7 +25,7 @@ const adminConfig = {
           <div class="login__mark" aria-hidden="true">PK</div>
           <p class="eyebrow">PatagoniK</p>
           <h1 id="login-title">Panel de administración</h1>
-          <p class="login__lead">Aquí se gestionan los recursos gráficos de la página.</p>
+          <p class="login__lead">Aquí se gestionan las experiencias y los recursos gráficos de la página.</p>
 
           <form id="login-form" class="login__form">
             <label class="field">
@@ -51,8 +51,8 @@ const adminConfig = {
             <div class="toolbar__mark" aria-hidden="true">PK</div>
             <div>
               <p class="eyebrow">Panel de administración</p>
-              <h1 id="dashboard-title" tabindex="-1">Recursos gráficos</h1>
-              <p class="toolbar__help">Organiza, reemplaza y publica los recursos de cada sección.</p>
+              <h1 id="dashboard-title" tabindex="-1">Contenido y recursos</h1>
+              <p class="toolbar__help">Crea experiencias, define su prioridad y publica los recursos de cada sección.</p>
             </div>
           </div>
           <div class="toolbar__actions">
@@ -110,10 +110,80 @@ const adminConfig = {
             <div class="section-total"><strong id="section-visible-count">0</strong><span>recursos</span></div>
           </header>
 
+          <section id="experience-manager" class="experience-manager" aria-labelledby="experience-manager-title" hidden>
+            <header class="experience-manager__head">
+              <div>
+                <p class="eyebrow">Contenido y prioridad</p>
+                <h3 id="experience-manager-title">Orden de experiencias</h3>
+                <p>Este orden se usa tanto en la portada como en el catálogo. Arrastra desde los seis puntos o usa las flechas.</p>
+              </div>
+              <button id="new-experience-button" type="button" class="button button--primary">
+                <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12" /></svg>
+                <span>Nueva experiencia</span>
+              </button>
+            </header>
+            <p id="experience-manager-status" class="status" role="status" aria-live="polite"></p>
+            <ol id="experience-list" class="experience-list" aria-label="Orden de experiencias"></ol>
+            <p class="experience-manager__note">Las experiencias nuevas permanecen como borrador hasta que tengan contenido en los tres idiomas, una portada y se pulse “Publicar cambios”.</p>
+          </section>
+
           <div id="asset-grid" class="asset-grid" role="tabpanel" aria-labelledby="section-tab-hero" aria-live="polite"></div>
         </div>
       </section>
     </main>
+
+    <dialog id="experience-dialog" class="experience-dialog" aria-labelledby="experience-dialog-title">
+      <form id="experience-form" class="experience-editor">
+        <header class="experience-editor__head">
+          <div>
+            <p class="eyebrow">Card · modal · página individual</p>
+            <h2 id="experience-dialog-title">Nueva experiencia</h2>
+          </div>
+          <button id="experience-dialog-close" type="button" class="experience-editor__close" aria-label="Cerrar editor">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        </header>
+
+        <input id="experience-id" type="hidden" />
+        <div class="experience-editor__meta">
+          <label class="field">
+            <span>URL (slug)</span>
+            <input id="experience-slug" type="text" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="trekking-laguna-amarga" required />
+            <small>Se genera desde el título; puedes ajustarla antes de crear. Luego no cambia.</small>
+          </label>
+          <label class="field">
+            <span>Estado del borrador</span>
+            <select id="experience-status">
+              <option value="active">Activa</option>
+              <option value="archived">Archivada</option>
+            </select>
+            <small>Archivar la oculta en la próxima publicación.</small>
+          </label>
+        </div>
+
+        <div class="locale-tabs" role="tablist" aria-label="Idioma del contenido">
+          <button type="button" role="tab" aria-selected="true" data-experience-locale="es">Español <span>Original</span></button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1" data-experience-locale="en">English <span>Editable</span></button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1" data-experience-locale="pt">Português <span>Editable</span></button>
+        </div>
+        <div id="experience-locale-panels" class="experience-locale-panels"></div>
+
+        <footer class="experience-editor__footer">
+          <p id="experience-form-status" class="status" role="status" aria-live="polite"></p>
+          <div class="experience-editor__actions">
+            <button id="translate-experience-button" type="button" class="button button--secondary">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5h8M8 3v2c0 4-2 7-5 9m3-4c1 2 3 4 5 5m2-8 4 10m-1-3h-6" /></svg>
+              <span>Generar EN/PT</span>
+            </button>
+            <button id="cancel-experience-button" type="button" class="button button--quiet">Cancelar</button>
+            <button id="save-experience-button" type="submit" class="button button--primary">
+              <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m5 10 3 3 7-7" /></svg>
+              <span>Guardar borrador</span>
+            </button>
+          </div>
+        </footer>
+      </form>
+    </dialog>
 
     <template id="asset-card-template">
       <article class="asset-card">
@@ -220,7 +290,7 @@ const adminConfig = {
   </body>
 </html>
 
-<style>
+<style is:global>
   :root {
     color-scheme: light;
     --canvas: #eeece5;
@@ -432,6 +502,77 @@ const adminConfig = {
   .button--save { flex: none; }
   .button--green-background { flex: none; }
 
+  textarea {
+    width: 100%; min-height: 92px; resize: vertical; padding: .78rem .82rem; border: 1px solid var(--line-strong); border-radius: 11px;
+    color: var(--ink); background: var(--surface-strong); font: inherit; line-height: 1.5; transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  textarea:hover { border-color: #aeb5aa; }
+  textarea:focus { outline: none; border-color: var(--olive); box-shadow: 0 0 0 4px rgba(83, 99, 73, .13); }
+  .field small { color: var(--soft); font-size: .67rem; font-weight: 550; line-height: 1.4; }
+
+  .experience-manager { margin: 0 0 1.2rem; padding: clamp(1rem, 2.6vw, 1.6rem); border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 10px 30px rgba(38, 48, 42, .055); }
+  .experience-manager__head { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1rem; }
+  .experience-manager__head .eyebrow { margin-bottom: .3rem; }
+  .experience-manager__head h3 { margin: 0 0 .4rem; font: 400 clamp(1.45rem, 2.7vw, 2rem)/1.05 Georgia, serif; }
+  .experience-manager__head p:last-child { max-width: 66ch; margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+  #experience-manager-status { min-height: 1.1rem; margin-bottom: .65rem; }
+  .experience-list { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; counter-reset: experience; }
+  .experience-row { display: grid; grid-template-columns: 38px 42px minmax(0, 1fr) auto auto; align-items: center; gap: .7rem; min-height: 70px; padding: .65rem .75rem; border: 1px solid #dde0d9; border-radius: 13px; background: #f8f7f2; transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, opacity .16s ease; }
+  .experience-row:hover { border-color: #bcc3b8; background: #fff; box-shadow: 0 7px 18px rgba(38, 48, 42, .065); }
+  .experience-row[data-dragging="true"] { opacity: .48; border-color: var(--olive); }
+  .experience-row[data-drag-over="true"] { border-color: var(--olive); background: var(--olive-light); box-shadow: 0 0 0 3px rgba(83, 99, 73, .1); }
+  .experience-row[data-status="archived"] { opacity: .62; }
+  .experience-row__handle { display: grid; place-items: center; width: 36px; height: 42px; padding: 0; border: 0; border-radius: 8px; cursor: grab; color: #788179; background: transparent; }
+  .experience-row__handle:hover { color: var(--olive-dark); background: var(--olive-light); }
+  .experience-row__handle:active { cursor: grabbing; }
+  .experience-row__handle svg { width: 18px; height: 18px; fill: currentColor; }
+  .experience-row__order { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; color: var(--olive-dark); background: #fff; font: 750 .76rem/1 ui-monospace, monospace; }
+  .experience-row__copy { min-width: 0; }
+  .experience-row__copy strong { display: block; overflow: hidden; color: var(--ink); font: 400 1rem/1.25 Georgia, serif; text-overflow: ellipsis; white-space: nowrap; }
+  .experience-row__copy small { display: block; overflow: hidden; margin-top: .25rem; color: var(--soft); font: 600 .62rem/1.3 ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+  .experience-row__badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .35rem; }
+  .experience-row__badge { padding: .3rem .5rem; border-radius: 999px; color: #47604c; background: #e7efe7; font-size: .61rem; font-weight: 780; white-space: nowrap; }
+  .experience-row__badge[data-kind="draft"] { color: #76541c; background: #f7e9ca; }
+  .experience-row__badge[data-kind="missing"] { color: #8f4032; background: #f7e1dc; }
+  .experience-row__badge[data-kind="archived"] { color: #626862; background: #e5e6e2; }
+  .experience-row__actions { display: flex; gap: .3rem; }
+  .experience-row__actions button { display: grid; place-items: center; min-width: 34px; height: 34px; padding: 0 .55rem; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; color: #59655c; background: #fff; font-size: .7rem; font-weight: 760; }
+  .experience-row__actions button:hover:not(:disabled) { border-color: var(--olive); color: var(--olive-dark); background: var(--olive-light); }
+  .experience-row__actions button:disabled { cursor: not-allowed; opacity: .35; }
+  .experience-manager__note { margin: 1rem 0 0; color: var(--muted); font-size: .7rem; line-height: 1.5; }
+
+  .experience-dialog { width: min(1040px, calc(100vw - 28px)); max-height: calc(100svh - 28px); margin: auto; padding: 0; overflow: auto; border: 1px solid rgba(65, 79, 59, .24); border-radius: 22px; color: var(--ink); background: var(--surface); box-shadow: 0 32px 90px rgba(25, 31, 27, .3); scrollbar-color: var(--olive) #e5e5de; scrollbar-width: thin; }
+  .experience-dialog::backdrop { background: rgba(23, 28, 25, .72); backdrop-filter: blur(7px); }
+  .experience-dialog::-webkit-scrollbar { width: 10px; }
+  .experience-dialog::-webkit-scrollbar-track { background: #e5e5de; }
+  .experience-dialog::-webkit-scrollbar-thumb { border: 2px solid #e5e5de; border-radius: 999px; background: linear-gradient(180deg, #78886d, var(--olive)); }
+  .experience-editor { min-height: 100%; }
+  .experience-editor__head { position: sticky; z-index: 4; top: 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.35rem clamp(1rem, 3vw, 2rem); border-bottom: 1px solid var(--line); background: rgba(250, 249, 245, .95); backdrop-filter: blur(14px); }
+  .experience-editor__head .eyebrow { margin-bottom: .3rem; }
+  .experience-editor__head h2 { margin: 0; font: 400 clamp(1.7rem, 3.8vw, 2.55rem)/1 Georgia, serif; }
+  .experience-editor__close { display: grid; flex: none; place-items: center; width: 42px; height: 42px; padding: 0; border: 1px solid var(--line); border-radius: 50%; cursor: pointer; color: var(--olive-dark); background: #fff; transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease; }
+  .experience-editor__close:hover { color: #fff; border-color: var(--olive-dark); background: var(--olive); transform: rotate(6deg); }
+  .experience-editor__close svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+  .experience-editor__meta { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(180px, .5fr); gap: 1rem; padding: 1.35rem clamp(1rem, 3vw, 2rem); }
+  .locale-tabs { position: sticky; z-index: 3; top: 103px; display: flex; gap: .35rem; padding: .65rem clamp(1rem, 3vw, 2rem); border-block: 1px solid var(--line); background: rgba(240, 240, 234, .96); backdrop-filter: blur(12px); }
+  .locale-tabs button { display: grid; gap: .12rem; min-width: 112px; min-height: 46px; padding: .45rem .8rem; border: 1px solid transparent; border-radius: 10px; cursor: pointer; text-align: left; color: #687169; background: transparent; font-size: .75rem; font-weight: 780; }
+  .locale-tabs button span { opacity: .68; font-size: .58rem; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
+  .locale-tabs button:hover { color: var(--ink); background: #e5e7e1; }
+  .locale-tabs button[aria-selected="true"] { color: #fff; border-color: var(--olive-dark); background: var(--olive); }
+  .experience-locale-panels { padding: 1.35rem clamp(1rem, 3vw, 2rem) 1.8rem; }
+  .experience-locale-panel { display: grid; gap: 1.25rem; }
+  .experience-locale-panel[hidden] { display: none; }
+  .experience-field-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; padding: 1rem; border: 1px solid #dfe0da; border-radius: 14px; background: #f5f4ef; }
+  .experience-field-group__head { grid-column: 1 / -1; }
+  .experience-field-group__head h3 { margin: 0 0 .25rem; font-size: .82rem; }
+  .experience-field-group__head p { margin: 0; color: var(--muted); font-size: .69rem; line-height: 1.45; }
+  .experience-field-group .field--wide { grid-column: 1 / -1; }
+  .experience-field-group textarea[data-field="body"] { min-height: 150px; }
+  .experience-field-group textarea[data-field="facts"] { min-height: 132px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .73rem; }
+  .experience-editor__footer { position: sticky; z-index: 4; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem clamp(1rem, 3vw, 2rem); border-top: 1px solid var(--line); background: rgba(250, 249, 245, .96); box-shadow: 0 -8px 24px rgba(38, 48, 42, .06); backdrop-filter: blur(14px); }
+  #experience-form-status { max-width: 48ch; }
+  .experience-editor__actions { display: flex; justify-content: flex-end; gap: .5rem; margin-left: auto; }
+
   @keyframes button-pulse { to { opacity: .35; } }
 
   @media (max-width: 1080px) {
@@ -463,6 +604,24 @@ const adminConfig = {
     .asset-card:hover { transform: none; }
     .preview-switch { flex-wrap: wrap; justify-content: flex-start; }
     .preview-switch > span { flex: 1 0 100%; }
+    .experience-manager__head { align-items: stretch; flex-direction: column; }
+    .experience-manager__head .button { align-self: flex-start; }
+    .experience-row { grid-template-columns: 30px 36px minmax(0, 1fr); gap: .45rem; padding: .6rem; }
+    .experience-row__handle { width: 30px; }
+    .experience-row__order { width: 34px; height: 34px; }
+    .experience-row__badges, .experience-row__actions { grid-column: 3; justify-content: flex-start; }
+    .experience-dialog { width: 100vw; max-height: 100svh; border: 0; border-radius: 0; }
+    .experience-editor__head { padding: 1rem; }
+    .experience-editor__meta { grid-template-columns: 1fr; padding: 1rem; }
+    .locale-tabs { top: 87px; overflow-x: auto; padding-inline: 1rem; }
+    .locale-tabs button { flex: none; }
+    .experience-locale-panels { padding: 1rem; }
+    .experience-field-group { grid-template-columns: 1fr; padding: .85rem; }
+    .experience-field-group .field--wide { grid-column: 1; }
+    .experience-editor__footer { align-items: stretch; flex-direction: column; padding: .8rem 1rem; }
+    .experience-editor__actions { width: 100%; margin: 0; flex-wrap: wrap; }
+    .experience-editor__actions .button { flex: 1; }
+    #translate-experience-button { flex-basis: 100%; }
   }
 
   @media (max-width: 500px) {

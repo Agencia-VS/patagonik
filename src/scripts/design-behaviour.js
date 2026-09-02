@@ -383,8 +383,9 @@ class PatagonikUI {
 
     cards.forEach((card) => {
       const titleEl = card.querySelector('h3');
-      const summaryEl = card.querySelector('[data-t^="tour."][data-t$=".s"]');
-      const detailEl = card.querySelector('[data-t^="tour."][data-t$=".d"]');
+      const summaryEl = card.querySelector('[data-exp-card-summary], [data-t^="tour."][data-t$=".s"]');
+      const detailEl = card.querySelector('[data-exp-card-detail], [data-t^="tour."][data-t$=".d"]');
+      const moreEl = card.querySelector('.pk-exp-detail-link');
       const slot = card.querySelector('image-slot');
       if (!titleEl || !slot) return;
 
@@ -401,6 +402,7 @@ class PatagonikUI {
 
       const summary = document.createElement('p');
       summary.setAttribute('data-desktop-exp-summary', '');
+      summary.setAttribute('data-exp-card-summary', '');
       if (summaryEl) {
         const k = summaryEl.getAttribute('data-t');
         if (k) summary.setAttribute('data-t', k);
@@ -409,6 +411,7 @@ class PatagonikUI {
 
       const tech = document.createElement('p');
       tech.setAttribute('data-desktop-exp-tech', '');
+      tech.setAttribute('data-exp-card-detail', '');
       if (detailEl) {
         const k = detailEl.getAttribute('data-t');
         if (k) tech.setAttribute('data-t', k);
@@ -417,7 +420,7 @@ class PatagonikUI {
 
       const more = document.createElement('span');
       more.setAttribute('data-desktop-exp-more', '');
-      more.textContent = 'Ver detalles';
+      more.textContent = moreEl ? moreEl.textContent : 'Ver detalles';
 
       card.innerHTML = '';
       card.append(image, title, summary, tech, more);
@@ -462,8 +465,9 @@ class PatagonikUI {
     sourceCards.forEach((source) => {
       const n = source.getAttribute('data-exp-detail');
       const titleEl = source.querySelector('h3');
-      const summaryEl = source.querySelector('[data-t^="tour."][data-t$=".s"]');
-      const detailEl = source.querySelector('[data-t^="tour."][data-t$=".d"]');
+      const summaryEl = source.querySelector('[data-exp-card-summary], [data-desktop-exp-summary], [data-t^="tour."][data-t$=".s"]');
+      const detailEl = source.querySelector('[data-exp-card-detail], [data-desktop-exp-tech], [data-t^="tour."][data-t$=".d"]');
+      const moreEl = source.querySelector('[data-desktop-exp-more], .pk-exp-detail-link');
       const slot = source.querySelector('image-slot');
 
       const card = document.createElement('a');
@@ -495,7 +499,7 @@ class PatagonikUI {
       tech.textContent = detailEl ? detailEl.textContent : '';
 
       const more = document.createElement('span');
-      more.textContent = 'Ver detalles';
+      more.textContent = moreEl ? moreEl.textContent : 'Ver detalles';
       more.style.cssText = 'margin-top:9px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,242,236,.46);';
 
       card.append(image, title, summary, tech, more);

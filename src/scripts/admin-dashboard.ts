@@ -1,3 +1,5 @@
+import { createExperienceManager } from './admin-experience-manager';
+
 interface AdminConfig { supabaseUrl: string; supabaseKey: string; cloudName: string }
 interface Session { access_token: string; refresh_token: string; expires_at?: number; user: { id: string; email?: string } }
 type FitMode = 'cover' | 'contain';
@@ -78,6 +80,7 @@ const loginForm = document.querySelector<HTMLFormElement>('#login-form')!;
 const loginStatus = document.querySelector<HTMLElement>('#login-status')!;
 const dashboardStatus = document.querySelector<HTMLElement>('#dashboard-status')!;
 const grid = document.querySelector<HTMLElement>('#asset-grid')!;
+const experienceManagerRoot = document.querySelector<HTMLElement>('#experience-manager')!;
 const template = document.querySelector<HTMLTemplateElement>('#asset-card-template')!;
 const dashboardTitle = document.querySelector<HTMLElement>('#dashboard-title')!;
 const draftCount = document.querySelector<HTMLElement>('#draft-count')!;
@@ -107,6 +110,8 @@ const PREVIEW_CONTEXT_LABELS: Record<PreviewContext, string> = {
 const CROP_THRESHOLD = 2;
 let session: Session | null = null;
 let activeSection: SectionId = 'hero';
+let mediaDraftCount = 0;
+let experienceDraftCount = 0;
 
 function message(node: HTMLElement, value = '', kind: 'error'|'success' = 'error') {
   node.textContent = value;
@@ -156,6 +161,7 @@ function activateSection(section: SectionId, focusTab = false) {
   sectionTitle.textContent = content.title;
   sectionKicker.textContent = content.kicker;
   sectionDescription.textContent = content.description;
+  experienceManagerRoot.hidden = section !== 'experiences';
 
   for (const tab of sectionTabs) {
     const selected = tab.dataset.sectionTab === section;
@@ -177,6 +183,14 @@ function activateSection(section: SectionId, focusTab = false) {
   sectionVisibleLabel.textContent = visible === 1 ? 'recurso' : 'recursos';
 }
 
+function renderDraftSummary() {
+  const drafts = mediaDraftCount + experienceDraftCount;
+  draftCount.dataset.empty = String(drafts === 0);
+  draftCountText.textContent = drafts === 0
+    ? 'Sin cambios pendientes'
+    : `${drafts} ${drafts === 1 ? 'cambio pendiente' : 'cambios pendientes'}`;
+}
+
 function updateManifestSummary(rows: ManifestRow[]) {
   const counts = Object.fromEntries(SECTION_ORDER.map((section) => [section, 0])) as Record<SectionId, number>;
   for (const row of rows) counts[sectionForSlot(row.slot_key)] += 1;
@@ -184,11 +198,8 @@ function updateManifestSummary(rows: ManifestRow[]) {
     document.querySelector<HTMLElement>(`[data-section-count="${section}"]`)!.textContent = String(counts[section]);
   }
 
-  const drafts = rows.filter(isDirty).length;
-  draftCount.dataset.empty = String(drafts === 0);
-  draftCountText.textContent = drafts === 0
-    ? 'Sin cambios pendientes'
-    : `${drafts} ${drafts === 1 ? 'cambio pendiente' : 'cambios pendientes'}`;
+  mediaDraftCount = rows.filter(isDirty).length;
+  renderDraftSummary();
 }
 
 async function parseError(response: Response): Promise<string> {
@@ -564,6 +575,7 @@ function renderCard(row: ManifestRow): HTMLElement {
   let activeContext: PreviewContext = 'desktop';
 
   card.dataset.section = sectionForSlot(row.slot_key);
+  card.dataset.slotKey = row.slot_key;
   card.dataset.dirty = String(dirty);
   card.querySelector<HTMLElement>('[data-slot-key]')!.textContent = row.slot_key;
   card.querySelector<HTMLElement>('[data-label]')!.textContent = row.label;
@@ -869,6 +881,27 @@ async function loadManifest(): Promise<void> {
   message(dashboardStatus, `${rows.length} recursos sincronizados.`, 'success');
 }
 
+const experienceManager = createExperienceManager({
+  getAccessToken: async () => (await ensureSession()).access_token,
+  onDraftCount: (count) => {
+    experienceDraftCount = count;
+    renderDraftSummary();
+  },
+  onCatalogChanged: async (focusCoverSlug) => {
+    await loadManifest();
+    if (!focusCoverSlug) return;
+    activateSection('experiences');
+    const cover = grid.querySelector<HTMLElement>(`[data-slot-key="experience.${focusCoverSlug}.cover"]`);
+    window.setTimeout(() => cover?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  },
+});
+
+async function loadDashboardData(): Promise<void> {
+  const results = await Promise.allSettled([loadManifest(), experienceManager.load()]);
+  const failure = results.find((result): result is PromiseRejectedResult => result.status === 'rejected');
+  if (failure) throw failure.reason;
+}
+
 async function verifyAdmin(): Promise<void> {
   const active = await ensureSession();
   const response = await supabase(`/rest/v1/profiles?user_id=eq.${encodeURIComponent(active.user.id)}&select=role&limit=1`);
@@ -883,7 +916,7 @@ async function showDashboard(focusDashboard = false): Promise<void> {
   message(loginStatus);
   loginForm.reset();
   setAdminView('dashboard', focusDashboard);
-  try { await loadManifest(); }
+  try { await loadDashboardData(); }
   catch (error) { message(dashboardStatus, error instanceof Error ? error.message : 'No se pudo cargar el panel.'); }
 }
 
@@ -926,7 +959,7 @@ sectionTabsContainer.addEventListener('keydown', (event) => {
 
 refreshButton.addEventListener('click', async () => {
   setBusy(refreshButton, true);
-  try { await loadManifest(); }
+  try { await loadDashboardData(); }
   catch (error) { message(dashboardStatus, error instanceof Error ? error.message : 'No se pudieron actualizar los recursos.'); }
   finally { setBusy(refreshButton, false); }
 });
@@ -935,6 +968,9 @@ logoutButton.addEventListener('click', () => {
   localStorage.removeItem(STORAGE_KEY);
   session = null;
   grid.replaceChildren();
+  experienceManager.reset();
+  mediaDraftCount = 0;
+  experienceDraftCount = 0;
   updateManifestSummary([]);
   activateSection('hero');
   message(dashboardStatus);
@@ -951,7 +987,7 @@ publishButton.addEventListener('click', async () => {
     const response = await fetch('/api/admin/publish', { method:'POST', headers:{ Authorization:`Bearer ${active.access_token}` } });
     if (!response.ok) throw new Error(await parseError(response));
     const body = await response.json() as {message:string};
-    await loadManifest();
+    await loadDashboardData();
     message(dashboardStatus, `${body.message} Los cambios aparecerán al terminar el build.`, 'success');
   } catch (error) { message(dashboardStatus, error instanceof Error ? error.message : 'No se pudo publicar.'); }
   finally { setBusy(publishButton, false); }
