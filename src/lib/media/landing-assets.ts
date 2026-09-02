@@ -1,5 +1,5 @@
 import { LOCAL_LANDING_ASSETS } from './landing-assets.local';
-import type { LandingAsset, LandingAssetMap, MediaFitMode, MediaResourceType } from './types';
+import type { LandingAsset, LandingAssetMap, MediaFitMode, MediaFocalPoint, MediaResourceType } from './types';
 
 interface PublishedManifestRow {
   slot_key: string;
@@ -14,7 +14,14 @@ interface PublishedManifestRow {
   height: number | null;
   duration: number | null;
   alt: Record<string, string> | null;
-  focal_point: { x?: number; y?: number; fit?: MediaFitMode } | null;
+  focal_point: {
+    x?: number;
+    y?: number;
+    fit?: MediaFitMode;
+    desktop?: { x?: number; y?: number };
+    mobile?: { x?: number; y?: number };
+    modal?: { x?: number; y?: number };
+  } | null;
   poster_public_id: string | null;
   poster_version: number | null;
   poster_format: string | null;
@@ -28,10 +35,29 @@ function cleanEnv(value: unknown): string | undefined {
 
 function normalizedPoint(point: PublishedManifestRow['focal_point']): LandingAsset['focalPoint'] {
   if (!point) return undefined;
-  return {
-    x: Math.min(1, Math.max(0, Number(point.x ?? 0.5))),
-    y: Math.min(1, Math.max(0, Number(point.y ?? 0.5))),
+  const clamp = (value: number | undefined, fallback = 0.5) => Math.min(1, Math.max(0, Number(value ?? fallback)));
+  const desktop = {
+    x: clamp(point.desktop?.x, clamp(point.x)),
+    y: clamp(point.desktop?.y, clamp(point.y)),
   };
+  const normalized: MediaFocalPoint = {
+    x: desktop.x,
+    y: desktop.y,
+    desktop,
+  };
+  if (point.mobile) {
+    normalized.mobile = {
+      x: clamp(point.mobile.x, desktop.x),
+      y: clamp(point.mobile.y, desktop.y),
+    };
+  }
+  if (point.modal) {
+    normalized.modal = {
+      x: clamp(point.modal.x, desktop.x),
+      y: clamp(point.modal.y, desktop.y),
+    };
+  }
+  return normalized;
 }
 
 async function loadManifest(): Promise<LandingAssetMap> {

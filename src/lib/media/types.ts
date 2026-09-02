@@ -3,6 +3,14 @@ import type { Locale } from '@/content.config';
 export type MediaResourceType = 'image' | 'video';
 export type MediaFitMode = 'cover' | 'contain';
 
+export interface MediaFocalPoint {
+  x: number;
+  y: number;
+  desktop?: { x: number; y: number };
+  mobile?: { x: number; y: number };
+  modal?: { x: number; y: number };
+}
+
 export interface MediaAlt {
   es?: string;
   en?: string;
@@ -21,7 +29,7 @@ export interface LandingAsset {
   height?: number;
   duration?: number;
   alt?: MediaAlt;
-  focalPoint?: { x: number; y: number };
+  focalPoint?: MediaFocalPoint;
   fitMode?: MediaFitMode;
   posterPublicId?: string;
   posterVersion?: number;

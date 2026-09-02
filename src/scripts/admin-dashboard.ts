@@ -1,7 +1,23 @@
 interface AdminConfig { supabaseUrl: string; supabaseKey: string; cloudName: string }
 interface Session { access_token: string; refresh_token: string; expires_at?: number; user: { id: string; email?: string } }
 type FitMode = 'cover' | 'contain';
-interface Framing { x?: number; y?: number; fit?: FitMode }
+type PreviewContext = 'desktop' | 'mobile' | 'modal';
+interface FocalPoint { x?: number; y?: number }
+interface Framing extends FocalPoint {
+  fit?: FitMode;
+  desktop?: FocalPoint;
+  mobile?: FocalPoint;
+  modal?: FocalPoint;
+}
+interface NormalizedPoint { x: number; y: number }
+interface NormalizedFraming {
+  x: number;
+  y: number;
+  fit: FitMode;
+  desktop: NormalizedPoint;
+  mobile: NormalizedPoint;
+  modal: NormalizedPoint;
+}
 interface ManifestRow {
   slot_key: string; label: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
   draft_asset_id: string | null; draft_public_id: string | null; draft_resource_type: 'image'|'video'|null;
@@ -63,16 +79,10 @@ const publishButton = document.querySelector<HTMLButtonElement>('#publish-button
 const refreshButton = document.querySelector<HTMLButtonElement>('#refresh-button')!;
 const logoutButton = document.querySelector<HTMLButtonElement>('#logout-button')!;
 const STORAGE_KEY = 'patagonik-admin-session';
-const FOCAL_LABELS: Record<string, string> = {
-  '0,0': 'Arriba izquierda',
-  '0.5,0': 'Arriba centro',
-  '1,0': 'Arriba derecha',
-  '0,0.5': 'Centro izquierda',
-  '0.5,0.5': 'Centro',
-  '1,0.5': 'Centro derecha',
-  '0,1': 'Abajo izquierda',
-  '0.5,1': 'Abajo centro',
-  '1,1': 'Abajo derecha',
+const PREVIEW_CONTEXT_LABELS: Record<PreviewContext, string> = {
+  desktop: 'Card escritorio',
+  mobile: 'Card móvil',
+  modal: 'Modal',
 };
 let session: Session | null = null;
 let activeSection: SectionId = 'hero';
@@ -257,20 +267,69 @@ async function insertAsset(asset: CloudinaryUpload): Promise<string> {
   return rows[0].id;
 }
 
-function normalizedFraming(point: Framing | null | undefined): Required<Framing> {
-  const clamp = (value: number | undefined) => Math.min(1, Math.max(0, Number(value ?? .5)));
-  return { x:clamp(point?.x), y:clamp(point?.y), fit:point?.fit === 'contain' ? 'contain' : 'cover' };
+function clampFocal(value: number | undefined, fallback = .5): number {
+  return Math.min(1, Math.max(0, Number(value ?? fallback)));
 }
 
-function applyPreviewPresentation(container: HTMLElement, framing: Required<Framing>) {
-  container.dataset.fit = framing.fit;
+function normalizedPoint(point: FocalPoint | null | undefined, fallback: NormalizedPoint): NormalizedPoint {
+  return {
+    x:clampFocal(point?.x, fallback.x),
+    y:clampFocal(point?.y, fallback.y),
+  };
+}
+
+function normalizedFraming(point: Framing | null | undefined): NormalizedFraming {
+  const legacy = { x:clampFocal(point?.x), y:clampFocal(point?.y) };
+  const desktop = normalizedPoint(point?.desktop, legacy);
+  return {
+    x:desktop.x,
+    y:desktop.y,
+    fit:point?.fit === 'contain' ? 'contain' : 'cover',
+    desktop,
+    mobile:normalizedPoint(point?.mobile, desktop),
+    modal:normalizedPoint(point?.modal, desktop),
+  };
+}
+
+function previewPositionLabel(context: PreviewContext, point: NormalizedPoint): string {
+  const position = Math.abs(point.x - .5) < .005 && Math.abs(point.y - .5) < .005
+    ? 'Centro'
+    : `${Math.round(point.x * 100)}% / ${Math.round(point.y * 100)}%`;
+  return `${PREVIEW_CONTEXT_LABELS[context]} · ${position}`;
+}
+
+function applyPreviewPresentation(container: HTMLElement, fit: FitMode, point: NormalizedPoint) {
+  container.dataset.fit = fit;
   const media = container.querySelector<HTMLElement>('img, video');
   if (!media) return;
-  media.style.objectFit = framing.fit;
-  media.style.objectPosition = `${framing.x * 100}% ${framing.y * 100}%`;
+  media.style.objectFit = fit;
+  media.style.objectPosition = `${point.x * 100}% ${point.y * 100}%`;
 }
 
-function renderPreviewMedia(container: HTMLElement, resourceType: 'image'|'video', url: string, framing: Required<Framing>) {
+function updatePreviewOrientation(container: HTMLElement, media: HTMLImageElement | HTMLVideoElement) {
+  const previewFrame = container.closest<HTMLElement>('.asset-card__preview');
+  if (!previewFrame) return;
+  const dimensions = () => media instanceof HTMLVideoElement
+    ? { width:media.videoWidth || Number(media.getAttribute('width')), height:media.videoHeight || Number(media.getAttribute('height')) }
+    : { width:media.naturalWidth || Number(media.getAttribute('width')), height:media.naturalHeight || Number(media.getAttribute('height')) };
+  const apply = () => {
+    const { width, height } = dimensions();
+    if (!width || !height) return;
+    const ratio = width / height;
+    previewFrame.dataset.mediaOrientation = ratio > 1.08 ? 'landscape' : ratio < .92 ? 'portrait' : 'square';
+  };
+  apply();
+  if (media instanceof HTMLVideoElement) media.addEventListener('loadedmetadata', apply, { once:true });
+  else media.addEventListener('load', apply, { once:true });
+}
+
+function renderPreviewMedia(
+  container: HTMLElement,
+  resourceType: 'image'|'video',
+  url: string,
+  fit: FitMode,
+  point: NormalizedPoint,
+) {
   delete container.dataset.greenBackground;
   container.replaceChildren();
   if (resourceType === 'video') {
@@ -281,17 +340,19 @@ function renderPreviewMedia(container: HTMLElement, resourceType: 'image'|'video
     video.playsInline = true;
     video.preload = 'metadata';
     container.append(video);
+    updatePreviewOrientation(container, video);
   } else {
     const image = document.createElement('img');
     image.src = url;
     image.alt = '';
     image.loading = 'lazy';
     container.append(image);
+    updatePreviewOrientation(container, image);
   }
-  applyPreviewPresentation(container, framing);
+  applyPreviewPresentation(container, fit, point);
 }
 
-function preview(row: ManifestRow, container: HTMLElement, framing: Required<Framing>) {
+function preview(row: ManifestRow, container: HTMLElement, framing: NormalizedFraming) {
   if (row.slot_key === 'landing.experiences-background' && row.draft_alt?._backgroundMode !== 'photo') {
     container.dataset.greenBackground = 'true';
     container.textContent = 'Bloque verde';
@@ -303,7 +364,25 @@ function preview(row: ManifestRow, container: HTMLElement, framing: Required<Fra
     : null;
   const url = row.draft_secure_url || derived || row.published_secure_url || row.local_fallback;
   if (!url) { container.textContent = 'Sin recurso asignado'; return; }
-  renderPreviewMedia(container, resourceType, url, framing);
+  renderPreviewMedia(container, resourceType, url, framing.fit, framing.desktop);
+}
+
+function previewOverflow(container: HTMLElement): { x: number; y: number } {
+  const media = container.querySelector<HTMLImageElement | HTMLVideoElement>('img, video');
+  if (!media) return { x:0, y:0 };
+  const width = media instanceof HTMLVideoElement
+    ? media.videoWidth || Number(media.getAttribute('width'))
+    : media.naturalWidth || Number(media.getAttribute('width'));
+  const height = media instanceof HTMLVideoElement
+    ? media.videoHeight || Number(media.getAttribute('height'))
+    : media.naturalHeight || Number(media.getAttribute('height'));
+  const bounds = container.getBoundingClientRect();
+  if (!width || !height || !bounds.width || !bounds.height) return { x:0, y:0 };
+  const scale = Math.max(bounds.width / width, bounds.height / height);
+  return {
+    x:Math.max(0, width * scale - bounds.width),
+    y:Math.max(0, height * scale - bounds.height),
+  };
 }
 
 function renderCard(row: ManifestRow): HTMLElement {
@@ -323,9 +402,13 @@ function renderCard(row: ManifestRow): HTMLElement {
   const focalXInput = card.querySelector<HTMLInputElement>('[data-focal="x"]')!;
   const focalYInput = card.querySelector<HTMLInputElement>('[data-focal="y"]')!;
   const focalLabel = card.querySelector<HTMLOutputElement>('[data-focal-label]')!;
+  const resetFocal = card.querySelector<HTMLButtonElement>('[data-reset-focal]')!;
+  const contextButtons = [...card.querySelectorAll<HTMLButtonElement>('[data-preview-context]')];
   const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
   const framing = normalizedFraming(row.draft_focal_point ?? row.published_focal_point);
+  const isExperience = row.slot_key.startsWith('experience.');
   const dirty = isDirty(row);
+  let activeContext: PreviewContext = 'desktop';
 
   card.dataset.section = sectionForSlot(row.slot_key);
   card.dataset.dirty = String(dirty);
@@ -334,12 +417,20 @@ function renderCard(row: ManifestRow): HTMLElement {
   stateBadge.textContent = dirty ? 'Borrador' : row.published_at ? 'Publicado' : 'Local';
   stateBadge.dataset.state = dirty ? 'draft' : row.published_at ? 'published' : 'local';
   resourceLabel.textContent = resourceType === 'video' ? 'Video' : 'Imagen';
-  previewFrame.dataset.previewViewport = 'desktop';
-  previewFrame.dataset.previewKind = row.slot_key.startsWith('experience.')
+  previewFrame.dataset.previewContext = activeContext;
+  previewFrame.dataset.previewKind = isExperience
     ? 'card'
     : row.slot_key === 'about.essence'
       ? 'portrait'
       : ['landing.band-valle', 'landing.final-cta'].includes(row.slot_key) ? 'band' : 'wide';
+  const desktopContextButton = contextButtons.find((button) => button.dataset.previewContext === 'desktop')!;
+  const mobileContextButton = contextButtons.find((button) => button.dataset.previewContext === 'mobile')!;
+  const modalContextButton = contextButtons.find((button) => button.dataset.previewContext === 'modal')!;
+  if (isExperience) modalContextButton.hidden = false;
+  else {
+    desktopContextButton.textContent = 'Escritorio';
+    mobileContextButton.textContent = 'Móvil';
+  }
   preview(row, previewMedia, framing);
   publicIdInput.value = row.draft_public_id || '';
   typeInput.value = resourceType;
@@ -351,35 +442,66 @@ function renderCard(row: ManifestRow): HTMLElement {
   focalXInput.value = String(framing.x);
   focalYInput.value = String(framing.y);
 
+  const activePoint = () => framing[activeContext];
+
+  const updateDragAvailability = () => {
+    const enabled = fitInput.value === 'cover'
+      && Boolean(previewMedia.querySelector('img, video'))
+      && previewMedia.dataset.greenBackground !== 'true';
+    previewFrame.dataset.dragEnabled = String(enabled);
+    previewMedia.tabIndex = enabled ? 0 : -1;
+    resetFocal.disabled = !enabled;
+    const instruction = enabled
+      ? `Encuadre ${PREVIEW_CONTEXT_LABELS[activeContext]}. Arrastra la imagen o usa las flechas del teclado.`
+      : 'La imagen se muestra completa y no necesita encuadre.';
+    previewMedia.setAttribute('aria-label', instruction);
+  };
+
   const updateFitControls = (fit: FitMode) => {
+    framing.fit = fit;
     fitInput.value = fit;
     for (const button of card.querySelectorAll<HTMLButtonElement>('[data-fit-option]')) {
       button.setAttribute('aria-pressed', String(button.dataset.fitOption === fit));
     }
-    applyPreviewPresentation(previewMedia, { ...framing, x:Number(focalXInput.value), y:Number(focalYInput.value), fit });
+    applyPreviewPresentation(previewMedia, fit, activePoint());
+    updateDragAvailability();
   };
 
-  const updateFocalControls = (x: number, y: number) => {
-    focalXInput.value = String(x);
-    focalYInput.value = String(y);
-    const key = `${x},${y}`;
-    focalLabel.value = FOCAL_LABELS[key] || 'Personalizada';
-    for (const button of card.querySelectorAll<HTMLButtonElement>('[data-focal-option]')) {
-      button.setAttribute('aria-pressed', String(button.dataset.focalOption === key));
+  const updateFocalControls = (x: number, y: number, context = activeContext) => {
+    const point = { x:clampFocal(x), y:clampFocal(y) };
+    framing[context] = point;
+    if (context === 'desktop') {
+      framing.x = point.x;
+      framing.y = point.y;
     }
-    applyPreviewPresentation(previewMedia, { x, y, fit:fitInput.value === 'contain' ? 'contain' : 'cover' });
+    if (context !== activeContext) return;
+    focalXInput.value = String(point.x);
+    focalYInput.value = String(point.y);
+    focalLabel.value = previewPositionLabel(context, point);
+    applyPreviewPresentation(previewMedia, framing.fit, point);
+  };
+
+  const selectPreviewContext = (context: PreviewContext) => {
+    activeContext = context;
+    previewFrame.dataset.previewContext = context;
+    for (const button of contextButtons) {
+      button.setAttribute('aria-pressed', String(button.dataset.previewContext === context));
+    }
+    const point = activePoint();
+    focalXInput.value = String(point.x);
+    focalYInput.value = String(point.y);
+    focalLabel.value = previewPositionLabel(context, point);
+    applyPreviewPresentation(previewMedia, framing.fit, point);
+    updateDragAvailability();
   };
 
   updateFitControls(framing.fit);
-  updateFocalControls(framing.x, framing.y);
+  selectPreviewContext('desktop');
 
-  for (const button of card.querySelectorAll<HTMLButtonElement>('button[data-preview-viewport]')) {
+  for (const button of contextButtons) {
     button.addEventListener('click', () => {
-      const viewport = button.dataset.previewViewport === 'mobile' ? 'mobile' : 'desktop';
-      previewFrame.dataset.previewViewport = viewport;
-      for (const option of card.querySelectorAll<HTMLButtonElement>('button[data-preview-viewport]')) {
-        option.setAttribute('aria-pressed', String(option === button));
-      }
+      const context = button.dataset.previewContext;
+      if (context === 'desktop' || context === 'mobile' || (context === 'modal' && isExperience)) selectPreviewContext(context);
     });
   }
 
@@ -387,12 +509,62 @@ function renderCard(row: ManifestRow): HTMLElement {
     button.addEventListener('click', () => updateFitControls(button.dataset.fitOption === 'contain' ? 'contain' : 'cover'));
   }
 
-  for (const button of card.querySelectorAll<HTMLButtonElement>('[data-focal-option]')) {
-    button.addEventListener('click', () => {
-      const [x, y] = (button.dataset.focalOption || '.5,.5').split(',').map(Number);
-      updateFocalControls(x, y);
-    });
-  }
+  resetFocal.addEventListener('click', () => updateFocalControls(.5, .5));
+
+  let drag: {
+    pointerId: number;
+    startX: number;
+    startY: number;
+    point: NormalizedPoint;
+    overflow: { x: number; y: number };
+  } | null = null;
+
+  previewMedia.addEventListener('pointerdown', (event) => {
+    if (previewFrame.dataset.dragEnabled !== 'true' || event.button !== 0) return;
+    const overflow = previewOverflow(previewMedia);
+    if (overflow.x < 1 && overflow.y < 1) return;
+    event.preventDefault();
+    drag = {
+      pointerId:event.pointerId,
+      startX:event.clientX,
+      startY:event.clientY,
+      point:{ ...activePoint() },
+      overflow,
+    };
+    previewMedia.setPointerCapture(event.pointerId);
+    previewFrame.dataset.dragging = 'true';
+  });
+
+  previewMedia.addEventListener('pointermove', (event) => {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const nextX = drag.overflow.x >= 1
+      ? drag.point.x - (event.clientX - drag.startX) / drag.overflow.x
+      : drag.point.x;
+    const nextY = drag.overflow.y >= 1
+      ? drag.point.y - (event.clientY - drag.startY) / drag.overflow.y
+      : drag.point.y;
+    updateFocalControls(nextX, nextY);
+  });
+
+  const stopDragging = (event: PointerEvent) => {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (previewMedia.hasPointerCapture(event.pointerId)) previewMedia.releasePointerCapture(event.pointerId);
+    drag = null;
+    delete previewFrame.dataset.dragging;
+  };
+  previewMedia.addEventListener('pointerup', stopDragging);
+  previewMedia.addEventListener('pointercancel', stopDragging);
+
+  previewMedia.addEventListener('keydown', (event) => {
+    if (previewFrame.dataset.dragEnabled !== 'true' || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+    event.preventDefault();
+    const point = activePoint();
+    const step = event.shiftKey ? .1 : .025;
+    updateFocalControls(
+      point.x + (event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0),
+      point.y + (event.key === 'ArrowDown' ? step : event.key === 'ArrowUp' ? -step : 0),
+    );
+  });
 
   typeInput.addEventListener('change', () => {
     resourceLabel.textContent = typeInput.value === 'video' ? 'Video' : 'Imagen';
@@ -406,8 +578,10 @@ function renderCard(row: ManifestRow): HTMLElement {
       previewMedia,
       typeInput.value as 'image'|'video',
       URL.createObjectURL(selected),
-      { x:Number(focalXInput.value), y:Number(focalYInput.value), fit:fitInput.value === 'contain' ? 'contain' : 'cover' },
+      framing.fit,
+      activePoint(),
     );
+    updateDragAvailability();
   });
 
   clearResource.addEventListener('click', async () => {
@@ -452,9 +626,12 @@ function renderCard(row: ManifestRow): HTMLElement {
         alt._backgroundMode = 'photo';
       }
       const focal = {
-        x:Number(focalXInput.value),
-        y:Number(focalYInput.value),
-        fit:fitInput.value === 'contain' ? 'contain' : 'cover',
+        x:framing.desktop.x,
+        y:framing.desktop.y,
+        fit:framing.fit,
+        desktop:{ ...framing.desktop },
+        mobile:{ ...framing.mobile },
+        ...(isExperience ? { modal:{ ...framing.modal } } : {}),
       };
       const response = await supabase(`/rest/v1/landing_slot_assignments?slot_key=eq.${encodeURIComponent(row.slot_key)}`, {
         method:'PATCH', headers:{ 'Content-Type':'application/json', Prefer:'return=minimal' },
