@@ -288,15 +288,38 @@ class PatagonikUI {
     const imageWrap = q('pk-exp-image');
     if (imageWrap && card && imageWrap.getAttribute('data-exp-key') !== key) {
       imageWrap.innerHTML = '';
+      imageWrap.setAttribute('data-exp-key', key);
+      imageWrap.setAttribute('data-orientation', 'landscape');
+      const grid = q('pk-exp-grid');
+      if (grid) grid.setAttribute('data-image-orientation', 'landscape');
       const source = card.querySelector('image-slot');
       if (source) {
+        const sourceMedia = source.querySelector('img, video');
         const clone = source.cloneNode(true);
         clone.removeAttribute('id');
         clone.style.width = '100%';
         clone.style.height = '100%';
         imageWrap.appendChild(clone);
+        const media = clone.querySelector('img, video');
+        if (media) {
+          const applyOrientation = () => {
+            if (imageWrap.getAttribute('data-exp-key') !== key) return;
+            const width = media instanceof HTMLVideoElement
+              ? media.videoWidth || Number(media.getAttribute('width')) || (sourceMedia && sourceMedia.videoWidth) || 0
+              : media.naturalWidth || Number(media.getAttribute('width')) || (sourceMedia && sourceMedia.naturalWidth) || 0;
+            const height = media instanceof HTMLVideoElement
+              ? media.videoHeight || Number(media.getAttribute('height')) || (sourceMedia && sourceMedia.videoHeight) || 0
+              : media.naturalHeight || Number(media.getAttribute('height')) || (sourceMedia && sourceMedia.naturalHeight) || 0;
+            if (!width || !height) return;
+            const ratio = width / height;
+            const orientation = ratio > 1.08 ? 'landscape' : ratio < .92 ? 'portrait' : 'square';
+            imageWrap.setAttribute('data-orientation', orientation);
+            if (grid) grid.setAttribute('data-image-orientation', orientation);
+          };
+          applyOrientation();
+          media.addEventListener(media instanceof HTMLVideoElement ? 'loadedmetadata' : 'load', applyOrientation, { once: true });
+        }
       }
-      imageWrap.setAttribute('data-exp-key', key);
     }
 
     const num = String(this.props.whatsappNumber || '56931712780').replace(/[^0-9]/g, '');

@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '@/content.config';
 import { cloudinaryVideoPosterUrl, cloudinaryVideoUrl } from '@/lib/media/cloudinary';
-import { localizedAlt, type LandingAsset } from '@/lib/media/types';
+import { localizedAlt, type LandingAsset, type MediaFocalPoint } from '@/lib/media/types';
 
 interface Props {
   asset: LandingAsset;
@@ -20,9 +20,12 @@ const {
 } = Astro.props;
 const src = cloudinaryVideoUrl(asset);
 const poster = cloudinaryVideoPosterUrl(asset);
-const focus = asset.focalPoint ?? { x: 0.5, y: 0.5 };
+const focus: MediaFocalPoint = asset.focalPoint ?? { x: 0.5, y: 0.5 };
+const desktopFocus = focus.desktop ?? focus;
+const mobileFocus = focus.mobile ?? desktopFocus;
+const modalFocus = focus.modal ?? desktopFocus;
 const fit = asset.fitMode ?? 'cover';
-const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-fit:${fit};object-position:${focus.x * 100}% ${focus.y * 100}%;`;
+const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-fit:${fit};--pk-media-position-desktop:${desktopFocus.x * 100}% ${desktopFocus.y * 100}%;--pk-media-position-mobile:${mobileFocus.x * 100}% ${mobileFocus.y * 100}%;--pk-media-position-modal:${modalFocus.x * 100}% ${modalFocus.y * 100}%;object-position:var(--pk-media-position-desktop);`;
 ---
 
 {
@@ -37,6 +40,8 @@ const finalStyle = `${style}${style.trim().endsWith(';') ? '' : ';'}object-fit:$
       playsinline
       preload="none"
       aria-label={localizedAlt(asset, locale)}
+      width={asset.width}
+      height={asset.height}
       data-pk-media-fit={fit}
       class={className}
       style={finalStyle}
