@@ -2,6 +2,8 @@ interface AdminConfig { supabaseUrl: string; supabaseKey: string; cloudName: str
 interface Session { access_token: string; refresh_token: string; expires_at?: number; user: { id: string; email?: string } }
 type FitMode = 'cover' | 'contain';
 type PreviewContext = 'desktop' | 'mobile' | 'modal';
+type MediaOrientation = 'landscape' | 'portrait' | 'square';
+type FrameShape = 'landscape' | 'portrait' | 'square' | 'band';
 interface FocalPoint { x?: number; y?: number }
 interface Framing extends FocalPoint {
   fit?: FitMode;
@@ -17,6 +19,11 @@ interface NormalizedFraming {
   desktop: NormalizedPoint;
   mobile: NormalizedPoint;
   modal: NormalizedPoint;
+}
+interface PreviewGeometry {
+  ratio: string;
+  label: string;
+  shape: FrameShape;
 }
 interface ManifestRow {
   slot_key: string; label: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
@@ -306,21 +313,67 @@ function applyPreviewPresentation(container: HTMLElement, fit: FitMode, point: N
   media.style.objectPosition = `${point.x * 100}% ${point.y * 100}%`;
 }
 
+function mediaDimensions(media: HTMLImageElement | HTMLVideoElement): { width: number; height: number } {
+  return media instanceof HTMLVideoElement
+    ? { width:media.videoWidth || Number(media.getAttribute('width')), height:media.videoHeight || Number(media.getAttribute('height')) }
+    : { width:media.naturalWidth || Number(media.getAttribute('width')), height:media.naturalHeight || Number(media.getAttribute('height')) };
+}
+
+function mediaOrientation(media: HTMLImageElement | HTMLVideoElement | null): MediaOrientation {
+  if (!media) return 'landscape';
+  const { width, height } = mediaDimensions(media);
+  if (!width || !height) return 'landscape';
+  const ratio = width / height;
+  return ratio > 1.08 ? 'landscape' : ratio < .92 ? 'portrait' : 'square';
+}
+
 function updatePreviewOrientation(container: HTMLElement, media: HTMLImageElement | HTMLVideoElement) {
   const previewFrame = container.closest<HTMLElement>('.asset-card__preview');
   if (!previewFrame) return;
-  const dimensions = () => media instanceof HTMLVideoElement
-    ? { width:media.videoWidth || Number(media.getAttribute('width')), height:media.videoHeight || Number(media.getAttribute('height')) }
-    : { width:media.naturalWidth || Number(media.getAttribute('width')), height:media.naturalHeight || Number(media.getAttribute('height')) };
   const apply = () => {
-    const { width, height } = dimensions();
+    const { width, height } = mediaDimensions(media);
     if (!width || !height) return;
-    const ratio = width / height;
-    previewFrame.dataset.mediaOrientation = ratio > 1.08 ? 'landscape' : ratio < .92 ? 'portrait' : 'square';
+    previewFrame.dataset.mediaOrientation = mediaOrientation(media);
+    container.dispatchEvent(new CustomEvent('preview-media-ready'));
   };
   apply();
   if (media instanceof HTMLVideoElement) media.addEventListener('loadedmetadata', apply, { once:true });
   else media.addEventListener('load', apply, { once:true });
+}
+
+function previewGeometry(row: ManifestRow, context: PreviewContext, orientation: MediaOrientation): PreviewGeometry {
+  if (row.slot_key.startsWith('experience.')) {
+    if (context !== 'modal') {
+      return {
+        ratio:'4 / 3',
+        label:`${PREVIEW_CONTEXT_LABELS[context]} · 4:3 real`,
+        shape:'landscape',
+      };
+    }
+    if (orientation === 'portrait') return { ratio:'3 / 4', label:'Modal vertical · vista lateral', shape:'portrait' };
+    if (orientation === 'square') return { ratio:'1 / 1', label:'Modal · imagen final 1:1', shape:'square' };
+    return { ratio:'4 / 3', label:'Modal · imagen final 4:3', shape:'landscape' };
+  }
+
+  if (row.slot_key === 'landing.hero' || row.slot_key === 'landing.experiences-background') {
+    return context === 'mobile'
+      ? { ratio:'9 / 16', label:'Móvil · pantalla vertical 9:16', shape:'portrait' }
+      : { ratio:'16 / 9', label:'Escritorio · pantalla 16:9', shape:'landscape' };
+  }
+
+  if (row.slot_key === 'landing.band-valle' || row.slot_key === 'landing.final-cta') {
+    return context === 'mobile'
+      ? { ratio:'4 / 3', label:'Móvil · bloque 4:3', shape:'landscape' }
+      : { ratio:'3 / 1', label:'Escritorio · franja 3:1', shape:'band' };
+  }
+
+  if (row.slot_key === 'about.essence') {
+    return { ratio:'3 / 2', label:`${context === 'mobile' ? 'Móvil' : 'Escritorio'} · imagen 3:2`, shape:'landscape' };
+  }
+
+  return context === 'mobile'
+    ? { ratio:'4 / 3', label:'Móvil · bloque 4:3', shape:'landscape' }
+    : { ratio:'16 / 9', label:'Escritorio · bloque 16:9', shape:'landscape' };
 }
 
 function renderPreviewMedia(
@@ -403,6 +456,8 @@ function renderCard(row: ManifestRow): HTMLElement {
   const focalYInput = card.querySelector<HTMLInputElement>('[data-focal="y"]')!;
   const focalLabel = card.querySelector<HTMLOutputElement>('[data-focal-label]')!;
   const resetFocal = card.querySelector<HTMLButtonElement>('[data-reset-focal]')!;
+  const frameLabel = card.querySelector<HTMLElement>('[data-frame-label]')!;
+  const dragHintText = card.querySelector<HTMLElement>('[data-drag-hint-text]')!;
   const contextButtons = [...card.querySelectorAll<HTMLButtonElement>('[data-preview-context]')];
   const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
   const framing = normalizedFraming(row.draft_focal_point ?? row.published_focal_point);
@@ -431,7 +486,6 @@ function renderCard(row: ManifestRow): HTMLElement {
     desktopContextButton.textContent = 'Escritorio';
     mobileContextButton.textContent = 'Móvil';
   }
-  preview(row, previewMedia, framing);
   publicIdInput.value = row.draft_public_id || '';
   typeInput.value = resourceType;
   fileInput.accept = row.accepted_types.includes('video') ? 'image/*,video/mp4,video/webm' : 'image/*';
@@ -444,16 +498,42 @@ function renderCard(row: ManifestRow): HTMLElement {
 
   const activePoint = () => framing[activeContext];
 
+  const applyFrameGeometry = () => {
+    const orientation = mediaOrientation(previewMedia.querySelector<HTMLImageElement | HTMLVideoElement>('img, video'));
+    previewFrame.dataset.mediaOrientation = orientation;
+    const geometry = previewGeometry(row, activeContext, orientation);
+    previewFrame.style.setProperty('--preview-aspect-ratio', geometry.ratio);
+    previewFrame.dataset.frameShape = geometry.shape;
+    frameLabel.textContent = geometry.label;
+  };
+
   const updateDragAvailability = () => {
-    const enabled = fitInput.value === 'cover'
-      && Boolean(previewMedia.querySelector('img, video'))
-      && previewMedia.dataset.greenBackground !== 'true';
+    const media = previewMedia.querySelector<HTMLImageElement | HTMLVideoElement>('img, video');
+    const hasMedia = Boolean(media);
+    const dimensions = media ? mediaDimensions(media) : { width:0, height:0 };
+    const mediaReady = dimensions.width > 0 && dimensions.height > 0;
+    const overflow = previewOverflow(previewMedia);
+    const hasCrop = mediaReady && (overflow.x >= 1 || overflow.y >= 1);
+    const enabled = fitInput.value === 'cover' && hasMedia && hasCrop && previewMedia.dataset.greenBackground !== 'true';
     previewFrame.dataset.dragEnabled = String(enabled);
     previewMedia.tabIndex = enabled ? 0 : -1;
     resetFocal.disabled = !enabled;
-    const instruction = enabled
-      ? `Encuadre ${PREVIEW_CONTEXT_LABELS[activeContext]}. Arrastra la imagen o usa las flechas del teclado.`
-      : 'La imagen se muestra completa y no necesita encuadre.';
+    let instruction = 'La proporción de la foto ya coincide con este marco; no hay una zona recortada para mover.';
+    let hint = 'La foto ya coincide con este marco';
+    if (!hasMedia) {
+      instruction = 'No hay una foto disponible para encuadrar.';
+      hint = 'Sin foto para encuadrar';
+    } else if (!mediaReady) {
+      instruction = 'Preparando la vista previa del encuadre.';
+      hint = 'Preparando vista previa…';
+    } else if (fitInput.value === 'contain') {
+      instruction = 'Ver completo está activo: la foto no se recorta.';
+      hint = 'Ver completo · sin recorte';
+    } else if (hasCrop) {
+      instruction = `Encuadre ${PREVIEW_CONTEXT_LABELS[activeContext]}. Mantén presionado y arrastra la foto, o usa las flechas del teclado.`;
+      hint = 'Mantén presionado y arrastra la foto';
+    }
+    dragHintText.textContent = hint;
     previewMedia.setAttribute('aria-label', instruction);
   };
 
@@ -488,6 +568,7 @@ function renderCard(row: ManifestRow): HTMLElement {
       button.setAttribute('aria-pressed', String(button.dataset.previewContext === context));
     }
     const point = activePoint();
+    applyFrameGeometry();
     focalXInput.value = String(point.x);
     focalYInput.value = String(point.y);
     focalLabel.value = previewPositionLabel(context, point);
@@ -495,6 +576,12 @@ function renderCard(row: ManifestRow): HTMLElement {
     updateDragAvailability();
   };
 
+  previewMedia.addEventListener('preview-media-ready', () => {
+    applyFrameGeometry();
+    updateDragAvailability();
+  });
+  preview(row, previewMedia, framing);
+  applyFrameGeometry();
   updateFitControls(framing.fit);
   selectPreviewContext('desktop');
 
@@ -509,7 +596,10 @@ function renderCard(row: ManifestRow): HTMLElement {
     button.addEventListener('click', () => updateFitControls(button.dataset.fitOption === 'contain' ? 'contain' : 'cover'));
   }
 
-  resetFocal.addEventListener('click', () => updateFocalControls(.5, .5));
+  resetFocal.addEventListener('click', () => {
+    updateFocalControls(.5, .5);
+    message(cardStatus, 'Encuadre centrado. Guarda el borrador para conservarlo.', 'success');
+  });
 
   let drag: {
     pointerId: number;
@@ -522,7 +612,10 @@ function renderCard(row: ManifestRow): HTMLElement {
   previewMedia.addEventListener('pointerdown', (event) => {
     if (previewFrame.dataset.dragEnabled !== 'true' || event.button !== 0) return;
     const overflow = previewOverflow(previewMedia);
-    if (overflow.x < 1 && overflow.y < 1) return;
+    if (overflow.x < 1 && overflow.y < 1) {
+      updateDragAvailability();
+      return;
+    }
     event.preventDefault();
     drag = {
       pointerId:event.pointerId,
@@ -533,6 +626,7 @@ function renderCard(row: ManifestRow): HTMLElement {
     };
     previewMedia.setPointerCapture(event.pointerId);
     previewFrame.dataset.dragging = 'true';
+    dragHintText.textContent = `Moviendo · ${Math.round(drag.point.x * 100)}% / ${Math.round(drag.point.y * 100)}%`;
   });
 
   previewMedia.addEventListener('pointermove', (event) => {
@@ -544,6 +638,8 @@ function renderCard(row: ManifestRow): HTMLElement {
       ? drag.point.y - (event.clientY - drag.startY) / drag.overflow.y
       : drag.point.y;
     updateFocalControls(nextX, nextY);
+    const point = activePoint();
+    dragHintText.textContent = `Moviendo · ${Math.round(point.x * 100)}% / ${Math.round(point.y * 100)}%`;
   });
 
   const stopDragging = (event: PointerEvent) => {
@@ -551,9 +647,12 @@ function renderCard(row: ManifestRow): HTMLElement {
     if (previewMedia.hasPointerCapture(event.pointerId)) previewMedia.releasePointerCapture(event.pointerId);
     drag = null;
     delete previewFrame.dataset.dragging;
+    updateDragAvailability();
+    message(cardStatus, 'Encuadre actualizado. Guarda el borrador para conservarlo.', 'success');
   };
   previewMedia.addEventListener('pointerup', stopDragging);
   previewMedia.addEventListener('pointercancel', stopDragging);
+  previewMedia.addEventListener('lostpointercapture', stopDragging);
 
   previewMedia.addEventListener('keydown', (event) => {
     if (previewFrame.dataset.dragEnabled !== 'true' || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
@@ -564,6 +663,8 @@ function renderCard(row: ManifestRow): HTMLElement {
       point.x + (event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0),
       point.y + (event.key === 'ArrowDown' ? step : event.key === 'ArrowUp' ? -step : 0),
     );
+    const updatedPoint = activePoint();
+    dragHintText.textContent = `Posición · ${Math.round(updatedPoint.x * 100)}% / ${Math.round(updatedPoint.y * 100)}%`;
   });
 
   typeInput.addEventListener('change', () => {
@@ -642,6 +743,10 @@ function renderCard(row: ManifestRow): HTMLElement {
       window.setTimeout(() => loadManifest().catch((error) => message(dashboardStatus, error.message)), 500);
     } catch (error) { message(cardStatus, error instanceof Error ? error.message : 'No se pudo guardar.'); }
     finally { setBusy(submit, false); }
+  });
+  window.requestAnimationFrame(() => {
+    applyFrameGeometry();
+    updateDragAvailability();
   });
   return card;
 }
