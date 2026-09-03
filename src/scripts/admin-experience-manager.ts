@@ -196,6 +196,11 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
   const saveButton = requiredElement<HTMLButtonElement>('#save-experience-button');
   const translateButton = requiredElement<HTMLButtonElement>('#translate-experience-button');
   const formStatus = requiredElement<HTMLElement>('#experience-form-status');
+  const deleteDialog = requiredElement<HTMLDialogElement>('#delete-experience-dialog');
+  const deleteName = requiredElement<HTMLElement>('#delete-experience-name');
+  const deleteStatus = requiredElement<HTMLElement>('#delete-experience-status');
+  const cancelDeleteButton = requiredElement<HTMLButtonElement>('#cancel-delete-experience-button');
+  const confirmDeleteButton = requiredElement<HTMLButtonElement>('#confirm-delete-experience-button');
   const idInput = requiredElement<HTMLInputElement>('#experience-id');
   const slugInput = requiredElement<HTMLInputElement>('#experience-slug');
   const statusInput = requiredElement<HTMLSelectElement>('#experience-status');
@@ -208,6 +213,9 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
   let draggingId: string | null = null;
   let slugEdited = false;
   let editorDirty = false;
+  let pendingDeletionCount = 0;
+  let pendingDelete: AdminExperience | null = null;
+  let deleting = false;
 
   const authenticatedFetch = async (path: string, init: RequestInit = {}): Promise<Response> => {
     const token = await options.getAccessToken();
@@ -260,6 +268,55 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
     }, 30);
   };
 
+  const closeDeleteDialog = (force = false): void => {
+    if (deleting && !force) return;
+    if (deleteDialog.open) deleteDialog.close();
+    pendingDelete = null;
+    setMessage(deleteStatus);
+  };
+
+  const openDeleteDialog = (item: AdminExperience): void => {
+    pendingDelete = item;
+    deleteName.textContent = `“${item.content?.es.cardTitle ?? item.slug}”`;
+    setMessage(deleteStatus);
+    deleteDialog.showModal();
+    window.setTimeout(() => cancelDeleteButton.focus(), 30);
+  };
+
+  const deleteExperience = async (): Promise<void> => {
+    const item = pendingDelete;
+    if (!item || deleting) return;
+    deleting = true;
+    setBusy(confirmDeleteButton, true);
+    cancelDeleteButton.disabled = true;
+    setMessage(deleteStatus, 'Eliminando experiencia…', 'success');
+    try {
+      const response = await authenticatedFetch('/api/admin/experiences', {
+        method: 'DELETE',
+        body: JSON.stringify({ id: item.id }),
+      });
+      if (!response.ok) throw new Error(await errorMessage(response));
+      closeDeleteDialog(true);
+      try {
+        await load();
+        await options.onCatalogChanged();
+      } catch (refreshError) {
+        setMessage(
+          managerStatus,
+          `La experiencia se eliminó, pero el panel no pudo actualizarse: ${refreshError instanceof Error ? refreshError.message : 'actualiza la página.'}`,
+        );
+        return;
+      }
+      setMessage(managerStatus, 'Experiencia eliminada del borrador. Pulsa “Publicar cambios” para retirarla del sitio.', 'success');
+    } catch (error) {
+      setMessage(deleteStatus, error instanceof Error ? error.message : 'No se pudo eliminar la experiencia.');
+    } finally {
+      deleting = false;
+      setBusy(confirmDeleteButton, false);
+      cancelDeleteButton.disabled = false;
+    }
+  };
+
   const saveOrder = async (): Promise<void> => {
     setMessage(managerStatus, 'Guardando el nuevo orden…', 'success');
     const response = await authenticatedFetch('/api/admin/experiences', {
@@ -268,7 +325,7 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
     });
     if (!response.ok) throw new Error(await errorMessage(response));
     setMessage(managerStatus, 'Orden guardado como borrador. Se aplicará en portada y catálogo al publicar.', 'success');
-    options.onDraftCount(items.filter((item) => item.dirty || item.order !== item.publishedOrder).length);
+    options.onDraftCount(items.filter((item) => item.dirty || item.order !== item.publishedOrder).length + pendingDeletionCount);
     await options.onCatalogChanged();
   };
 
@@ -342,17 +399,25 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
       const actions = document.createElement('div');
       actions.className = 'experience-row__actions';
       const up = document.createElement('button');
-      up.type = 'button'; up.textContent = '↑'; up.title = 'Subir prioridad'; up.disabled = index === 0;
+      up.type = 'button'; up.innerHTML = '<span aria-hidden="true">↑</span><span class="experience-row__action-label">Subir</span>'; up.title = 'Subir prioridad'; up.disabled = index === 0;
+      up.dataset.action = 'up';
       up.setAttribute('aria-label', `Subir prioridad de ${item.content?.es.cardTitle ?? item.slug}`);
       up.addEventListener('click', () => moveBy(item.id, -1));
       const down = document.createElement('button');
-      down.type = 'button'; down.textContent = '↓'; down.title = 'Bajar prioridad'; down.disabled = index === items.length - 1;
+      down.type = 'button'; down.innerHTML = '<span aria-hidden="true">↓</span><span class="experience-row__action-label">Bajar</span>'; down.title = 'Bajar prioridad'; down.disabled = index === items.length - 1;
+      down.dataset.action = 'down';
       down.setAttribute('aria-label', `Bajar prioridad de ${item.content?.es.cardTitle ?? item.slug}`);
       down.addEventListener('click', () => moveBy(item.id, 1));
       const edit = document.createElement('button');
       edit.type = 'button'; edit.textContent = 'Editar'; edit.title = 'Editar contenido';
+      edit.dataset.action = 'edit';
       edit.addEventListener('click', () => openEditor(item));
-      actions.append(up, down, edit);
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.textContent = 'Eliminar'; remove.title = 'Eliminar experiencia';
+      remove.dataset.action = 'delete';
+      remove.setAttribute('aria-label', `Eliminar ${item.content?.es.cardTitle ?? item.slug}`);
+      remove.addEventListener('click', () => openDeleteDialog(item));
+      actions.append(up, down, edit, remove);
 
       handle.addEventListener('dragstart', (event) => {
         draggingId = item.id;
@@ -393,10 +458,11 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
     setMessage(managerStatus, 'Cargando experiencias…', 'success');
     const response = await authenticatedFetch('/api/admin/experiences');
     if (!response.ok) throw new Error(await errorMessage(response));
-    const payload = await response.json() as { experiences: AdminExperience[] };
+    const payload = await response.json() as { experiences: AdminExperience[]; pendingDeletionCount?: number };
     items = payload.experiences.sort((a, b) => a.order - b.order);
+    pendingDeletionCount = payload.pendingDeletionCount ?? 0;
     renderList();
-    options.onDraftCount(items.filter((item) => item.dirty).length);
+    options.onDraftCount(items.filter((item) => item.dirty).length + pendingDeletionCount);
     setMessage(managerStatus, `${items.length} experiencias sincronizadas.`, 'success');
   };
 
@@ -407,6 +473,13 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
   dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
     closeEditor();
+  });
+  cancelDeleteButton.addEventListener('click', () => closeDeleteDialog());
+  confirmDeleteButton.addEventListener('click', () => { void deleteExperience(); });
+  deleteDialog.addEventListener('click', (event) => { if (event.target === deleteDialog) closeDeleteDialog(); });
+  deleteDialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    closeDeleteDialog();
   });
   form.addEventListener('input', () => { editorDirty = true; });
 
@@ -505,9 +578,11 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
     load,
     reset: () => {
       items = [];
+      pendingDeletionCount = 0;
       list.replaceChildren();
       options.onDraftCount(0);
       closeEditor(true);
+      closeDeleteDialog(true);
       setMessage(managerStatus);
     },
     setVisible: (visible: boolean) => { root.hidden = !visible; },

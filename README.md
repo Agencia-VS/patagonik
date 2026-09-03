@@ -65,8 +65,8 @@ página indexable y el selector de idioma es navegación real.
 ## Reglas del contenido
 
 - Las 16 experiencias originales conservan un JSON como respaldo. El admin
-  puede crear nuevas experiencias, editar las existentes y definir un único
-  orden compartido por portada y catálogo. La versión pública se lee desde
+  puede crear, editar o eliminar experiencias y definir un único orden
+  compartido por portada y catálogo. La versión pública se lee desde
   Supabase durante el build y genera card, modal y página individual.
 - **El schema local y Supabase exigen paridad de forma** entre idiomas: mismo
   número de `facts`, `includes` y `excludes`. El panel bloquea guardar o

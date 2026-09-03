@@ -12,7 +12,7 @@ const adminConfig = {
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex,nofollow,noarchive" />
     <meta name="theme-color" content="#eeece5" />
     <title>Panel de administración · PatagoniK</title>
@@ -115,7 +115,7 @@ const adminConfig = {
               <div>
                 <p class="eyebrow">Contenido y prioridad</p>
                 <h3 id="experience-manager-title">Orden de experiencias</h3>
-                <p>Este orden se usa tanto en la portada como en el catálogo. Arrastra desde los seis puntos o usa las flechas.</p>
+                <p>Este orden se usa tanto en la portada como en el catálogo. En computador puedes arrastrar; en celular usa Subir y Bajar.</p>
               </div>
               <button id="new-experience-button" type="button" class="button button--primary">
                 <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12" /></svg>
@@ -183,6 +183,26 @@ const adminConfig = {
           </div>
         </footer>
       </form>
+    </dialog>
+
+    <dialog id="delete-experience-dialog" class="confirm-dialog" aria-labelledby="delete-experience-title" aria-describedby="delete-experience-description">
+      <div class="confirm-dialog__content">
+        <div class="confirm-dialog__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5" /></svg>
+        </div>
+        <p class="eyebrow">Acción permanente</p>
+        <h2 id="delete-experience-title">Eliminar experiencia</h2>
+        <p id="delete-experience-description">Vas a eliminar <strong id="delete-experience-name"></strong> del panel. Se retirará de la portada, el catálogo y su página individual cuando publiques los cambios.</p>
+        <p class="confirm-dialog__note">La imagen original no se borra de Cloudinary.</p>
+        <p id="delete-experience-status" class="status" role="status" aria-live="polite"></p>
+        <div class="confirm-dialog__actions">
+          <button id="cancel-delete-experience-button" type="button" class="button button--secondary">Cancelar</button>
+          <button id="confirm-delete-experience-button" type="button" class="button button--danger">
+            <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M8 6V3h4v3m-6 0 1 11h6l1-11M8.5 9v5m3-5v5" /></svg>
+            <span>Eliminar experiencia</span>
+          </button>
+        </div>
+      </div>
     </dialog>
 
     <template id="asset-card-template">
@@ -312,11 +332,11 @@ const adminConfig = {
 
   * { box-sizing: border-box; }
   html { min-width: 320px; background: var(--canvas); }
-  body { margin: 0; min-height: 100vh; background: var(--canvas); }
+  body { margin: 0; min-height: 100vh; overflow-x: hidden; background: var(--canvas); }
   main { min-height: 100vh; }
   [hidden] { display: none !important; }
   h1, h2, h3, h4, p { margin-top: 0; }
-  button, input, select { font: inherit; }
+  button, input, select, textarea { font: inherit; }
   button, input, select, summary { -webkit-tap-highlight-color: transparent; }
 
   h1 { margin-bottom: .65rem; font: 400 clamp(2.15rem, 5vw, 3.9rem)/.98 Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
@@ -349,6 +369,8 @@ const adminConfig = {
   .button--secondary:hover:not(:disabled) { border-color: #a8afa4; background: #fff; box-shadow: 0 6px 15px rgba(38, 48, 42, .09); }
   .button--quiet { color: #526057; border-color: transparent; background: transparent; }
   .button--quiet:hover:not(:disabled) { color: var(--ink); background: #e9e8e1; }
+  .button--danger { color: #fff; border-color: #843323; background: linear-gradient(180deg, #a94735, #913726); box-shadow: 0 7px 16px rgba(125, 44, 29, .18); }
+  .button--danger:hover:not(:disabled) { background: linear-gradient(180deg, #b24d39, #843020); box-shadow: 0 9px 20px rgba(125, 44, 29, .23); }
   .button--wide { width: 100%; min-height: 49px; margin-top: .2rem; }
 
   .panel { background: var(--surface); border: 1px solid rgba(198, 202, 194, .9); }
@@ -538,7 +560,10 @@ const adminConfig = {
   .experience-row__actions { display: flex; gap: .3rem; }
   .experience-row__actions button { display: grid; place-items: center; min-width: 34px; height: 34px; padding: 0 .55rem; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; color: #59655c; background: #fff; font-size: .7rem; font-weight: 760; }
   .experience-row__actions button:hover:not(:disabled) { border-color: var(--olive); color: var(--olive-dark); background: var(--olive-light); }
+  .experience-row__actions button[data-action="delete"] { color: var(--danger); }
+  .experience-row__actions button[data-action="delete"]:hover:not(:disabled) { border-color: #c68173; color: #7e2f20; background: #f8e8e4; }
   .experience-row__actions button:disabled { cursor: not-allowed; opacity: .35; }
+  .experience-row__action-label { display: none; }
   .experience-manager__note { margin: 1rem 0 0; color: var(--muted); font-size: .7rem; line-height: 1.5; }
 
   .experience-dialog { width: min(1040px, calc(100vw - 28px)); max-height: calc(100svh - 28px); margin: auto; padding: 0; overflow: auto; border: 1px solid rgba(65, 79, 59, .24); border-radius: 22px; color: var(--ink); background: var(--surface); box-shadow: 0 32px 90px rgba(25, 31, 27, .3); scrollbar-color: var(--olive) #e5e5de; scrollbar-width: thin; }
@@ -573,6 +598,20 @@ const adminConfig = {
   #experience-form-status { max-width: 48ch; }
   .experience-editor__actions { display: flex; justify-content: flex-end; gap: .5rem; margin-left: auto; }
 
+  .confirm-dialog { width: min(460px, calc(100vw - 28px)); margin: auto; padding: 0; overflow: hidden; border: 1px solid rgba(154, 62, 45, .24); border-radius: 21px; color: var(--ink); background: var(--surface); box-shadow: 0 28px 80px rgba(25, 31, 27, .3); }
+  .confirm-dialog::backdrop { background: rgba(23, 28, 25, .72); backdrop-filter: blur(7px); }
+  .confirm-dialog__content { padding: 1.5rem; }
+  .confirm-dialog__icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 1.2rem; border-radius: 14px; color: var(--danger); background: #f5e3df; }
+  .confirm-dialog__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+  .confirm-dialog .eyebrow { margin-bottom: .4rem; color: var(--danger); }
+  .confirm-dialog h2 { margin: 0 0 .75rem; font: 400 2rem/1 Georgia, serif; }
+  .confirm-dialog p { line-height: 1.55; }
+  #delete-experience-description { margin-bottom: .7rem; color: var(--muted); font-size: .9rem; }
+  #delete-experience-description strong { color: var(--ink); }
+  .confirm-dialog__note { margin: 0; padding: .7rem .8rem; border-radius: 10px; color: #6b5b39; background: #f5ecd7; font-size: .75rem; }
+  #delete-experience-status { min-height: 1.15rem; margin-top: .8rem; }
+  .confirm-dialog__actions { display: flex; justify-content: flex-end; gap: .55rem; margin-top: 1rem; }
+
   @keyframes button-pulse { to { opacity: .35; } }
 
   @media (max-width: 1080px) {
@@ -583,53 +622,109 @@ const adminConfig = {
   }
 
   @media (max-width: 700px) {
-    .login { padding: .9rem; }
-    .login__panel { padding: 1.6rem; border-radius: 19px; }
+    html { scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+    body[data-admin-view="dashboard"] { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+    input, select, textarea { min-height: 50px; border-radius: 12px; font-size: 16px; }
+    textarea { min-height: 112px; }
+    .button { min-height: 48px; }
+    .login { align-items: center; padding: max(.9rem, env(safe-area-inset-top)) max(.9rem, env(safe-area-inset-right)) max(.9rem, env(safe-area-inset-bottom)) max(.9rem, env(safe-area-inset-left)); }
+    .login__panel { padding: 1.5rem; border-radius: 19px; }
     .login__mark { margin-bottom: 1.35rem; }
-    .toolbar { padding: 1rem; }
+    .login h1 { font-size: clamp(2rem, 11vw, 2.7rem); }
+    .login__lead { font-size: .9rem; line-height: 1.55; }
+    .login__form { margin-top: 1.5rem; }
+    .toolbar { position: sticky; top: 0; z-index: 30; gap: .7rem; padding: max(.8rem, env(safe-area-inset-top)) 1rem .8rem; }
     .toolbar__mark { display: none; }
-    .toolbar__actions { display: grid; grid-template-columns: 1fr 1fr; }
-    .toolbar__actions .button { width: 100%; }
-    #publish-button { grid-column: 1 / -1; grid-row: 1; }
-    .dashboard__content { padding: 1rem 1rem 3rem; }
-    .dashboard__feedback { align-items: flex-start; flex-direction: column; min-height: 0; }
+    .toolbar__identity { width: 100%; }
+    .toolbar .eyebrow { margin-bottom: .2rem; font-size: .58rem; }
+    .toolbar h1 { font-size: 1.45rem; }
+    .toolbar__help { display: none; }
+    .toolbar__actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: .45rem; }
+    .toolbar__actions .button { width: 100%; min-height: 44px; }
+    #publish-button { position: fixed; z-index: 60; right: max(12px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); left: max(12px, env(safe-area-inset-left)); width: auto; min-height: 56px; border-radius: 15px; box-shadow: 0 13px 30px rgba(38, 48, 42, .32), inset 0 1px 0 rgba(255, 255, 255, .16); }
+    .dashboard__content { padding: .8rem 1rem 2rem; }
+    .dashboard__feedback { align-items: stretch; flex-direction: column; gap: .45rem; min-height: 0; margin-bottom: .75rem; padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 12px; background: rgba(250, 249, 245, .72); }
     .status--dashboard { text-align: left; }
-    .section-nav { margin-inline: -1rem; padding-inline: 1rem; border-right: 0; border-left: 0; border-radius: 0; }
-    .section-tabs { overflow-x: auto; margin-inline: -1rem; padding: 0 1rem .3rem; scrollbar-width: thin; }
-    .section-tab { flex: none; }
-    .section-heading { align-items: flex-start; padding-top: 1.7rem; }
+    .section-nav { margin-inline: -1rem; padding: .65rem 0; border-right: 0; border-left: 0; border-radius: 0; }
+    .section-nav__intro { display: none; }
+    .section-tabs { width: 100%; overflow-x: auto; margin: 0; padding: 0 1rem .2rem; scroll-padding-inline: 1rem; scrollbar-width: none; scroll-snap-type: x proximity; }
+    .section-tabs::-webkit-scrollbar { display: none; }
+    .section-tab { flex: none; min-height: 46px; scroll-snap-align: start; }
+    .section-heading { align-items: flex-start; padding: 1.45rem .05rem .85rem; }
+    .section-heading h2 { font-size: 2rem; }
+    .section-heading p:last-child { font-size: .82rem; }
     .section-total { display: none; }
     .asset-grid { gap: .9rem; }
-    .asset-card { border-radius: 17px; }
+    .asset-card { scroll-margin-top: 128px; border-radius: 17px; }
     .asset-card:hover { transform: none; }
-    .preview-switch { flex-wrap: wrap; justify-content: flex-start; }
-    .preview-switch > span { flex: 1 0 100%; }
+    .asset-card__preview { min-height: clamp(255px, 82vw, 330px); padding: 44px 12px 50px; }
+    .asset-card__preview[data-frame-shape="phone"] .asset-card__media { width: min(50%, 180px); }
+    .asset-card__preview[data-frame-shape="portrait"] .asset-card__media { width: min(58%, 205px); }
+    .asset-card__preview[data-frame-shape="modal-side"] .asset-card__media { width: min(41%, 150px); }
+    .asset-card__drag-hint { bottom: 11px; left: 10px; max-width: calc(100% - 116px); min-height: 34px; }
+    .asset-card__frame-label { right: 10px; bottom: 14px; max-width: 105px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .preview-switch { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem; padding: .55rem .7rem .65rem; }
+    .asset-card[data-experience="true"] .preview-switch { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .preview-switch > span { grid-column: 1 / -1; margin: 0; }
+    .preview-switch button { min-width: 0; min-height: 40px; padding: .4rem .3rem; }
+    .asset-card__form { gap: .9rem; padding: 1rem; }
+    .replacement { padding: .9rem; }
+    input[type="file"] { min-height: 54px; padding: .35rem; font-size: .78rem; }
+    input[type="file"]::file-selector-button { min-height: 42px; }
+    .source-fields, fieldset, .framing { grid-template-columns: 1fr; }
+    .asset-card__settings summary { min-height: 52px; padding: .8rem .85rem; }
+    .fit-options button { min-height: 72px; }
+    .position-control__heading { align-items: flex-start; flex-direction: column; }
+    .position-control__reset { min-height: 44px; }
+    .asset-card__actions { align-items: stretch; flex-direction: column; gap: .55rem; }
+    .button--save, .button--green-background { width: 100%; min-height: 52px; }
+    .card-status:empty { display: none; }
+    .experience-manager { margin-inline: -.25rem; padding: 1rem; border-radius: 17px; }
     .experience-manager__head { align-items: stretch; flex-direction: column; }
-    .experience-manager__head .button { align-self: flex-start; }
-    .experience-row { grid-template-columns: 30px 36px minmax(0, 1fr); gap: .45rem; padding: .6rem; }
-    .experience-row__handle { width: 30px; }
-    .experience-row__order { width: 34px; height: 34px; }
-    .experience-row__badges, .experience-row__actions { grid-column: 3; justify-content: flex-start; }
-    .experience-dialog { width: 100vw; max-height: 100svh; border: 0; border-radius: 0; }
-    .experience-editor__head { padding: 1rem; }
+    .experience-manager__head .button { align-self: stretch; min-height: 52px; }
+    #experience-manager-status { min-height: 0; }
+    .experience-list { gap: .7rem; }
+    .experience-row { grid-template-columns: 42px minmax(0, 1fr); grid-template-areas: "order copy" "badges badges" "actions actions"; gap: .65rem .7rem; min-height: 0; padding: .85rem; border-radius: 14px; }
+    .experience-row__handle { display: none; }
+    .experience-row__order { grid-area: order; width: 42px; height: 42px; }
+    .experience-row__copy { grid-area: copy; align-self: center; }
+    .experience-row__copy strong { display: -webkit-box; overflow: hidden; font-size: 1.06rem; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .experience-row__copy small { white-space: normal; overflow-wrap: anywhere; }
+    .experience-row__badges { grid-area: badges; justify-content: flex-start; }
+    .experience-row__actions { grid-area: actions; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; padding-top: .15rem; border-top: 1px solid #e1e2dc; }
+    .experience-row__actions button { display: flex; gap: .4rem; width: 100%; min-width: 0; height: 46px; padding: 0 .65rem; }
+    .experience-row__action-label { display: inline; }
+    .experience-dialog { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; overscroll-behavior: contain; border: 0; border-radius: 0; }
+    .experience-editor__head { align-items: center; padding: max(.8rem, env(safe-area-inset-top)) 1rem .8rem; }
+    .experience-editor__head .eyebrow { display: none; }
+    .experience-editor__head h2 { font-size: 1.65rem; }
+    .experience-editor__close { width: 48px; height: 48px; }
     .experience-editor__meta { grid-template-columns: 1fr; padding: 1rem; }
-    .locale-tabs { top: 87px; overflow-x: auto; padding-inline: 1rem; }
-    .locale-tabs button { flex: none; }
+    .locale-tabs { top: calc(74px + env(safe-area-inset-top)); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem; padding: .55rem .7rem; }
+    .locale-tabs button { min-width: 0; min-height: 48px; padding: .4rem .3rem; text-align: center; }
+    .locale-tabs button span { font-size: .5rem; }
     .experience-locale-panels { padding: 1rem; }
     .experience-field-group { grid-template-columns: 1fr; padding: .85rem; }
     .experience-field-group .field--wide { grid-column: 1; }
-    .experience-editor__footer { align-items: stretch; flex-direction: column; padding: .8rem 1rem; }
-    .experience-editor__actions { width: 100%; margin: 0; flex-wrap: wrap; }
-    .experience-editor__actions .button { flex: 1; }
-    #translate-experience-button { flex-basis: 100%; }
+    .experience-field-group textarea[data-field="facts"] { font-size: 16px; }
+    .experience-editor__footer { align-items: stretch; flex-direction: column; gap: .55rem; padding: .7rem 1rem max(.7rem, env(safe-area-inset-bottom)); }
+    #experience-form-status { max-width: none; }
+    .experience-editor__actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin: 0; }
+    .experience-editor__actions .button { width: 100%; min-height: 48px; }
+    #save-experience-button { grid-column: 1 / -1; grid-row: 1; min-height: 52px; }
+    #translate-experience-button { grid-column: 1; grid-row: 2; }
+    #cancel-experience-button { grid-column: 2; grid-row: 2; }
+    .confirm-dialog { width: 100%; max-width: none; margin: auto 0 0; border-right: 0; border-bottom: 0; border-left: 0; border-radius: 22px 22px 0 0; }
+    .confirm-dialog__content { padding: 1.25rem 1rem max(1rem, env(safe-area-inset-bottom)); }
+    .confirm-dialog__actions { display: grid; grid-template-columns: 1fr; }
+    .confirm-dialog__actions .button { width: 100%; min-height: 52px; }
+    #confirm-delete-experience-button { grid-row: 1; }
   }
 
   @media (max-width: 500px) {
-    .source-fields, fieldset { grid-template-columns: 1fr; }
-    .framing { grid-template-columns: 1fr; }
-    .asset-card__actions { align-items: stretch; flex-direction: column; }
-    .button--save, .button--green-background { width: 100%; }
-    .card-status:empty { display: none; }
+    .preview-switch button { font-size: .61rem; }
+    .asset-card__badges { top: .6rem; right: .6rem; left: .6rem; }
+    .state-badge, .type-badge { font-size: .59rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
