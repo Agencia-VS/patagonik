@@ -35,7 +35,7 @@ interface PreviewPlacement {
   overflow: { x: number; y: number };
 }
 interface ManifestRow {
-  slot_key: string; label: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
+  slot_key: string; label: string; preset: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
   draft_asset_id: string | null; draft_public_id: string | null; draft_resource_type: 'image'|'video'|null;
   draft_secure_url: string | null; draft_alt: Record<string,string>; draft_focal_point: Framing;
   published_asset_id: string | null; published_resource_type: 'image'|'video'|null; published_secure_url: string | null; published_at: string | null;
@@ -572,9 +572,10 @@ function renderCard(row: ManifestRow): HTMLElement {
   const framing = normalizedFraming(row.draft_focal_point ?? row.published_focal_point);
   const isExperience = row.slot_key.startsWith('experience.');
   const dirty = isDirty(row);
-  let activeContext: PreviewContext = 'desktop';
+  let activeContext: PreviewContext = window.matchMedia('(max-width: 700px)').matches ? 'mobile' : 'desktop';
 
   card.dataset.section = sectionForSlot(row.slot_key);
+  card.dataset.experience = String(isExperience);
   card.dataset.slotKey = row.slot_key;
   card.dataset.dirty = String(dirty);
   card.querySelector<HTMLElement>('[data-slot-key]')!.textContent = row.slot_key;
@@ -700,7 +701,7 @@ function renderCard(row: ManifestRow): HTMLElement {
   preview(row, previewMedia, framing);
   applyFrameGeometry();
   updateFitControls(framing.fit);
-  selectPreviewContext('desktop');
+  selectPreviewContext(activeContext);
 
   for (const button of contextButtons) {
     button.addEventListener('click', () => {
@@ -873,7 +874,7 @@ async function loadManifest(): Promise<void> {
   message(dashboardStatus, 'Cargando recursos…', 'success');
   const response = await supabase('/rest/v1/landing_admin_manifest?select=*&order=sort_order.asc');
   if (!response.ok) throw new Error(await parseError(response));
-  const rows = await response.json() as ManifestRow[];
+  const rows = (await response.json() as ManifestRow[]).filter((row) => row.preset !== 'experience-deleted');
   for (const existing of grid.querySelectorAll('[data-preview-media]')) previewResizeObserver?.unobserve(existing);
   grid.replaceChildren(...rows.map(renderCard));
   updateManifestSummary(rows);

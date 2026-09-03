@@ -20,6 +20,8 @@ export interface ExperienceDatabaseRow {
   published_order: number | null;
   draft_status: ExperienceStatus;
   published_status: ExperienceStatus;
+  draft_deleted: boolean;
+  published_deleted: boolean;
   draft_content: ExperienceContent | null;
   published_content: ExperienceContent | null;
   updated_at: string;
@@ -75,7 +77,7 @@ async function loadPublishedExperiences(): Promise<ExperienceRecord[]> {
     const represented = new Set<string>();
     for (const row of rows) {
       represented.add(row.slug);
-      if (row.published_status !== 'active' || row.published_order === null) continue;
+      if (row.published_deleted || row.published_status !== 'active' || row.published_order === null) continue;
       const localEntry = localBySlug.get(row.slug);
       const content = row.published_content ?? localEntry?.content;
       if (!content) {

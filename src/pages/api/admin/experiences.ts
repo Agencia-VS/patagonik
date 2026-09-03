@@ -27,11 +27,15 @@ async function checkedSupabase(response: Response, action: string): Promise<Resp
   if (detail.includes('Could not find the table') || detail.includes("relation 'public.experiences' does not exist")) {
     throw new ApiError(503, 'Falta aplicar la migración del catálogo de experiencias en Supabase.');
   }
+  if (detail.includes('admin_delete_experience') && (detail.includes('schema cache') || detail.includes('Could not find the function'))) {
+    throw new ApiError(503, 'Falta aplicar la migración para eliminar experiencias en Supabase.');
+  }
   if (detail.includes('duplicate key') || detail.includes('experiences_slug_key')) {
     throw new ApiError(409, 'Ya existe una experiencia con ese slug.');
   }
   if (detail.includes('invalid_experience_order')) throw new ApiError(409, 'El orden cambió en otra sesión. Actualiza el panel e inténtalo nuevamente.');
   if (detail.includes('invalid_experience_content')) throw new ApiError(422, 'El contenido está incompleto o los idiomas no tienen la misma estructura.');
+  if (detail.includes('experience_not_found')) throw new ApiError(404, 'La experiencia ya no existe o fue eliminada.');
   throw new ApiError(response.status === 403 ? 403 : 422, `${action}: ${detail}`);
 }
 
@@ -50,7 +54,8 @@ export const GET: APIRoute = async ({ request }) => {
     const localBySlug = new Map(local.map((entry) => [entry.slug, entry.content]));
     const coverBySlot = new Map(manifest.map((entry) => [entry.slot_key, entry]));
 
-    const experiences = rows.map((row) => {
+    const pendingDeletionCount = rows.filter((row) => Boolean(row.draft_deleted) !== Boolean(row.published_deleted)).length;
+    const experiences = rows.filter((row) => !row.draft_deleted).map((row) => {
       const content = row.draft_content ?? row.published_content ?? localBySlug.get(row.slug) ?? null;
       const cover = coverBySlot.get(`experience.${row.slug}.cover`);
       return {
@@ -70,7 +75,7 @@ export const GET: APIRoute = async ({ request }) => {
         publishedAt: row.published_at,
       };
     });
-    return json({ experiences });
+    return json({ experiences, pendingDeletionCount });
   } catch (error) {
     return errorResponse(error);
   }
@@ -142,6 +147,26 @@ export const PATCH: APIRoute = async ({ request }) => {
     });
     await checkedSupabase(response, 'No se pudo guardar la experiencia');
     return json({ ok: true });
+  } catch (error) {
+    return errorResponse(error);
+  }
+};
+
+export const DELETE: APIRoute = async ({ request }) => {
+  try {
+    const { token } = await assertAdmin(request);
+    const body = (await request.json().catch(() => ({}))) as { id?: unknown };
+    if (typeof body.id !== 'string' || !/^[0-9a-f-]{36}$/i.test(body.id)) {
+      throw new ApiError(422, 'La experiencia que intentas eliminar es inválida.');
+    }
+    const response = await userFetch('/rest/v1/rpc/admin_delete_experience', token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_id: body.id }),
+    });
+    await checkedSupabase(response, 'No se pudo eliminar la experiencia');
+    const slug = await response.json() as string;
+    return json({ ok: true, slug });
   } catch (error) {
     return errorResponse(error);
   }

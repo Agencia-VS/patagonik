@@ -95,11 +95,17 @@ En la pestaña **Experiencias** del admin:
    automáticamente debajo de la lista.
 4. Arrastrar las filas o usar ↑/↓ para definir la prioridad. Es el mismo orden
    de la portada y del catálogo.
-5. Pulsar **Publicar cambios**. El sistema bloquea la publicación si una
+5. Para retirar una experiencia, pulsar **Eliminar** y confirmar. Desaparece
+   del panel de inmediato y se retira de card, modal y página individual al
+   publicar; el archivo original permanece en Cloudinary.
+6. Pulsar **Publicar cambios**. El sistema bloquea la publicación si una
    experiencia activa no tiene contenido completo o portada.
 
 Archivar es reversible y sólo afecta la web al publicar. El slug se fija al
 crear porque forma parte de las URLs indexables de los tres idiomas.
+El panel está optimizado para celular: el orden se cambia con botones grandes,
+el editor ocupa la pantalla completa y **Publicar cambios** permanece accesible
+en la parte inferior.
 
 ## 5. Migrar las fotos existentes
 
