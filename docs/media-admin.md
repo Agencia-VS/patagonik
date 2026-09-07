@@ -76,13 +76,36 @@ Variables. Aplicarlas a Production y Preview según corresponda:
 | `CLOUDINARY_ASSET_FOLDER` | privada | carpeta destino |
 | `VERCEL_DEPLOY_HOOK_URL` | privada | rebuild al publicar |
 | `CRON_SECRET` | privada | autenticar cron/healthcheck |
-| `OPENAI_API_KEY` | privada | generar traducciones EN/PT |
-| `OPENAI_TRANSLATION_MODEL` | privada/opcional | modelo de traducción; por defecto `gpt-5.6-luna` |
+| `TRANSLATION_PROVIDER` | privada | `opencode-zen`, `opencode-go` u `openai` |
+| `TRANSLATION_API_KEY` | privada | key del proveedor usado para generar EN/PT |
+| `TRANSLATION_MODEL` | privada/opcional | modelo de traducción; por defecto `gpt-5.6-luna` |
+| `TRANSLATION_API_FORMAT` | privada/opcional | `responses` o `chat-completions`; normalmente se infiere por modelo |
+| `OPENCODE_API_KEY` | privada/opcional | alias de `TRANSLATION_API_KEY` para OpenCode |
+| `OPENAI_API_KEY` | privada/opcional | alias anterior, conservado para OpenAI |
+| `OPENAI_TRANSLATION_MODEL` | privada/opcional | alias anterior de `TRANSLATION_MODEL` |
 | `MEDIA_REMOTE_REQUIRED` | build | fallback o fallo estricto |
 | `EXPERIENCES_REMOTE_REQUIRED` | build | fallback local o fallo estricto del catálogo |
 
 Crear el Deploy Hook en Vercel → Settings → Git → Deploy Hooks y apuntarlo a
 la rama de producción. No pegar secretos en issues, PR ni chat.
+
+### Traducción con OpenCode
+
+Una key de OpenCode no se puede enviar a `api.openai.com`. Para OpenCode Zen,
+usar en Vercel:
+
+```dotenv
+TRANSLATION_PROVIDER=opencode-zen
+TRANSLATION_API_KEY=REEMPLAZAR_CON_KEY_DE_OPENCODE
+TRANSLATION_MODEL=gpt-5.6-luna
+```
+
+Para usar `mimo-v2.5-free`, cambiar el modelo y fijar
+`TRANSLATION_API_FORMAT=chat-completions`. Los modelos gratuitos de OpenCode
+pueden ser temporales y sus condiciones de retención/entrenamiento son
+distintas; no enviar contenido confidencial. Para una suscripción Go usar
+`TRANSLATION_PROVIDER=opencode-go`. Después de cambiar variables en Vercel hay
+que volver a desplegar.
 
 ## 4. Gestionar experiencias
 
