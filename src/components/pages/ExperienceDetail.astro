@@ -4,7 +4,7 @@ import { useTranslations, whatsappUrl } from '@/i18n';
 import { routePath } from '@/i18n/routes';
 import type { ExperienceRecord } from '@/lib/experiences/catalog';
 import type { LandingAssetMap } from '@/lib/media/types';
-import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
+import StorageImage from '@/components/media/StorageImage.astro';
 
 interface Props {
   locale: Locale;
@@ -31,7 +31,7 @@ const WA_ASK: Record<Locale, (title: string) => string> = {
 */}
 <article class="pk-shell pk-detail" data-nav="light">
   <figure class="pk-detail__cover">
-    <CloudinaryImage asset={cover} locale={locale} preset="experience-index" />
+    <StorageImage asset={cover} locale={locale} preset="experience-index" />
   </figure>
   <p class="pk-kicker">{t('exp.modal.kicker')}</p>
   <h1>{c.title}</h1>

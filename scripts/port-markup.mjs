@@ -116,10 +116,10 @@ function convertImageSlots(html, component) {
           'pt-final-band': ["landing.final-cta", 'final-cta'],
         }[id];
         const experience = id?.match(/^pt-exp-(\d+)$/)?.[1];
-        if (fixed) editable = `<CloudinaryImage asset={asset('${fixed[0]}')} locale={locale} preset="${fixed[1]}" decorative />`;
-        else if (experience) editable = `<CloudinaryImage asset={experienceAsset(${experience})} locale={locale} preset="experience-card" decorative />`;
+        if (fixed) editable = `<StorageImage asset={asset('${fixed[0]}')} locale={locale} preset="${fixed[1]}" decorative />`;
+        else if (experience) editable = `<StorageImage asset={experienceAsset(${experience})} locale={locale} preset="experience-card" decorative />`;
       } else if (component === 'AboutSections' && id === 'pt-esc-main') {
-        editable = `<CloudinaryImage asset={asset('about.essence')} locale={locale} preset="essence" decorative />`;
+        editable = `<StorageImage asset={asset('about.essence')} locale={locale} preset="essence" decorative />`;
       }
       // alt vacío: son fotos decorativas, el texto de la tarjeta va al lado.
       const child = editable ?? `<img src="${src}" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:${fit};display:block;" />`;
@@ -135,9 +135,9 @@ function convertHero(html, component) {
   if (!hero.test(html)) throw new Error('Landing: no encuentro el hero para conectarlo al catálogo de medios');
   return html.replace(hero, (_all, attrs) => {
     const keep = attrs.replace(/\s*\bplaceholder="[^"]*"/, '').replace(/\s*\bstyle="[^"]*"/, '');
-    return `{heroAsset.resourceType === 'video' && <CloudinaryVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
+    return `{heroAsset.resourceType === 'video' && <StorageVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
           <image-slot${keep} style="display:block;width:100%;height:100%;">
-            {heroAsset.resourceType === 'image' && <CloudinaryImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
+            {heroAsset.resourceType === 'image' && <StorageImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
           </image-slot>`;
   });
 }
@@ -259,8 +259,8 @@ function toComponent(name, html, { imports = '' } = {}) {
   const needsTour = /\btour\(/.test(withText);
   const usesMedia = name === 'Landing' || name === 'AboutSections';
   const mediaImports = usesMedia
-    ? `import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
-${name === 'Landing' ? "import CloudinaryVideo from '@/components/media/CloudinaryVideo.astro';\n" : ''}import type { LandingAssetMap } from '@/lib/media/types';
+    ? `import StorageImage from '@/components/media/StorageImage.astro';
+${name === 'Landing' ? "import StorageVideo from '@/components/media/StorageVideo.astro';\n" : ''}import type { LandingAssetMap } from '@/lib/media/types';
 `
     : '';
   const menuFrontmatter = hasMenu

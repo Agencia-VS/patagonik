@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 
 const local = readFileSync('src/lib/media/landing-assets.local.ts', 'utf8');
 const migration = readFileSync('supabase/migrations/20260819000000_landing_media_admin.sql', 'utf8');
+const storageMigration = readFileSync('supabase/migrations/20260916000000_supabase_storage_media.sql', 'utf8');
 const components = [
   'src/components/design/Landing.astro',
   'src/components/design/AboutSections.astro',
@@ -30,6 +31,12 @@ if (!migration.includes('where published_at is null')) {
 }
 if (!readFileSync('src/scripts/design-behaviour.js', 'utf8').includes('setupLazyMedia()')) {
   errors.push('falta setupLazyMedia en el comportamiento de diseño');
+}
+for (const required of ['patagonik-media', 'storage_path', 'patagonik_media_admin_insert', 'patagonik_media_admin_delete', 'create or replace view public.landing_published_manifest']) {
+  if (!storageMigration.includes(required)) errors.push(`falta ${required} en migración Supabase Storage`);
+}
+if (!readFileSync('src/pages/api/admin/storage-sign.ts', 'utf8').includes('assertAdmin(request)')) {
+  errors.push('la subida de Storage no exige sesión de administrador');
 }
 
 if (errors.length) {

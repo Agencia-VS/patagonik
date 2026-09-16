@@ -74,7 +74,7 @@ for (const name of dropped) {
 }
 
 /* El bundle original precarga y fuerza a reproducir el hero; tampoco conoce
- * los src diferidos que emite CloudinaryImage. Esta adaptación vive en el
+ * los src diferidos que emite StorageImage. Esta adaptación vive en el
  * port para que `npm run port` no revierta la optimización. */
 const mediaMethods = `
   /* Los clones desktop/móvil conservan data-lazy-*: se observan después de

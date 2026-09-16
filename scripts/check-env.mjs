@@ -17,7 +17,7 @@ const serverEnv = readFileSync('src/lib/server/supabase-admin.ts', 'utf8');
 for (const name of [
   'VERCEL_DEPLOY_HOOK_URL',
   'SUPABASE_SECRET_KEY',
-  'CLOUDINARY_API_SECRET',
+  'SUPABASE_STORAGE_BUCKET',
   'CRON_SECRET',
   'TRANSLATION_PROVIDER',
   'TRANSLATION_API_KEY',

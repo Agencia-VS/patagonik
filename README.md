@@ -15,10 +15,10 @@ src/
     ui.overrides.json  ← textos propios de esta versión; gana sobre lo generado
   layouts/           BaseLayout: canonical, hreflang, Open Graph
   components/        Header, Footer, ExperienceCard + páginas
-  lib/media/         manifiesto Cloudinary, presets y fallbacks
+  lib/media/         manifiesto Supabase Storage, variantes y fallbacks
   lib/experiences/   catálogo local + experiencias publicadas en Supabase
   pages/admin/       panel autenticado de contenido y assets
-  pages/api/         catálogo, traducción, firma, publicación y healthcheck
+  pages/api/         catálogo, traducción, subida firmada, publicación y healthcheck
   pages/[...path].astro   una sola ruta genera todas las páginas publicadas
 supabase/             migraciones, RLS, catálogo, manifiestos y revisiones
 scripts/
@@ -34,7 +34,7 @@ npm run build     # build + comprobación de i18n
 npm run check     # astro check + tsc
 npm run content:export   # re-vuelca el contenido desde design/src/template.html
 npm run media:check      # catálogo y ausencia de src hardcodeados
-npm run media:migrate    # sube los assets actuales a Cloudinary/Supabase
+npm run media:migrate    # migra los assets existentes a Supabase Storage
 npm run media:export     # respaldo JSON del manifiesto publicado
 ```
 
@@ -78,8 +78,8 @@ página indexable y el selector de idioma es navegación real.
 ## Panel editorial
 
 El cliente administra experiencias, fotos y hero-video desde `/admin`.
-Cloudinary entrega variantes optimizadas y Supabase guarda borradores y
-publicaciones con RLS. El contenido se redacta en español; EN/PT se generan
+Supabase Storage guarda originales, variantes WebP y posters; Supabase Database
+guarda borradores y publicaciones con RLS. El contenido se redacta en español; EN/PT se generan
 con la API de OpenAI y quedan editables antes de guardar. La landing pública
 sigue siendo estática: una pausa de Supabase no la derriba.
 

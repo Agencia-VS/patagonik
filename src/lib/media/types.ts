@@ -2,6 +2,7 @@ import type { Locale } from '@/content.config';
 
 export type MediaResourceType = 'image' | 'video';
 export type MediaFitMode = 'cover' | 'contain';
+export type MediaProvider = 'supabase' | 'cloudinary';
 
 export interface MediaFocalPoint {
   x: number;
@@ -22,6 +23,7 @@ export interface LandingAsset {
   label: string;
   preset: string;
   resourceType: MediaResourceType;
+  provider?: MediaProvider;
   publicId?: string;
   version?: number;
   format?: string;
@@ -34,6 +36,16 @@ export interface LandingAsset {
   posterPublicId?: string;
   posterVersion?: number;
   posterFormat?: string;
+  storageBucket?: string;
+  storagePath?: string;
+  storageUrl?: string;
+  mimeType?: string;
+  variants?: Record<string, string>;
+  posterBucket?: string;
+  posterPath?: string;
+  posterUrl?: string;
+  posterVariants?: Record<string, string>;
+  legacySecureUrl?: string;
   displayMode?: 'green' | 'photo';
   fallback?: string;
 }

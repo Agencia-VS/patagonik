@@ -1,6 +1,7 @@
 import { createExperienceManager } from './admin-experience-manager';
+import { Upload } from 'tus-js-client';
 
-interface AdminConfig { supabaseUrl: string; supabaseKey: string; cloudName: string }
+interface AdminConfig { supabaseUrl: string; supabaseKey: string; storageBucket: string }
 interface Session { access_token: string; refresh_token: string; expires_at?: number; user: { id: string; email?: string } }
 type FitMode = 'cover' | 'contain';
 type PreviewContext = 'desktop' | 'mobile' | 'modal';
@@ -38,13 +39,17 @@ interface ManifestRow {
   slot_key: string; label: string; preset: string; accepted_types: ('image'|'video')[]; local_fallback: string | null; required: boolean;
   draft_asset_id: string | null; draft_public_id: string | null; draft_resource_type: 'image'|'video'|null;
   draft_secure_url: string | null; draft_alt: Record<string,string>; draft_focal_point: Framing;
+  draft_provider: 'supabase'|'cloudinary'|null; draft_storage_bucket: string | null; draft_storage_path: string | null; draft_storage_url: string | null; draft_mime_type: string | null; draft_variants: Record<string,string> | null; draft_poster_bucket: string | null; draft_poster_path: string | null; draft_poster_url: string | null; draft_poster_variants: Record<string,string> | null;
   published_asset_id: string | null; published_resource_type: 'image'|'video'|null; published_secure_url: string | null; published_at: string | null;
+  published_provider: 'supabase'|'cloudinary'|null; published_storage_bucket: string | null; published_storage_path: string | null; published_storage_url: string | null; published_mime_type: string | null; published_variants: Record<string,string> | null; published_poster_bucket: string | null; published_poster_path: string | null; published_poster_url: string | null; published_poster_variants: Record<string,string> | null;
   published_alt: Record<string,string>; published_focal_point: Framing;
 }
-interface CloudinaryUpload {
-  public_id: string; resource_type: 'image'|'video'; version: number; format?: string;
-  width?: number; height?: number; duration?: number; bytes?: number; secure_url?: string; original_filename?: string;
+interface StorageUpload {
+  publicId: string; resourceType: 'image'|'video'; storageBucket: string; storagePath: string; storageUrl: string;
+  mimeType?: string; format?: string; width?: number; height?: number; duration?: number; bytes?: number; originalFilename?: string;
+  variants?: Record<string,string>; posterBucket?: string; posterPath?: string; posterUrl?: string; posterVariants?: Record<string,string>;
 }
+interface SignedStorageFile { key: string; bucket: string; path: string; token: string; signedUrl: string; publicUrl: string; contentType: string }
 
 type SectionId = 'hero' | 'experiences' | 'essence' | 'closing';
 
@@ -233,52 +238,219 @@ async function supabase(path: string, init: RequestInit = {}): Promise<Response>
   return fetch(`${config.supabaseUrl}${path}`, { ...init, headers });
 }
 
-function cloudinaryValue(value: string, chosenType: 'image'|'video'): CloudinaryUpload {
+function encodeStoragePath(path: string): string {
+  return path.split('/').map(encodeURIComponent).join('/');
+}
+
+function storagePublicUrl(bucket: string, path: string): string {
+  return `${config.supabaseUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodeStoragePath(path)}`;
+}
+
+function formatFromName(name: string): string | undefined {
+  return name.match(/\.([a-z0-9]+)$/i)?.[1]?.toLowerCase();
+}
+
+function storageValue(value: string, chosenType: 'image'|'video'): StorageUpload {
   const trimmed = value.trim();
-  if (!trimmed) throw new Error('Pega una URL/public ID o elige un archivo.');
+  if (!trimmed) throw new Error('Pega una URL/ruta de Storage o elige un archivo.');
+  let bucket = config.storageBucket;
+  let path = trimmed.replace(/^\/+/, '').split('?')[0].split('#')[0];
+  let storageUrl = storagePublicUrl(bucket, path);
   try {
     const url = new URL(trimmed);
-    const match = url.pathname.match(/\/(image|video)\/upload\/(?:[^/]+\/)*?v(\d+)\/(.+)$/);
-    if (!match?.[3]) throw new Error('La URL Cloudinary debe incluir su versión (/v123/).');
-    const decoded = decodeURIComponent(match[3]);
-    const format = decoded.match(/\.([a-z0-9]+)$/i)?.[1];
-    return {
-      public_id: decoded.replace(/\.[a-z0-9]+$/i, ''),
-      resource_type: match[1] as 'image'|'video',
-      version: Number(match[2]),
-      format,
-      secure_url: trimmed,
-    };
+    if (config.supabaseUrl && url.origin !== new URL(config.supabaseUrl).origin) {
+      throw new Error('La URL debe pertenecer al proyecto de Supabase configurado.');
+    }
+    const match = url.pathname.match(/\/storage\/v1\/object\/(?:public|sign)\/([^/]+)\/(.+)$/);
+    if (!match?.[2]) throw new Error('La URL debe ser un objeto de Supabase Storage.');
+    bucket = decodeURIComponent(match[1]);
+    path = match[2].split('/').map((segment) => decodeURIComponent(segment)).join('/');
+    storageUrl = trimmed;
   } catch (error) {
     if (/^https?:/i.test(trimmed)) throw error;
-    return { public_id:trimmed.replace(/^\/+|\.[a-z0-9]+$/gi, ''), resource_type:chosenType, version:0 };
+  }
+  if (!path.startsWith('landing/')) throw new Error('La ruta de Storage debe comenzar con landing/.');
+  return {
+    publicId: path,
+    resourceType: chosenType,
+    storageBucket: bucket,
+    storagePath: path,
+    storageUrl,
+    format: formatFromName(path),
+    mimeType: chosenType === 'video' ? 'video/mp4' : 'image/webp',
+  };
+}
+
+async function signStorageFiles(slotKey: string, resourceType: 'image'|'video', files: File[]): Promise<SignedStorageFile[]> {
+  const active = await ensureSession();
+  const response = await fetch('/api/admin/storage-sign', {
+    method:'POST',
+    headers:{ Authorization:`Bearer ${active.access_token}`, 'Content-Type':'application/json' },
+    body:JSON.stringify({
+      slotKey,
+      resourceType,
+      files:files.map((file, index) => ({
+        key:index === 0 ? 'original' : file.name.match(/-(\d+)\.[^.]+$/)?.[1] ?? `variant-${index}`,
+        name:file.name,
+        contentType:file.type || (resourceType === 'video' ? 'video/mp4' : 'image/webp'),
+        size:file.size,
+      })),
+    }),
+  });
+  if (!response.ok) throw new Error(await parseError(response));
+  const body = await response.json() as { files?: SignedStorageFile[] };
+  if (!body.files?.length || body.files.length !== files.length) throw new Error('Supabase no devolvió todas las subidas firmadas.');
+  return body.files;
+}
+
+async function uploadWithSignedUrl(file: File, signed: SignedStorageFile): Promise<void> {
+  if (!config.supabaseUrl || !config.supabaseKey) throw new Error('Supabase Storage no está configurado.');
+  const form = new FormData();
+  form.set('cacheControl', '31536000');
+  form.append('', file);
+  const response = await fetch(signed.signedUrl, {
+    method:'POST',
+    headers:{ apikey:config.supabaseKey },
+    body:form,
+  });
+  if (!response.ok) throw new Error(`Storage respondió ${response.status}: ${await response.text()}`);
+}
+
+async function uploadWithTus(file: File, signed: SignedStorageFile): Promise<void> {
+  const active = await ensureSession();
+  const projectRef = new URL(config.supabaseUrl).hostname.split('.')[0];
+  const endpoint = `https://${projectRef}.storage.supabase.co/storage/v1/upload/resumable`;
+  await new Promise<void>((resolve, reject) => {
+    const upload = new Upload(file, {
+      endpoint,
+      retryDelays:[0, 1000, 3000, 5000, 10000],
+      chunkSize:6 * 1024 * 1024,
+      removeFingerprintOnSuccess:true,
+      headers:{ apikey:config.supabaseKey, Authorization:`Bearer ${active.access_token}`, 'x-upsert':'false' },
+      metadata:{
+        bucketName:signed.bucket,
+        objectName:signed.path,
+        contentType:signed.contentType,
+        cacheControl:'31536000',
+      },
+      onError:error => reject(error),
+      onSuccess:() => resolve(),
+    });
+    upload.start();
+  });
+}
+
+async function uploadStorageFile(file: File, signed: SignedStorageFile): Promise<void> {
+  if (file.size > 6 * 1024 * 1024) {
+    try { await uploadWithTus(file, signed); return; }
+    catch (error) { console.warn('[media] TUS falló; se intenta la subida firmada.', error); }
+  }
+  await uploadWithSignedUrl(file, signed);
+}
+
+function canvasBlob(canvas: HTMLCanvasElement, type = 'image/webp', quality = .86): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('El navegador no pudo preparar la variante de imagen.')), type, quality);
+  });
+}
+
+async function imageUploadFiles(file: File): Promise<{ files: File[]; width: number; height: number }> {
+  if (!file.type.startsWith('image/')) return { files:[file], width:0, height:0 };
+  let bitmap: ImageBitmap;
+  try { bitmap = await createImageBitmap(file); }
+  catch { return { files:[file], width:0, height:0 }; }
+  const files = [file];
+  for (const width of [480, 720, 960, 1280, 1600, 1920]) {
+    if (width >= bitmap.width) continue;
+    const height = Math.round(bitmap.height * width / bitmap.width);
+    const canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = height;
+    canvas.getContext('2d')?.drawImage(bitmap, 0, 0, width, height);
+    const blob = await canvasBlob(canvas);
+    files.push(new File([blob], `${file.name.replace(/\.[^.]+$/, '')}-${width}.webp`, { type:'image/webp' }));
+  }
+  const dimensions = { width:bitmap.width, height:bitmap.height };
+  bitmap.close();
+  return { files, ...dimensions };
+}
+
+async function videoPosterFile(file: File): Promise<{ file: File; width: number; height: number; duration: number } | null> {
+  const source = URL.createObjectURL(file);
+  const video = document.createElement('video');
+  video.preload = 'metadata'; video.muted = true; video.src = source;
+  try {
+    await new Promise<void>((resolve, reject) => {
+      video.onloadedmetadata = () => resolve();
+      video.onerror = () => reject(new Error('No se pudo leer el video para generar su poster.'));
+    });
+    await new Promise<void>((resolve, reject) => {
+      video.onseeked = () => resolve();
+      video.onerror = () => reject(new Error('No se pudo leer el primer cuadro del video.'));
+      video.currentTime = Math.min(1, Math.max(0, (video.duration || 1) * .1));
+    });
+    const width = Math.min(1600, video.videoWidth || 1600);
+    const height = Math.round((video.videoHeight || 900) * width / (video.videoWidth || 1600));
+    const canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = height;
+    canvas.getContext('2d')?.drawImage(video, 0, 0, width, height);
+    const blob = await canvasBlob(canvas);
+    return { file:new File([blob], `${file.name.replace(/\.[^.]+$/, '')}-poster.webp`, { type:'image/webp' }), width:video.videoWidth, height:video.videoHeight, duration:video.duration || 0 };
+  } catch (error) {
+    console.warn('[media] No se pudo generar el poster del video.', error);
+    return null;
+  } finally {
+    URL.revokeObjectURL(source);
+    video.removeAttribute('src');
+    video.load();
   }
 }
 
-async function signedUpload(file: File, resourceType: 'image'|'video'): Promise<CloudinaryUpload> {
+async function signedUpload(file: File, resourceType: 'image'|'video', slotKey: string): Promise<StorageUpload> {
   if (file.size > 60 * 1024 * 1024) throw new Error('El archivo supera el límite editorial de 60 MB.');
-  const active = await ensureSession();
-  const signResponse = await fetch('/api/admin/cloudinary-sign', {
-    method:'POST', headers:{ Authorization:`Bearer ${active.access_token}`, 'Content-Type':'application/json' },
-    body:JSON.stringify({ resourceType }),
-  });
-  if (!signResponse.ok) throw new Error(await parseError(signResponse));
-  const signed = await signResponse.json() as {
-    signature:string; timestamp:number; folder:string; apiKey:string; cloudName:string;
-    overwrite:boolean; uniqueFilename:boolean; useFilename:boolean;
+  const prepared = resourceType === 'image' ? await imageUploadFiles(file) : { files:[file], width:0, height:0 };
+  const signed = await signStorageFiles(slotKey, resourceType, prepared.files);
+  await Promise.all(prepared.files.map((item, index) => uploadStorageFile(item, signed[index])));
+  const original = signed[0];
+  const variants: Record<string,string> = {};
+  for (const [index] of prepared.files.entries()) {
+    if (index === 0) continue;
+    const key = /^\d+$/.test(signed[index].key) ? signed[index].key : undefined;
+    if (key) variants[key] = signed[index].publicUrl;
+  }
+  const upload: StorageUpload = {
+    publicId:original.path,
+    resourceType,
+    storageBucket:original.bucket,
+    storagePath:original.path,
+    storageUrl:original.publicUrl,
+    mimeType:file.type || original.contentType,
+    format:formatFromName(file.name),
+    width:prepared.width || undefined,
+    height:prepared.height || undefined,
+    bytes:file.size,
+    originalFilename:file.name,
+    variants,
   };
-  const form = new FormData();
-  form.set('file', file); form.set('api_key', signed.apiKey); form.set('timestamp', String(signed.timestamp));
-  form.set('signature', signed.signature); form.set('folder', signed.folder); form.set('overwrite', String(signed.overwrite));
-  form.set('unique_filename', String(signed.uniqueFilename)); form.set('use_filename', String(signed.useFilename));
-  const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(signed.cloudName)}/${resourceType}/upload`, { method:'POST', body:form });
-  if (!uploadResponse.ok) throw new Error(await parseError(uploadResponse));
-  return uploadResponse.json() as Promise<CloudinaryUpload>;
+  if (resourceType === 'video') {
+    const poster = await videoPosterFile(file);
+    if (poster) {
+      const posterSigned = (await signStorageFiles(slotKey, 'image', [poster.file]))[0];
+      await uploadStorageFile(poster.file, posterSigned);
+      upload.width = poster.width || undefined;
+      upload.height = poster.height || undefined;
+      upload.duration = poster.duration || undefined;
+      upload.posterBucket = posterSigned.bucket;
+      upload.posterPath = posterSigned.path;
+      upload.posterUrl = posterSigned.publicUrl;
+      upload.posterVariants = {};
+    }
+  }
+  return upload;
 }
 
-async function insertAsset(asset: CloudinaryUpload): Promise<string> {
+async function insertAsset(asset: StorageUpload): Promise<string> {
   const existingResponse = await supabase(
-    `/rest/v1/media_assets?resource_type=eq.${asset.resource_type}&public_id=eq.${encodeURIComponent(asset.public_id)}&version=eq.${asset.version}&select=id&limit=1`,
+    `/rest/v1/media_assets?storage_path=eq.${encodeURIComponent(asset.storagePath)}&select=id&limit=1`,
   );
   if (!existingResponse.ok) throw new Error(await parseError(existingResponse));
   const existing = await existingResponse.json() as {id:string}[];
@@ -287,10 +459,14 @@ async function insertAsset(asset: CloudinaryUpload): Promise<string> {
   const response = await supabase('/rest/v1/media_assets', {
     method:'POST', headers:{ 'Content-Type':'application/json', Prefer:'return=representation' },
     body:JSON.stringify({
-      public_id:asset.public_id, resource_type:asset.resource_type, version:asset.version || null,
+      public_id:asset.publicId, resource_type:asset.resourceType, version:null,
       format:asset.format || null, width:asset.width || null, height:asset.height || null,
-      duration:asset.duration || null, bytes:asset.bytes || null, secure_url:asset.secure_url || null,
-      original_filename:asset.original_filename || null,
+      duration:asset.duration || null, bytes:asset.bytes || null, secure_url:null,
+      original_filename:asset.originalFilename || null,
+      provider:'supabase', storage_bucket:asset.storageBucket, storage_path:asset.storagePath,
+      storage_url:asset.storageUrl, mime_type:asset.mimeType || null, variants:asset.variants || {},
+      poster_bucket:asset.posterBucket || null, poster_path:asset.posterPath || null,
+      poster_url:asset.posterUrl || null, poster_variants:asset.posterVariants || {},
     }),
   });
   if (!response.ok) throw new Error(await parseError(response));
@@ -525,10 +701,13 @@ function preview(row: ManifestRow, container: HTMLElement, framing: NormalizedFr
     return;
   }
   const resourceType = row.draft_resource_type || row.published_resource_type || row.accepted_types[0] || 'image';
-  const derived = row.draft_public_id && config.cloudName
-    ? `https://res.cloudinary.com/${encodeURIComponent(config.cloudName)}/${resourceType}/upload/w_720,c_limit/f_auto/q_auto/${row.draft_public_id.split('/').map(encodeURIComponent).join('/')}`
-    : null;
-  const url = row.draft_secure_url || derived || row.published_secure_url || row.local_fallback;
+  const draftUrl = row.draft_storage_url
+    || (row.draft_storage_bucket && row.draft_storage_path ? storagePublicUrl(row.draft_storage_bucket, row.draft_storage_path) : null)
+    || row.draft_secure_url;
+  const publishedUrl = row.published_storage_url
+    || (row.published_storage_bucket && row.published_storage_path ? storagePublicUrl(row.published_storage_bucket, row.published_storage_path) : null)
+    || row.published_secure_url;
+  const url = draftUrl || publishedUrl || row.local_fallback;
   if (!url) { container.textContent = 'Sin recurso asignado'; return; }
   renderPreviewMedia(container, resourceType, url, framing.fit, framing.desktop);
 }
@@ -593,7 +772,7 @@ function renderCard(row: ManifestRow): HTMLElement {
     desktopContextButton.textContent = 'Escritorio';
     mobileContextButton.textContent = 'Móvil';
   }
-  publicIdInput.value = row.draft_public_id || '';
+  publicIdInput.value = row.draft_storage_path || row.draft_public_id || '';
   typeInput.value = resourceType;
   fileInput.accept = row.accepted_types.includes('video') ? 'image/*,video/mp4,video/webm' : 'image/*';
   clearResource.hidden = row.slot_key !== 'landing.experiences-background';
@@ -833,11 +1012,11 @@ function renderCard(row: ManifestRow): HTMLElement {
         const inferredType: 'image'|'video' = selected.type.startsWith('video/') ? 'video' : 'image';
         if (!row.accepted_types.includes(inferredType)) throw new Error(`Este espacio no acepta ${inferredType === 'video' ? 'videos' : 'imágenes'}.`);
         typeInput.value = inferredType;
-        const uploaded = await signedUpload(selected, inferredType);
+        const uploaded = await signedUpload(selected, inferredType, row.slot_key);
         assetId = await insertAsset(uploaded);
-      } else if (publicIdInput.value.trim() && publicIdInput.value.trim() !== (row.draft_public_id || '')) {
-        const parsed = cloudinaryValue(publicIdInput.value, typeInput.value as 'image'|'video');
-        if (!row.accepted_types.includes(parsed.resource_type)) throw new Error(`Este espacio no acepta ${parsed.resource_type === 'video' ? 'videos' : 'imágenes'}.`);
+      } else if (publicIdInput.value.trim() && publicIdInput.value.trim() !== (row.draft_storage_path || row.draft_public_id || '')) {
+        const parsed = storageValue(publicIdInput.value, typeInput.value as 'image'|'video');
+        if (!row.accepted_types.includes(parsed.resourceType)) throw new Error(`Este espacio no acepta ${parsed.resourceType === 'video' ? 'videos' : 'imágenes'}.`);
         assetId = await insertAsset(parsed);
       }
       const alt = Object.fromEntries(['es','en','pt'].map((locale) => [locale, card.querySelector<HTMLInputElement>(`[data-alt="${locale}"]`)!.value.trim()]));
