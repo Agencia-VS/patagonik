@@ -7,7 +7,7 @@ values (
   'patagonik-media',
   'patagonik-media',
   true,
-  62914560,
+  52428800,
   array[
     'image/jpeg', 'image/png', 'image/webp', 'image/avif',
     'video/mp4', 'video/webm'

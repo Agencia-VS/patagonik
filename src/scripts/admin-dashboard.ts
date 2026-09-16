@@ -406,7 +406,7 @@ async function videoPosterFile(file: File): Promise<{ file: File; width: number;
 }
 
 async function signedUpload(file: File, resourceType: 'image'|'video', slotKey: string): Promise<StorageUpload> {
-  if (file.size > 60 * 1024 * 1024) throw new Error('El archivo supera el límite editorial de 60 MB.');
+  if (file.size > 50 * 1024 * 1024) throw new Error('El archivo supera el límite del plan Free de Supabase: 50 MB.');
   const prepared = resourceType === 'image' ? await imageUploadFiles(file) : { files:[file], width:0, height:0 };
   const signed = await signStorageFiles(slotKey, resourceType, prepared.files);
   await Promise.all(prepared.files.map((item, index) => uploadStorageFile(item, signed[index])));

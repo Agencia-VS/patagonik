@@ -4,7 +4,7 @@ import { ApiError, assertAdmin, errorResponse, json, serviceFetch, storageBucket
 
 export const prerender = false;
 
-const MAX_FILE_SIZE = 60 * 1024 * 1024;
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const MAX_SIGNED_FILES = 8;
 const MIME_EXTENSIONS: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -95,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
       const size = Number(input.size);
       if (!Number.isFinite(size) || size <= 0 || size > MAX_FILE_SIZE) {
-        throw new ApiError(400, 'El archivo supera el límite editorial de 60 MB.');
+        throw new ApiError(400, 'El archivo supera el límite del plan Free de Supabase: 50 MB.');
       }
       const key = typeof input.key === 'string' && /^[a-z0-9-]+$/.test(input.key) ? input.key : index === 0 ? 'original' : `variant-${index}`;
       const name = safeSegment(typeof input.name === 'string' ? input.name.replace(/\.[^.]+$/, '') : '', 'asset');

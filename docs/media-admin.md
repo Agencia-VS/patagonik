@@ -36,7 +36,7 @@ panel y la siguiente publicación.
 1. Crear el proyecto y ejecutar en orden las migraciones de `supabase/migrations/`
    con `supabase db push` o desde SQL Editor. La migración
    `20260916000000_supabase_storage_media.sql` crea el bucket público
-   `patagonik-media`, limita los objetos a 60 MB y aplica RLS de escritura sólo
+   `patagonik-media`, limita los objetos a 50 MB (límite del plan Free) y aplica RLS de escritura sólo
    a administradores.
 2. En Authentication → Users, crear al usuario del cliente.
 3. Convertirlo en administrador desde SQL Editor:
@@ -60,7 +60,7 @@ directamente contra el host de Storage y no atraviesan una función de Vercel.
 El panel admite:
 
 - imágenes JPEG, PNG, WebP y AVIF;
-- videos MP4 o WebM de hasta 60 MB;
+- videos MP4 o WebM de hasta 50 MB;
 - rutas o URLs públicas de `patagonik-media` que comiencen por `landing/`;
 - alt en español/inglés/portugués y foco X/Y entre 0 y 1.
 
