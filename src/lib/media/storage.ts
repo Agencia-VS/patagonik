@@ -11,7 +11,7 @@ export const IMAGE_PRESETS: Record<string, ImagePreset> = {
   hero: { sizes: '100vw', widths: IMAGE_WIDTHS },
   band: { sizes: '100vw', widths: [480, 720, 960, 1280, 1600] },
   'experience-background': { sizes: '100vw', widths: IMAGE_WIDTHS },
-  'experience-card': { sizes: '(max-width: 720px) 78vw, (max-width: 1200px) 34vw, 390px' },
+  'experience-card': { sizes: '(max-width: 720px) 78vw, (max-width: 1200px) 34vw, 390px', widths: [480, 720, 960] },
   'experience-modal': { sizes: '(max-width: 860px) 100vw, 50vw', widths: [480, 720, 960, 1280, 1600] },
   'experience-detail': { sizes: '(max-width: 820px) 100vw, 820px', widths: [480, 720, 960, 1280, 1600] },
   'experience-gallery': { sizes: '(max-width: 820px) 100vw, 820px', widths: [480, 720, 960, 1280, 1600] },
