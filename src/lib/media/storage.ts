@@ -14,6 +14,7 @@ export const IMAGE_PRESETS: Record<string, ImagePreset> = {
   'experience-card': { sizes: '(max-width: 720px) 78vw, (max-width: 1200px) 34vw, 390px },
   'experience-modal': { sizes: '(max-width: 860px) 100vw, 50vw', widths: [480, 720, 960, 1280, 1600] },
   'experience-detail': { sizes: '(max-width: 820px) 100vw, 820px', widths: [480, 720, 960, 1280, 1600] },
+  'experience-gallery': { sizes: '(max-width: 820px) 100vw, 820px', widths: [480, 720, 960, 1280, 1600] },
   'experience-index': { sizes: '(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw', widths: [480, 720, 960] },
   essence: { sizes: '(max-width: 860px) 100vw, 58vw', widths: [480, 720, 960, 1280, 1600] },
   'final-cta': { sizes: '100vw', widths: IMAGE_WIDTHS },
