@@ -305,13 +305,14 @@ async function signStorageFiles(slotKey: string, resourceType: 'image'|'video', 
 
 async function uploadWithSignedUrl(file: File, signed: SignedStorageFile): Promise<void> {
   if (!config.supabaseUrl || !config.supabaseKey) throw new Error('Supabase Storage no está configurado.');
-  const form = new FormData();
-  form.set('cacheControl', '31536000');
-  form.append('', file);
   const response = await fetch(signed.signedUrl, {
-    method:'POST',
-    headers:{ apikey:config.supabaseKey },
-    body:form,
+    method:'PUT',
+    headers:{
+      apikey:config.supabaseKey,
+      'Content-Type':signed.contentType || file.type || 'application/octet-stream',
+      'cache-control':'31536000',
+    },
+    body:file,
   });
   if (!response.ok) throw new Error(`Storage respondió ${response.status}: ${await response.text()}`);
 }

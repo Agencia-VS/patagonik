@@ -36,7 +36,8 @@ create index if not exists media_assets_storage_path_idx
   on public.media_assets (storage_bucket, storage_path)
   where storage_path is not null;
 
-alter table storage.objects enable row level security;
+-- Supabase administra storage.objects y mantiene RLS en su esquema de Storage.
+-- La migración sólo agrega las políticas específicas de este bucket.
 
 drop policy if exists patagonik_media_public_read on storage.objects;
 create policy patagonik_media_public_read on storage.objects
@@ -170,6 +171,4 @@ join public.landing_slot_assignments a using (slot_key)
 left join public.media_assets p on p.id = a.published_asset_id
 order by s.sort_order;
 
-revoke all on storage.objects from anon;
-grant select on storage.objects to anon, authenticated;
-grant insert, update, delete on storage.objects to authenticated;
+-- No se modifican GRANT/REVOKE de storage.objects: Supabase administra esos privilegios.

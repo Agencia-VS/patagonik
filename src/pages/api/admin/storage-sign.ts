@@ -40,6 +40,14 @@ function publicUrl(bucket: string, path: string): string {
   return `${supabaseUrl()}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodeStoragePath(path)}`;
 }
 
+function absoluteStorageUrl(value: string): string {
+  if (/^https?:/i.test(value)) return value;
+  const path = value.startsWith('/') ? value : `/${value}`;
+  return path.startsWith('/storage/v1/')
+    ? `${supabaseUrl()}${path}`
+    : `${supabaseUrl()}/storage/v1${path}`;
+}
+
 async function signPath(bucket: string, path: string): Promise<{ token: string; signedUrl: string }> {
   const response = await serviceFetch(
     `/storage/v1/object/upload/sign/${encodeStoragePath(`${bucket}/${path}`)}`,
@@ -51,7 +59,7 @@ async function signPath(bucket: string, path: string): Promise<{ token: string; 
   }
   const body = await response.json() as { url?: string };
   if (!body.url) throw new ApiError(502, 'Supabase no devolvió la URL de subida firmada.');
-  const signedUrl = /^https?:/i.test(body.url) ? body.url : `${supabaseUrl()}${body.url}`;
+  const signedUrl = absoluteStorageUrl(body.url);
   const token = new URL(signedUrl).searchParams.get('token');
   if (!token) throw new ApiError(502, 'Supabase no devolvió el token de subida.');
   return { token, signedUrl };
