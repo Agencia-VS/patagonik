@@ -25,6 +25,17 @@ interface PublishedManifestRow {
   poster_public_id: string | null;
   poster_version: number | null;
   poster_format: string | null;
+  provider: 'supabase' | 'cloudinary' | null;
+  storage_bucket: string | null;
+  storage_path: string | null;
+  storage_url: string | null;
+  mime_type: string | null;
+  variants: Record<string, string> | null;
+  poster_bucket: string | null;
+  poster_path: string | null;
+  poster_url: string | null;
+  poster_variants: Record<string, string> | null;
+  legacy_secure_url: string | null;
 }
 
 let manifestPromise: Promise<LandingAssetMap> | undefined;
@@ -64,11 +75,10 @@ async function loadManifest(): Promise<LandingAssetMap> {
   const fallback = structuredClone(LOCAL_LANDING_ASSETS);
   const supabaseUrl = cleanEnv(import.meta.env.SUPABASE_URL) ?? cleanEnv(import.meta.env.PUBLIC_SUPABASE_URL);
   const secretKey = cleanEnv(import.meta.env.SUPABASE_SECRET_KEY) ?? cleanEnv(import.meta.env.SUPABASE_SERVICE_ROLE_KEY);
-  const cloudName = cleanEnv(import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME);
   const requireRemote = cleanEnv(import.meta.env.MEDIA_REMOTE_REQUIRED) === 'true';
 
-  if (!supabaseUrl || !secretKey || !cloudName) {
-    if (requireRemote) throw new Error('Faltan SUPABASE_URL, SUPABASE_SECRET_KEY o PUBLIC_CLOUDINARY_CLOUD_NAME para cargar los assets publicados.');
+  if (!supabaseUrl || !secretKey) {
+    if (requireRemote) throw new Error('Faltan SUPABASE_URL y SUPABASE_SECRET_KEY para cargar los assets publicados.');
     return fallback;
   }
 
@@ -86,7 +96,7 @@ async function loadManifest(): Promise<LandingAssetMap> {
     for (const row of rows) {
       const local = fallback[row.slot_key];
       const fitMode = row.focal_point?.fit === 'contain' ? 'contain' : local?.fitMode ?? 'cover';
-      if (!row.public_id || !row.resource_type) {
+      if (!row.resource_type || (!row.storage_url && !row.storage_path && !row.legacy_secure_url && !row.public_id)) {
         if (local) {
           fallback[row.slot_key] = {
             ...local,
@@ -105,7 +115,8 @@ async function loadManifest(): Promise<LandingAssetMap> {
         label: row.label,
         preset: row.preset,
         resourceType: row.resource_type,
-        publicId: row.public_id,
+        provider: row.provider ?? (row.storage_path || row.storage_url ? 'supabase' : 'cloudinary'),
+        publicId: row.public_id ?? undefined,
         version: row.version ?? undefined,
         format: row.format ?? undefined,
         width: row.width ?? undefined,
@@ -117,6 +128,16 @@ async function loadManifest(): Promise<LandingAssetMap> {
         posterPublicId: row.poster_public_id ?? undefined,
         posterVersion: row.poster_version ?? undefined,
         posterFormat: row.poster_format ?? undefined,
+        storageBucket: row.storage_bucket ?? undefined,
+        storagePath: row.storage_path ?? undefined,
+        storageUrl: row.storage_url ?? undefined,
+        mimeType: row.mime_type ?? undefined,
+        variants: row.variants ?? undefined,
+        posterBucket: row.poster_bucket ?? undefined,
+        posterPath: row.poster_path ?? undefined,
+        posterUrl: row.poster_url ?? undefined,
+        posterVariants: row.poster_variants ?? undefined,
+        legacySecureUrl: row.legacy_secure_url ?? undefined,
         displayMode: row.slot_key === 'landing.experiences-background'
           ? row.alt?._backgroundMode === 'photo' ? 'photo' : 'green'
           : undefined,

@@ -14,10 +14,8 @@ const BUILD_ENV = {
   SUPABASE_ANON_KEY: import.meta.env.SUPABASE_ANON_KEY,
   SUPABASE_SECRET_KEY: import.meta.env.SUPABASE_SECRET_KEY,
   SUPABASE_SERVICE_ROLE_KEY: import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
-  PUBLIC_CLOUDINARY_CLOUD_NAME: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME,
-  CLOUDINARY_API_KEY: import.meta.env.CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET: import.meta.env.CLOUDINARY_API_SECRET,
-  CLOUDINARY_ASSET_FOLDER: import.meta.env.CLOUDINARY_ASSET_FOLDER,
+  PUBLIC_SUPABASE_STORAGE_BUCKET: import.meta.env.PUBLIC_SUPABASE_STORAGE_BUCKET,
+  SUPABASE_STORAGE_BUCKET: import.meta.env.SUPABASE_STORAGE_BUCKET,
   VERCEL_DEPLOY_HOOK_URL: import.meta.env.VERCEL_DEPLOY_HOOK_URL,
   CRON_SECRET: import.meta.env.CRON_SECRET,
   TRANSLATION_PROVIDER: import.meta.env.TRANSLATION_PROVIDER,
@@ -63,6 +61,10 @@ export function publicKey(): string {
 
 export function secretKey(): string {
   return env('SUPABASE_SECRET_KEY') ?? requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
+}
+
+export function storageBucket(): string {
+  return env('SUPABASE_STORAGE_BUCKET') ?? env('PUBLIC_SUPABASE_STORAGE_BUCKET') ?? 'patagonik-media';
 }
 
 function serviceHeaders(): Record<string, string> {

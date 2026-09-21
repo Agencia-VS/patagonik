@@ -3,15 +3,15 @@
 ## Arquitectura
 
 La web pública se genera de forma estática. Durante cada build, Astro lee
-`landing_published_manifest` y deja URLs de Cloudinary en el HTML. Supabase es
-el plano de control del panel, no una dependencia de cada visita:
+`landing_published_manifest` y deja URLs públicas de Supabase Storage en el HTML.
+Supabase es el plano de control del panel, no una dependencia de cada visita:
 
 1. El administrador entra en `/admin` con Supabase Auth.
-2. Sube una imagen/video con firma privada o pega una URL/public ID de Cloudinary.
+2. Sube una imagen/video directamente a Storage mediante una URL firmada de corta duración, o pega una ruta pública de Storage.
 3. Crea o edita experiencias, genera EN/PT y define su prioridad editorial.
 4. Guarda borradores. RLS limita las lecturas y escrituras al rol `admin`.
 5. `Publicar cambios` promueve contenido, orden y recursos en una misma transacción, guarda una revisión y llama un Deploy Hook de Vercel.
-6. El nuevo build genera `srcset`/`sizes` de Cloudinary y conserva el fallback local si el servicio remoto no está configurado.
+6. El nuevo build genera `srcset`/`sizes` con variantes WebP guardadas en Storage y conserva el fallback local si el servicio remoto no está configurado.
 
 Por eso, si el proyecto gratuito de Supabase se pausa, la landing continúa
 sirviendo la última versión. Sólo quedan temporalmente fuera de servicio el
@@ -19,7 +19,8 @@ panel y la siguiente publicación.
 
 ## Rendimiento de medios
 
-- Cloudinary entrega anchos de 480 a 1920 px con `f_auto` y `q_auto`.
+- El panel genera variantes WebP de 480 a 1920 px en el navegador y guarda el original para el modal y futuras exportaciones.
+- Los videos se guardan como MP4/WebM sin transcodificación en el plan Free; el panel genera un poster WebP del primer tramo del video.
 - Cada contexto tiene su `sizes`: hero, franja, fondo, tarjeta, índice y CTA.
 - Sólo el hero-imagen es prioritario. El resto usa un `IntersectionObserver`
   con 480 px de anticipación; esto evita descargar al mismo tiempo los clones
@@ -33,7 +34,10 @@ panel y la siguiente publicación.
 ## 1. Crear y preparar Supabase
 
 1. Crear el proyecto y ejecutar en orden las migraciones de `supabase/migrations/`
-   con `supabase db push` o desde SQL Editor.
+   con `supabase db push` o desde SQL Editor. La migración
+   `20260916000000_supabase_storage_media.sql` crea el bucket público
+   `patagonik-media`, limita los objetos a 50 MB (límite del plan Free) y aplica RLS de escritura sólo
+   a administradores.
 2. En Authentication → Users, crear al usuario del cliente.
 3. Convertirlo en administrador desde SQL Editor:
 
@@ -46,18 +50,18 @@ on conflict (user_id) do update set role = 'admin', updated_at = now();
 No hay registro público. `/admin` tiene `noindex`, pero la protección real es
 Supabase Auth + RLS; ocultar la ruta no se considera seguridad.
 
-## 2. Preparar Cloudinary
+## 2. Preparar Storage
 
-Crear/usar una carpeta `patagonik/landing` y obtener Cloud name, API key y API
-secret. La API secret queda únicamente en Vercel. El navegador pide una firma
-de corta duración al endpoint autenticado `/api/admin/cloudinary-sign`; nunca
-recibe el secreto.
+No se necesitan credenciales de otro proveedor. El navegador pide al endpoint
+autenticado `/api/admin/storage-sign` rutas firmadas de corta duración; la clave
+secreta de Supabase nunca se entrega al cliente. Las subidas grandes usan TUS
+directamente contra el host de Storage y no atraviesan una función de Vercel.
 
 El panel admite:
 
-- subir imagen, MP4 o WebM;
-- pegar una URL de entrega de Cloudinary que contenga `/v123.../`;
-- pegar directamente un `public_id`;
+- imágenes JPEG, PNG, WebP y AVIF;
+- videos MP4 o WebM de hasta 50 MB;
+- rutas o URLs públicas de `patagonik-media` que comiencen por `landing/`;
 - alt en español/inglés/portugués y foco X/Y entre 0 y 1.
 
 ## 3. Variables de Vercel
@@ -69,11 +73,9 @@ Variables. Aplicarlas a Production y Preview según corresponda:
 |---|---|---|
 | `PUBLIC_SUPABASE_URL` | pública | Auth y Data API |
 | `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | pública | clave con RLS |
-| `PUBLIC_CLOUDINARY_CLOUD_NAME` | pública | URLs de entrega |
+| `PUBLIC_SUPABASE_STORAGE_BUCKET` | pública | nombre del bucket, normalmente `patagonik-media` |
 | `SUPABASE_SECRET_KEY` | privada | build, validación de rol y healthcheck |
-| `CLOUDINARY_API_KEY` | privada/no sensible por sí sola | upload firmado |
-| `CLOUDINARY_API_SECRET` | privada | firma de Cloudinary |
-| `CLOUDINARY_ASSET_FOLDER` | privada | carpeta destino |
+| `SUPABASE_STORAGE_BUCKET` | privada/opcional | sobreescribe el bucket por defecto |
 | `VERCEL_DEPLOY_HOOK_URL` | privada | rebuild al publicar |
 | `CRON_SECRET` | privada | autenticar cron/healthcheck |
 | `TRANSLATION_PROVIDER` | privada | `opencode-zen`, `opencode-go` u `openai` |
@@ -120,7 +122,7 @@ En la pestaña **Experiencias** del admin:
    de la portada y del catálogo.
 5. Para retirar una experiencia, pulsar **Eliminar** y confirmar. Desaparece
    del panel de inmediato y se retira de card, modal y página individual al
-   publicar; el archivo original permanece en Cloudinary.
+   publicar; el archivo original permanece en Supabase Storage.
 6. Pulsar **Publicar cambios**. El sistema bloquea la publicación si una
    experiencia activa no tiene contenido completo o portada.
 
@@ -130,7 +132,7 @@ El panel está optimizado para celular: el orden se cambia con botones grandes,
 el editor ocupa la pantalla completa y **Publicar cambios** permanece accesible
 en la parte inferior.
 
-## 5. Migrar las fotos existentes
+## 5. Migrar los medios existentes
 
 Con las variables privadas cargadas en un `.env` local (no versionado):
 
@@ -141,15 +143,20 @@ set +a
 npm run media:migrate
 ```
 
-El script sube las 20 imágenes actuales, crea filas `media_assets` y las deja
-como borrador. Revisarlas en `/admin` y pulsar **Publicar cambios**. El hero no
-tiene un archivo local y se gestiona directamente desde el panel.
+El script lee los assets que aún estén marcados como `provider=cloudinary`,
+descarga su `secure_url` existente, sube el original a Storage, genera las
+variantes WebP de las imágenes y actualiza la misma fila `media_assets`. Las
+asignaciones, encuadres y publicaciones se conservan. No elimina ninguna
+fuente antigua. Revisar el resultado en `/admin` y pulsar **Publicar cambios**.
+
+Los nuevos uploads del panel ya quedan directamente en Supabase Storage; este
+script sólo sirve para la migración única de los registros históricos.
 
 Después de comprobar Production se puede poner `MEDIA_REMOTE_REQUIRED=true` y
 `EXPERIENCES_REMOTE_REQUIRED=true`, para que un build falle en vez de publicar
 el respaldo local si no logra leer la versión editorial de Supabase.
 No se borran automáticamente los fallbacks locales: son el mecanismo de
-recuperación y no se descargan cuando un slot publicado tiene `public_id`.
+recuperación y no se descargan cuando un slot publicado tiene `storage_path`.
 `.vercelignore` evita, además, enviar el pesado archivo fuente `design/` al
 despliegue.
 
@@ -208,9 +215,9 @@ npm run media:export
   volver a pulsar Publicar reintenta el despliegue.
 - Si Supabase está pausado, restaurarlo desde el dashboard. La web no requiere
   una consulta en runtime y continúa en línea.
-- Si Cloudinary tiene una incidencia, el CDN/cache puede seguir respondiendo.
-  El dump mensual guarda referencias y configuración, no los binarios nuevos:
-  conservar los originales fuera de Cloudinary o contratar su opción de backup.
+- El dump mensual guarda referencias y configuración, no los binarios nuevos:
+  conservar también los originales de Storage en un destino privado si se
+  necesita una copia independiente.
 
 ## Referencias operativas
 
@@ -219,4 +226,6 @@ npm run media:export
 - Backup/restore CLI: https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore
 - Vercel Cron: https://vercel.com/docs/cron-jobs/manage-cron-jobs
 - GitHub workflows inactivos: https://docs.github.com/actions/managing-workflow-runs/disabling-and-enabling-a-workflow
-- Cloudinary responsive: https://cloudinary.com/documentation/responsive_html
+- Supabase Storage uploads: https://supabase.com/docs/guides/storage/uploads/standard-uploads
+- Supabase Storage resumable uploads: https://supabase.com/docs/guides/storage/uploads/resumable-uploads
+- Supabase Storage image transformations: https://supabase.com/docs/guides/storage/serving/image-transformations

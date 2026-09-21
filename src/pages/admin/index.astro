@@ -4,7 +4,7 @@ export const prerender = true;
 const adminConfig = {
   supabaseUrl: (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/$/, ''),
   supabaseKey: import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '',
-  cloudName: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME ?? '',
+  storageBucket: import.meta.env.PUBLIC_SUPABASE_STORAGE_BUCKET ?? 'patagonik-media',
 };
 ---
 
@@ -193,7 +193,7 @@ const adminConfig = {
         <p class="eyebrow">Acción permanente</p>
         <h2 id="delete-experience-title">Eliminar experiencia</h2>
         <p id="delete-experience-description">Vas a eliminar <strong id="delete-experience-name"></strong> del panel. Se retirará de la portada, el catálogo y su página individual cuando publiques los cambios.</p>
-        <p class="confirm-dialog__note">La imagen original no se borra de Cloudinary.</p>
+        <p class="confirm-dialog__note">El archivo original permanece en Supabase Storage.</p>
         <p id="delete-experience-status" class="status" role="status" aria-live="polite"></p>
         <div class="confirm-dialog__actions">
           <button id="cancel-delete-experience-button" type="button" class="button button--secondary">Cancelar</button>
@@ -235,17 +235,17 @@ const adminConfig = {
           <section class="replacement" aria-label="Reemplazar recurso">
             <div class="replacement__heading">
               <h4>Reemplazar recurso</h4>
-              <p>Sube un archivo o utiliza un recurso existente de Cloudinary.</p>
+              <p>Sube un archivo o utiliza un recurso existente de Supabase Storage.</p>
             </div>
             <label class="field file-field">
               <span>Archivo nuevo</span>
               <input data-file type="file" accept="image/*,video/mp4,video/webm" />
             </label>
-            <div class="source-divider"><span>o usar Cloudinary</span></div>
+            <div class="source-divider"><span>o usar Supabase Storage</span></div>
             <div class="source-fields">
               <label class="field field--source">
-                <span>URL o public ID</span>
-                <input data-public-id type="text" spellcheck="false" placeholder="patagonik/landing/recurso" />
+                <span>URL o ruta de Storage</span>
+                <input data-public-id type="text" spellcheck="false" placeholder="landing/experiencia/recurso.webp" />
               </label>
               <label class="field field--type">
                 <span>Tipo</span>

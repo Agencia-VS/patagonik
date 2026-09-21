@@ -2,8 +2,8 @@
 import type { Locale } from '@/content.config';
 import { useTranslations, WHATSAPP_INTRO, whatsappUrl } from '@/i18n';
 import { experiencePath, routePath } from '@/i18n/routes';
-import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
-import CloudinaryVideo from '@/components/media/CloudinaryVideo.astro';
+import StorageImage from '@/components/media/StorageImage.astro';
+import StorageVideo from '@/components/media/StorageVideo.astro';
 import type { LandingAssetMap } from '@/lib/media/types';
 import type { ExperienceRecord } from '@/lib/experiences/catalog';
 
@@ -44,7 +44,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
           <div data-franja="2" style="display: grid; align-items: center; gap: clamp(14px, 2.6vw, 38px); padding: 0 clamp(22px, 6vw, 96px) 0 0;">
             <div data-f2-img="" data-nav="dark" style="pointer-events: auto; position: relative; height: clamp(112px, 21vh, 240px); overflow: hidden; background: linear-gradient(160deg, #5B7C99 0%, #6B7A5E 100%); clip-path: inset(0 100% 0 0); will-change: clip-path;">
               <div data-par="0.16" style="position: absolute; inset: -16% 0;">
-                <image-slot id="pt-band-valle" shape="rect" fit={asset('landing.band-valle').fitMode ?? 'cover'}><CloudinaryImage asset={asset('landing.band-valle')} locale={locale} preset="band" decorative /></image-slot>
+                <image-slot id="pt-band-valle" shape="rect" fit={asset('landing.band-valle').fitMode ?? 'cover'}><StorageImage asset={asset('landing.band-valle')} locale={locale} preset="band" decorative /></image-slot>
               </div>
             </div>
             <div data-f2-text="" style="opacity: 0; transform: translateY(30px); transition: opacity 1s cubic-bezier(.19,1,.22,1), transform 1.1s cubic-bezier(.19,1,.22,1);">
@@ -60,9 +60,9 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
         </div>
 
         <div data-video-frame="" style="position: absolute; z-index: 2; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; background: #2E3B47; will-change: top, left, width, height;">
-          {heroAsset.resourceType === 'video' && <CloudinaryVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
+          {heroAsset.resourceType === 'video' && <StorageVideo asset={heroAsset} locale={locale} hero style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
           <image-slot id="pt-hero-video" shape="rect" fit={heroAsset.fitMode ?? 'cover'} style="display:block;width:100%;height:100%;">
-            {heroAsset.resourceType === 'image' && <CloudinaryImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
+            {heroAsset.resourceType === 'image' && <StorageImage asset={heroAsset} locale={locale} preset="hero" loading="eager" decorative />}
           </image-slot>
           <div data-video-scrim="" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(20,24,28,.5) 0%, rgba(20,24,28,.22) 34%, rgba(20,24,28,.26) 64%, rgba(20,24,28,.58) 100%);"></div>
         </div>
@@ -99,11 +99,11 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
             <>
               <!-- Extensión suave de la fotografía elegida desde el panel admin. -->
               <div aria-hidden="true" style="position:absolute; inset:-5%; opacity:.78; filter:blur(24px); transform:scale(1.08);">
-                <image-slot id="pt-exp-bg-extended" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+                <image-slot id="pt-exp-bg-extended" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><StorageImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
               </div>
               <div aria-hidden="true" style="position:absolute; inset:0; background:rgba(62,78,58,.10);"></div>
               <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
-                <image-slot id="pt-exp-bg" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><CloudinaryImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
+                <image-slot id="pt-exp-bg" shape="rect" fit={experiencesBackgroundAsset.fitMode ?? 'cover'}><StorageImage asset={experiencesBackgroundAsset} locale={locale} preset="experience-background" decorative /></image-slot>
               </div>
             </>
           )}
@@ -131,7 +131,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
                 >
                   <div data-hs-img="" style="position:relative;flex:1 1 auto;overflow:hidden;background:#303833;">
                     <image-slot id={`pt-exp-${experience.slug}`} shape="rect" fit={cover.fitMode ?? 'cover'}>
-                      <CloudinaryImage asset={cover} locale={locale} preset="experience-card" decorative />
+                      <StorageImage asset={cover} locale={locale} preset="experience-card" decorative />
                     </image-slot>
                     {content.cardCategory && (
                       <span class="pk-exp-card-category">{content.cardCategory}</span>
@@ -330,7 +330,7 @@ const heroWhatsappUrl = whatsappUrl(WHATSAPP_INTRO[locale]);
 
     <section data-nav="dark" data-screen-label="10 CTA final" style="position: relative; min-height: 92svh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(110px, 22vh, 200px) clamp(22px, 6vw, 96px) clamp(72px, 12vw, 118px); background: linear-gradient(180deg, #2E3B47 0%, #55636B 55%, #B4835F 100%);">
       <div data-par="0.16" style="position: absolute; inset: -12% 0;">
-        <image-slot id="pt-final-band" shape="rect" fit={asset('landing.final-cta').fitMode ?? 'cover'}><CloudinaryImage asset={asset('landing.final-cta')} locale={locale} preset="final-cta" decorative /></image-slot>
+        <image-slot id="pt-final-band" shape="rect" fit={asset('landing.final-cta').fitMode ?? 'cover'}><StorageImage asset={asset('landing.final-cta')} locale={locale} preset="final-cta" decorative /></image-slot>
       </div>
       <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(18,22,26,.5) 0%, rgba(18,22,26,.2) 42%, rgba(18,22,26,.72) 100%);"></div>
 

@@ -11,7 +11,7 @@
     "port": "node scripts/port-design.mjs && node scripts/port-markup.mjs && node scripts/port-behaviour.mjs",
     "media:check": "node scripts/check-media.mjs",
     "env:check": "node scripts/check-env.mjs",
-    "media:migrate": "node scripts/migrate-media-to-cloudinary.mjs",
+    "media:migrate": "node scripts/migrate-media-to-supabase.mjs",
     "media:export": "node scripts/export-landing-manifest.mjs"
   },
   "repository": {
@@ -26,7 +26,8 @@
   "dependencies": {
     "@astrojs/vercel": "^11.0.5",
     "astro": "^7.2.2",
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.3",
+    "tus-js-client": "^4.3.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

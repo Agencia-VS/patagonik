@@ -2,7 +2,7 @@
 import type { Locale } from '@/content.config';
 import { useTranslations } from '@/i18n';
 import { experiencePath } from '@/i18n/routes';
-import CloudinaryImage from '@/components/media/CloudinaryImage.astro';
+import StorageImage from '@/components/media/StorageImage.astro';
 import type { LandingAssetMap } from '@/lib/media/types';
 import type { ExperienceRecord } from '@/lib/experiences/catalog';
 
@@ -37,7 +37,7 @@ const t = useTranslations(locale);
           <li class="pk-index__item">
             <a href={experiencePath(entry.slug, locale)}>
               <span class="pk-index__media">
-                <CloudinaryImage asset={cover} locale={locale} preset="experience-index" />
+                <StorageImage asset={cover} locale={locale} preset="experience-index" />
               </span>
               <span class="pk-index__body">
                 {c.cardCategory && <span class="pk-index__cat">{c.cardCategory}</span>}
