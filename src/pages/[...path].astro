@@ -83,6 +83,32 @@ const META: Record<string, { title: string; description: string }> = {
 };
 
 const meta = META[kind]!;
+
+const socialAsset = kind === 'experience' && entry
+  ? landingAssets[`experience.${entry.slug}.modal`] ?? landingAssets[`experience.${entry.slug}.cover`]
+  : landingAssets['landing.hero'];
+const socialImage = socialAsset?.resourceType === 'image'
+  ? mediaImageUrl(socialAsset, 1600, kind === 'experience' ? 'experience-modal' : socialAsset.preset) ?? socialAsset.fallback
+  : undefined;
+const socialImageUrl = socialImage ? new URL(socialImage, Astro.site).toString() : undefined;
+const experienceStructuredData = kind === 'experience' && entry
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'TouristTrip',
+      name: entry.content[locale].title,
+      description: entry.content[locale].lead,
+      url: new URL(experiencePath(entry.slug, locale), Astro.site).toString(),
+      ...(socialImageUrl ? { image: [socialImageUrl] } : {}),
+      touristType: 'Adventure tourism',
+      inLanguage: HTML_LANG[locale],
+      provider: {
+        '@type': 'TravelAgency',
+        name: 'PatagoniK',
+        url: new URL(homePath(locale), Astro.site).toString(),
+      },
+    }
+  : undefined;
+
 ---
 
 <BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates} socialImage={socialImageUrl}>
