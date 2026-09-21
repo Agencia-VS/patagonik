@@ -37,7 +37,9 @@ const LANGUAGES: { code: Locale; label: string }[] = [
         <span data-bar1="" aria-hidden="true" style="display: block; width: 22px; height: 1px; background: currentColor; transition: transform .5s cubic-bezier(.19,1,.22,1), opacity .3s ease;"></span>
         <span data-bar2="" aria-hidden="true" style="display: block; width: 22px; height: 1px; background: currentColor; transition: transform .5s cubic-bezier(.19,1,.22,1), opacity .3s ease;"></span>
       </button>
-      <a href={home} data-route-link="" data-route-path={home} data-hdr-logo="" style="font-family: Georgia, 'Times New Roman', serif; font-size: clamp(16px, 3.6vw, 20px); line-height: 1; letter-spacing: .17em; color: inherit; opacity: 0; pointer-events: none;">PatagoniK</a>
+      <a href={home} data-route-link="" data-route-path={home} data-hdr-logo="" aria-label="PatagoniK" style="display:flex; align-items:center; width:clamp(112px,20vw,150px); height:42px; color:inherit; opacity:0; pointer-events:none;">
+        <img src="/images/patagonik-logo.png" alt="PatagoniK" style="display:block; width:100%; height:100%; object-fit:contain; object-position:left center;" />
+      </a>
     </div>
 
     <div style="margin-left: auto; display: flex; align-items: center; gap: clamp(4px, 2vw, 14px);">

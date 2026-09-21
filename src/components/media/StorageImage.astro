@@ -11,6 +11,7 @@ interface Props {
   decorative?: boolean;
   class?: string;
   style?: string;
+  alt?: string;
 }
 
 const {
@@ -21,13 +22,14 @@ const {
   decorative = false,
   class: className,
   style = 'width:100%;height:100%;object-fit:cover;display:block;',
+  alt: altOverride,
 } = Astro.props;
 
 const config = IMAGE_PRESETS[preset] ?? IMAGE_PRESETS.hero;
 const largest = config.widths[config.widths.length - 1] ?? 1600;
 const src = mediaImageUrl(asset, largest, preset) ?? asset.fallback;
 const srcset = mediaImageSrcset(asset, preset);
-const alt = decorative ? '' : localizedAlt(asset, locale);
+const alt = altOverride ?? (decorative ? '' : localizedAlt(asset, locale));
 const eager = loading === 'eager';
 const focus: MediaFocalPoint = asset.focalPoint ?? { x: 0.5, y: 0.5 };
 const desktopFocus = focus.desktop ?? focus;

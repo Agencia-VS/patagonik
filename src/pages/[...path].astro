@@ -11,9 +11,10 @@ import ExperienceDetail from '@/components/pages/ExperienceDetail.astro';
 import ExperiencesIndex from '@/components/pages/ExperiencesIndex.astro';
 import ExperienceData from '@/components/ExperienceData.astro';
 import ExperienceModal from '@/components/design/ExperienceModal.astro';
-import { useTranslations } from '@/i18n';
+import { HTML_LANG, useTranslations } from '@/i18n';
 import { getLandingAssets } from '@/lib/media/landing-assets';
 import { getPublishedExperiences } from '@/lib/experiences/catalog';
+import { mediaImageUrl } from '@/lib/media/storage';
 
 /**
  * Una sola ruta atrapa todo el sitio porque el segmento cambia de idioma a
@@ -84,11 +85,12 @@ const META: Record<string, { title: string; description: string }> = {
 const meta = META[kind]!;
 ---
 
-<BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates}>
+<BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates} socialImage={socialImageUrl}>
+  {experienceStructuredData && <script slot="head" type="application/ld+json" set:html={JSON.stringify(experienceStructuredData)} />}
   <Header slot="header" locale={locale} alternates={alternates} />
   {kind === 'home' && <Home locale={locale} assets={landingAssets} experiences={experiences} />}
   {kind === 'home' && <ExperienceModal locale={locale} />}
-  {kind === 'home' && <ExperienceData locale={locale} experiences={experiences} />}
+  {kind === 'home' && <ExperienceData locale={locale} experiences={experiences} assets={landingAssets} />}
   {kind === 'about' && <About locale={locale} assets={landingAssets} />}
   {kind === 'faq' && <Faq locale={locale} />}
   {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} assets={landingAssets} />}
