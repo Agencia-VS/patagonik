@@ -2,7 +2,8 @@ name: Supabase keepalive
 
 on:
   schedule:
-    - cron: '23 3,11,19 * * *'
+    # Una vez por semana: lunes a las 11:23 UTC.
+    - cron: '23 11 * * 1'
   workflow_dispatch:
 
 permissions:
