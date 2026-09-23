@@ -162,22 +162,34 @@ despliegue.
 
 ## 6. Evitar pausa y mantener backups
 
-Supabase indica que un proyecto Free puede pausarse por baja actividad durante
-un período de siete días. No conviene depender de que el administrador entre:
+El keepalive automático se ejecuta **una vez por semana** desde
+`.github/workflows/supabase-keepalive.yml`: los lunes a las **11:23 UTC**
+(`23 11 * * 1`). El cron diario de Vercel se elimina para no duplicar las
+consultas. Este cambio en Vercel se aplica con el siguiente despliegue de
+producción. El endpoint protegido sigue alojado en Vercel.
 
-- `vercel.json` consulta una fila una vez al día (máximo práctico del plan
-  Hobby) mediante `/api/internal/supabase-health` y `CRON_SECRET`.
-- `.github/workflows/supabase-keepalive.yml` añade tres consultas diarias.
-  Crear en GitHub → Settings → Secrets and variables → Actions un secret
-  llamado `CRON_SECRET`, con exactamente el mismo valor configurado en Vercel.
-  La URL pública del endpoint queda definida en el workflow y no es un secreto.
-- Para más independencia, un monitor externo puede consultar ese mismo
-  endpoint con el header `Authorization: Bearer …`.
+### Configurar y comprobar el keepalive
 
-El keepalive reduce el riesgo, pero no sustituye una garantía contractual: si
-el panel debe estar disponible sin excepción, usar Supabase Pro. GitHub puede
+1. En Vercel → Project Settings → Environment Variables, comprobar que
+   `CRON_SECRET` esté definido en Production. Si se crea o cambia, volver a
+   desplegar producción para que el endpoint use ese valor.
+2. En GitHub → Settings → Secrets and variables → Actions → **New repository
+   secret**, crear `CRON_SECRET` con exactamente el mismo valor de Vercel.
+   No basta con definirlo sólo en Vercel: GitHub no copia esas variables.
+3. Una vez fusionado el workflow en `main`, abrir Actions → **Supabase
+   keepalive** → **Run workflow** para comprobarlo sin esperar al lunes.
+   Una respuesta correcta contiene `"ok": true`.
+
+Si el log dice **Falta configurar el secret CRON_SECRET**, el job se detuvo
+antes de consultar Supabase. Si devuelve HTTP 401, revisar que el secret de
+GitHub coincida con el que usa el despliegue de producción. No pegar el valor
+del secreto en issues, PR ni chat.
+
+Supabase puede pausar proyectos Free con baja actividad durante siete días.
+Una consulta semanal queda en ese mismo límite y no garantiza evitar la
+pausa, especialmente si una ejecución falla o se retrasa. GitHub también puede
 desactivar workflows programados en repositorios públicos tras 60 días sin
-actividad; por eso el cron diario de Vercel queda como base estable.
+actividad; revisar Actions y reactivar el workflow si corresponde.
 
 Free no ofrece el mismo historial automático de backups que Pro. Supabase
 recomienda exportar periódicamente roles, esquema y datos con su CLI. Como
