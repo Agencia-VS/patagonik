@@ -58,6 +58,11 @@ export const GET: APIRoute = async ({ request }) => {
     const experiences = rows.filter((row) => !row.draft_deleted).map((row) => {
       const content = row.draft_content ?? row.published_content ?? localBySlug.get(row.slug) ?? null;
       const cover = coverBySlot.get(`experience.${row.slug}.cover`);
+      const modal = coverBySlot.get(`experience.${row.slug}.modal`);
+      const galleryCount = manifest.filter((slot) =>
+        slot.slot_key.startsWith(`experience.${row.slug}.gallery.`)
+        && Boolean(slot.draft_asset_id || slot.published_asset_id),
+      ).length;
       return {
         id: row.id,
         slug: row.slug,
@@ -68,6 +73,8 @@ export const GET: APIRoute = async ({ request }) => {
         content,
         localSource: row.local_source,
         hasCover: Boolean(cover?.draft_asset_id || cover?.published_asset_id || cover?.local_fallback),
+        hasModal: Boolean(modal?.draft_asset_id || modal?.published_asset_id || modal?.local_fallback),
+        galleryCount,
         dirty: row.draft_order !== row.published_order
           || row.draft_status !== row.published_status
           || (row.draft_content !== null && JSON.stringify(row.draft_content) !== JSON.stringify(row.published_content)),

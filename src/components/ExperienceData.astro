@@ -1,18 +1,36 @@
 ---
 import type { Locale } from '@/content.config';
+import type { LandingAssetMap } from '@/lib/media/types';
+import { localizedAlt } from '@/lib/media/types';
+import { IMAGE_PRESETS, mediaImageSrcset, mediaImageUrl } from '@/lib/media/storage';
 import type { ExperienceRecord } from '@/lib/experiences/catalog';
 
-interface Props { locale: Locale; experiences: ExperienceRecord[] }
-const { locale, experiences } = Astro.props;
+interface Props {
+  locale: Locale;
+  experiences: ExperienceRecord[];
+  assets: LandingAssetMap;
+}
+const { locale, experiences, assets } = Astro.props;
 
-/*
-  Datos que el modal de detalle necesita en el navegador.
+const modalImage = (entry: ExperienceRecord) => {
+  const content = entry.content[locale];
+  const cover = assets[`experience.${entry.slug}.cover`];
+  const selected = assets[`experience.${entry.slug}.modal`] ?? cover;
+  if (!selected || selected.resourceType !== 'image') return null;
+  const preset = IMAGE_PRESETS['experience-modal'];
+  const focus = selected.focalPoint?.modal ?? selected.focalPoint?.desktop ?? selected.focalPoint;
+  return {
+    src: mediaImageUrl(selected, preset.widths[preset.widths.length - 1] ?? 1600, 'experience-modal') ?? selected.fallback,
+    srcset: mediaImageSrcset(selected, 'experience-modal'),
+    sizes: preset.sizes,
+    alt: localizedAlt(selected, locale) || content.title,
+    width: selected.width,
+    height: selected.height,
+    fit: selected.fitMode ?? 'cover',
+    objectPosition: focus ? `${focus.x * 100}% ${focus.y * 100}%` : '50% 50%',
+  };
+};
 
-  En el bundle vivían en un objeto EXPERIENCE_DATA en español más un overlay
-  EXPERIENCE_I18N, y el modal los mezclaba en tiempo de ejecución. Aquí la
-  página ya está en un idioma, así que se sirve sólo ese: menos peso y una
-  cosa menos que se pueda desincronizar.
-*/
 const data = Object.fromEntries(
   experiences.map((entry) => {
     const c = entry.content[locale];
@@ -27,6 +45,7 @@ const data = Object.fromEntries(
         excludes: c.excludes,
         modality: c.modality,
         note: c.note,
+        modalImage: modalImage(entry),
       },
     ];
   }),

@@ -11,9 +11,10 @@ import ExperienceDetail from '@/components/pages/ExperienceDetail.astro';
 import ExperiencesIndex from '@/components/pages/ExperiencesIndex.astro';
 import ExperienceData from '@/components/ExperienceData.astro';
 import ExperienceModal from '@/components/design/ExperienceModal.astro';
-import { useTranslations } from '@/i18n';
+import { HTML_LANG, useTranslations } from '@/i18n';
 import { getLandingAssets } from '@/lib/media/landing-assets';
 import { getPublishedExperiences } from '@/lib/experiences/catalog';
+import { mediaImageUrl } from '@/lib/media/storage';
 
 /**
  * Una sola ruta atrapa todo el sitio porque el segmento cambia de idioma a
@@ -82,13 +83,40 @@ const META: Record<string, { title: string; description: string }> = {
 };
 
 const meta = META[kind]!;
+
+const socialAsset = kind === 'experience' && entry
+  ? landingAssets[`experience.${entry.slug}.modal`] ?? landingAssets[`experience.${entry.slug}.cover`]
+  : landingAssets['landing.hero'];
+const socialImage = socialAsset?.resourceType === 'image'
+  ? mediaImageUrl(socialAsset, 1600, kind === 'experience' ? 'experience-modal' : socialAsset.preset) ?? socialAsset.fallback
+  : undefined;
+const socialImageUrl = socialImage ? new URL(socialImage, Astro.site).toString() : undefined;
+const experienceStructuredData = kind === 'experience' && entry
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'TouristTrip',
+      name: entry.content[locale].title,
+      description: entry.content[locale].lead,
+      url: new URL(experiencePath(entry.slug, locale), Astro.site).toString(),
+      ...(socialImageUrl ? { image: [socialImageUrl] } : {}),
+      touristType: 'Adventure tourism',
+      inLanguage: HTML_LANG[locale],
+      provider: {
+        '@type': 'TravelAgency',
+        name: 'PatagoniK',
+        url: new URL(homePath(locale), Astro.site).toString(),
+      },
+    }
+  : undefined;
+
 ---
 
-<BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates}>
+<BaseLayout locale={locale} page={kind} title={meta.title} description={meta.description} alternates={alternates} socialImage={socialImageUrl}>
+  {experienceStructuredData && <script slot="head" type="application/ld+json" set:html={JSON.stringify(experienceStructuredData)} />}
   <Header slot="header" locale={locale} alternates={alternates} />
   {kind === 'home' && <Home locale={locale} assets={landingAssets} experiences={experiences} />}
   {kind === 'home' && <ExperienceModal locale={locale} />}
-  {kind === 'home' && <ExperienceData locale={locale} experiences={experiences} />}
+  {kind === 'home' && <ExperienceData locale={locale} experiences={experiences} assets={landingAssets} />}
   {kind === 'about' && <About locale={locale} assets={landingAssets} />}
   {kind === 'faq' && <Faq locale={locale} />}
   {kind === 'experiences' && <ExperiencesIndex locale={locale} experiences={experiences} assets={landingAssets} />}

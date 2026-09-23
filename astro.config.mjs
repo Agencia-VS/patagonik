@@ -14,7 +14,7 @@ import vercel from '@astrojs/vercel';
  * redirección de / a /es/.
  */
 export default defineConfig({
-  site: 'https://patagoniknatales.com',
+  site: 'https://www.patagoniknatales.com',
   adapter: vercel({ imageService: true }),
   // Una sola forma de cada URL: sin barra final, igual que los hreflang.
   trailingSlash: 'never',

@@ -28,6 +28,8 @@ interface AdminExperience {
   content: ExperienceContent | null;
   localSource: boolean;
   hasCover: boolean;
+  hasModal: boolean;
+  galleryCount: number;
   dirty: boolean;
   updatedAt: string;
   publishedAt: string | null;
@@ -391,8 +393,13 @@ export function createExperienceManager(options: ManagerOptions): ExperienceMana
         badges.append(value);
       };
       if (item.status === 'archived') badge('Archivada', 'archived');
-      else if (!item.hasCover) badge('Falta portada', 'missing');
-      else badge('Portada lista');
+      else {
+        if (!item.hasCover) badge('Falta imagen card', 'missing');
+        else badge('Card lista');
+        if (!item.hasModal) badge('Falta imagen modal', 'missing');
+        else badge('Modal listo');
+        if (item.galleryCount > 0) badge(`Galería ${item.galleryCount}`);
+      }
       if (item.dirty || item.order !== item.publishedOrder) badge('Borrador', 'draft');
       else if (item.publishedAt) badge('Publicada');
 

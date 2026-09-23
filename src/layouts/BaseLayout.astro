@@ -18,9 +18,13 @@ interface Props {
   description: string;
   /** Ruta de esta misma página en cada idioma, para hreflang. */
   alternates: Record<Locale, string>;
+  socialImage?: string;
 }
 
-const { locale, page, title, description, alternates } = Astro.props;
+const { locale, page, title, description, alternates, socialImage } = Astro.props;
+const gaMeasurementId = typeof import.meta.env.PUBLIC_GA_MEASUREMENT_ID === 'string'
+  ? import.meta.env.PUBLIC_GA_MEASUREMENT_ID.trim()
+  : '';
 /*
   Astro normaliza el pathname con barra final, pero los hreflang de abajo se
   construyen desde routes.ts sin ella. Si no se unifican, el canonical de una
@@ -56,9 +60,16 @@ const canonical = new URL(selfPath, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="PatagoniK" />
+    <meta property="og:locale" content={HTML_LANG[locale]} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
     <slot name="head" />
   </head>
-  <body data-page={page}>
+  <body data-page={page} data-ga4-id={gaMeasurementId || undefined}>
     <slot name="header" />
     <main id="contenido">
       <slot />

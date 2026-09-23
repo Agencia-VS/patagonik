@@ -7,7 +7,6 @@
 */
 const ARROW_REST = '#9C998F';
 const ARROW_HOVER = '#6E6259';
-const GA4_ID = ''; // Desarrollador: pegar aquí el Measurement ID de GA4, por ejemplo G-XXXXXXXXXX
 const WIDE_BP = 860;
 /* Franja 1 = text | video strip · Franja 2 = flush-left image | word */
 const COLS = { wide: { f1: '1fr 0.86fr', f2: '2.9fr 1fr' }, narrow: { f1: '1fr', f2: '1fr' } };
@@ -283,41 +282,51 @@ class PatagonikUI {
     fillList('pk-exp-includes', d.includes);
     fillList('pk-exp-excludes', d.excludes);
 
-    /* La foto pertenece a la tarjeta, no al idioma: se clona sólo al abrir
-       para no provocar un parpadeo al conmutar de idioma. */
+    /* El modal usa la imagen elegida para el modal; si todavía no existe,
+       cae a la portada para que las experiencias históricas sigan funcionando. */
     const imageWrap = q('pk-exp-image');
-    if (imageWrap && card && imageWrap.getAttribute('data-exp-key') !== key) {
+    if (imageWrap && imageWrap.getAttribute('data-exp-key') !== key) {
       imageWrap.innerHTML = '';
       imageWrap.setAttribute('data-exp-key', key);
       imageWrap.setAttribute('data-orientation', 'landscape');
       const grid = q('pk-exp-grid');
       if (grid) grid.setAttribute('data-image-orientation', 'landscape');
-      const source = card.querySelector('image-slot');
-      if (source) {
-        const sourceMedia = source.querySelector('img, video');
-        const clone = source.cloneNode(true);
-        clone.removeAttribute('id');
-        clone.style.width = '100%';
-        clone.style.height = '100%';
-        imageWrap.appendChild(clone);
-        const media = clone.querySelector('img, video');
-        if (media) {
-          const applyOrientation = () => {
-            if (imageWrap.getAttribute('data-exp-key') !== key) return;
-            const width = media instanceof HTMLVideoElement
-              ? media.videoWidth || Number(media.getAttribute('width')) || (sourceMedia && sourceMedia.videoWidth) || 0
-              : media.naturalWidth || Number(media.getAttribute('width')) || (sourceMedia && sourceMedia.naturalWidth) || 0;
-            const height = media instanceof HTMLVideoElement
-              ? media.videoHeight || Number(media.getAttribute('height')) || (sourceMedia && sourceMedia.videoHeight) || 0
-              : media.naturalHeight || Number(media.getAttribute('height')) || (sourceMedia && sourceMedia.naturalHeight) || 0;
-            if (!width || !height) return;
-            const ratio = width / height;
-            const orientation = ratio > 1.08 ? 'landscape' : ratio < .92 ? 'portrait' : 'square';
-            imageWrap.setAttribute('data-orientation', orientation);
-            if (grid) grid.setAttribute('data-image-orientation', orientation);
-          };
-          applyOrientation();
-          media.addEventListener(media instanceof HTMLVideoElement ? 'loadedmetadata' : 'load', applyOrientation, { once: true });
+
+      const mediaData = d.modalImage;
+      if (mediaData && mediaData.src) {
+        const media = document.createElement('img');
+        media.src = mediaData.src;
+        if (mediaData.srcset) media.srcset = mediaData.srcset;
+        media.sizes = mediaData.sizes || '(max-width: 860px) 100vw, 50vw';
+        media.alt = mediaData.alt || '';
+        media.loading = 'eager';
+        media.decoding = 'async';
+        media.style.cssText = 'width:100%;height:100%;display:block;object-fit:' + (mediaData.fit || 'cover') + ';object-position:' + (mediaData.objectPosition || '50% 50%') + ';';
+        media.setAttribute('data-pk-media-fit', mediaData.fit || 'cover');
+        imageWrap.appendChild(media);
+
+        const applyOrientation = () => {
+          if (imageWrap.getAttribute('data-exp-key') !== key) return;
+          const width = Number(mediaData.width) || media.naturalWidth || 0;
+          const height = Number(mediaData.height) || media.naturalHeight || 0;
+          if (!width || !height) return;
+          const ratio = width / height;
+          const orientation = ratio > 1.08 ? 'landscape' : ratio < .92 ? 'portrait' : 'square';
+          imageWrap.setAttribute('data-orientation', orientation);
+          if (grid) grid.setAttribute('data-image-orientation', orientation);
+        };
+        applyOrientation();
+        if (!mediaData.width || !mediaData.height) {
+          media.addEventListener('load', applyOrientation, { once: true });
+        }
+      } else if (card) {
+        const source = card.querySelector('image-slot');
+        if (source) {
+          const clone = source.cloneNode(true);
+          clone.removeAttribute('id');
+          clone.style.width = '100%';
+          clone.style.height = '100%';
+          imageWrap.appendChild(clone);
         }
       }
     }
@@ -508,14 +517,15 @@ class PatagonikUI {
   }
 
   setupAnalytics() {
-    if (GA4_ID && /^G-[A-Z0-9]+$/i.test(GA4_ID)) {
+    const ga4Id = String(document.body?.dataset.ga4Id || '');
+    if (ga4Id && /^G-[A-Z0-9]+$/i.test(ga4Id)) {
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
-      window.gtag('config', GA4_ID);
+      window.gtag('config', ga4Id);
       const s = document.createElement('script');
       s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA4_ID);
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
       document.head.appendChild(s);
     }
 
