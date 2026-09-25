@@ -8,7 +8,8 @@ interface GoogleReview {
   originalText?: { text?: string };
   publishTime?: string;
   relativePublishTimeDescription?: string;
-  authorAttribution?: { displayName?: string; uri?: string; photoUri?: string };\n  googleMapsUri?: string;
+  authorAttribution?: { displayName?: string; uri?: string; photoUri?: string };
+  googleMapsUri?: string;
 }
 
 interface GooglePlaceDetails {
@@ -64,7 +65,9 @@ export const GET: APIRoute = async ({ request }) => {
       rating: typeof review.rating === 'number' && Number.isFinite(review.rating) ? review.rating : 0,
       text: review.text?.text ?? review.originalText?.text ?? '',
       author: review.authorAttribution?.displayName ?? 'Usuario de Google',
-      authorUrl: review.authorAttribution?.uri ?? '',\n      authorPhotoUrl: review.authorAttribution?.photoUri ?? '',\n      reviewUrl: review.googleMapsUri ?? '',
+      authorUrl: review.authorAttribution?.uri ?? '',
+      authorPhotoUrl: review.authorAttribution?.photoUri ?? '',
+      reviewUrl: review.googleMapsUri ?? '',
       published: review.relativePublishTimeDescription ?? '',
       publishTime: review.publishTime ?? '',
     })).filter((review) => review.text.trim() && review.rating > 0);
