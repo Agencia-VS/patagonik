@@ -8,7 +8,7 @@ interface GoogleReview {
   originalText?: { text?: string };
   publishTime?: string;
   relativePublishTimeDescription?: string;
-  authorAttribution?: { displayName?: string; uri?: string };
+  authorAttribution?: { displayName?: string; uri?: string; photoUri?: string };\n  googleMapsUri?: string;
 }
 
 interface GooglePlaceDetails {
@@ -64,7 +64,7 @@ export const GET: APIRoute = async ({ request }) => {
       rating: typeof review.rating === 'number' && Number.isFinite(review.rating) ? review.rating : 0,
       text: review.text?.text ?? review.originalText?.text ?? '',
       author: review.authorAttribution?.displayName ?? 'Usuario de Google',
-      authorUrl: review.authorAttribution?.uri ?? '',
+      authorUrl: review.authorAttribution?.uri ?? '',\n      authorPhotoUrl: review.authorAttribution?.photoUri ?? '',\n      reviewUrl: review.googleMapsUri ?? '',
       published: review.relativePublishTimeDescription ?? '',
       publishTime: review.publishTime ?? '',
     })).filter((review) => review.text.trim() && review.rating > 0);
@@ -74,7 +74,7 @@ export const GET: APIRoute = async ({ request }) => {
       userRatingCount: Number.isFinite(place.userRatingCount) ? place.userRatingCount : null,
       googleMapsUrl: place.googleMapsUri || `https://www.google.com/maps/search/?api=1&query_place_id=${encodeURIComponent(placeId)}`,
       reviews,
-    }, 200, 'public, s-maxage=3600, stale-while-revalidate=86400');
+    }, 200, 'no-store');
   } catch (error) {
     console.error('[google-reviews] Request failed', error);
     return json({ error: 'No se pudieron cargar las reseñas de Google.' }, 502);
