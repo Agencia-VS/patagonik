@@ -25,6 +25,8 @@ const BUILD_ENV = {
   OPENCODE_API_KEY: import.meta.env.OPENCODE_API_KEY,
   OPENAI_API_KEY: import.meta.env.OPENAI_API_KEY,
   OPENAI_TRANSLATION_MODEL: import.meta.env.OPENAI_TRANSLATION_MODEL,
+  GOOGLE_PLACES_API_KEY: import.meta.env.GOOGLE_PLACES_API_KEY,
+  GOOGLE_PLACE_ID: import.meta.env.GOOGLE_PLACE_ID,
 } as const;
 
 type ServerEnvName = keyof typeof BUILD_ENV;
