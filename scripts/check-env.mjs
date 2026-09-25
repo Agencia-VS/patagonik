@@ -26,6 +26,8 @@ for (const name of [
   'OPENCODE_API_KEY',
   'OPENAI_API_KEY',
   'OPENAI_TRANSLATION_MODEL',
+  'GOOGLE_PLACES_API_KEY',
+  'GOOGLE_PLACE_ID',
 ]) {
   if (!serverEnv.includes(`import.meta.env.${name}`)) errors.push(`falta acceso estático para ${name}`);
 }
