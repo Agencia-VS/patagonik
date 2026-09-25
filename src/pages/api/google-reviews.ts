@@ -61,7 +61,7 @@ export const GET: APIRoute = async ({ request }) => {
 
     const place = (await response.json()) as GooglePlaceDetails;
     const reviews = (place.reviews ?? []).map((review) => ({
-      rating: Number.isFinite(review.rating) ? review.rating : 0,
+      rating: typeof review.rating === 'number' && Number.isFinite(review.rating) ? review.rating : 0,
       text: review.text?.text ?? review.originalText?.text ?? '',
       author: review.authorAttribution?.displayName ?? 'Usuario de Google',
       authorUrl: review.authorAttribution?.uri ?? '',
