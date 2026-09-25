@@ -31,16 +31,16 @@ if (root && grid) {
 
     const top = document.createElement('div');
     Object.assign(top.style, { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' });
-    const avatar = addText(top, 'span', (review.author || 'G').trim().slice(0, 1).toUpperCase(), {
+    const avatar = addText(top, 'span', authorPhotoUrl ? '' : (review.author || 'G').trim().slice(0, 1).toUpperCase(), {
       width: '34px', height: '34px', borderRadius: '999px', background: 'rgba(107,122,94,.12)',
       color: '#6B7A5E', display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       fontSize: '13px', fontWeight: '600', flex: '0 0 34px',
     });
-    avatar.setAttribute('aria-hidden', 'true');
+    avatar.setAttribute('aria-hidden', 'true');\n    if (authorPhotoUrl) {\n      const image = document.createElement('img');\n      image.src = authorPhotoUrl;\n      image.alt = '';\n      image.referrerPolicy = 'no-referrer';\n      Object.assign(image.style, { width: '100%', height: '100%', borderRadius: 'inherit', objectFit: 'cover' });\n      avatar.appendChild(image);\n    }
 
     const authorWrap = document.createElement('div');
     authorWrap.style.flex = '1';
-    const authorUrl = safeHttpsUrl(review.authorUrl);
+    const authorUrl = safeHttpsUrl(review.authorUrl);\n    const authorPhotoUrl = safeHttpsUrl(review.authorPhotoUrl);
     const author = addText(authorWrap, authorUrl ? 'a' : 'strong', review.author, {
       color: '#2B2B2B', fontSize: '12px', fontWeight: '600', textDecoration: 'none',
     });
@@ -91,14 +91,14 @@ if (root && grid) {
       }
 
       if (note) {
-        note.textContent = 'Reseñas y calificación obtenidas desde Google.';
+        const notices = {\n          es: 'Opiniones ordenadas por relevancia según Google. Google revisa y elimina contenido falso que identifica; las reseñas no se verifican individualmente.',\n          en: 'Reviews are ordered by Google relevance. Google reviews and removes fake content it identifies; reviews are not individually verified.',\n          pt: 'Avaliações ordenadas por relevância segundo o Google. O Google analisa e remove conteúdo falso que identifica; as avaliações não são verificadas individualmente.',\n        };\n        note.textContent = notices[language] || notices.es;
         const mapsUrl = safeHttpsUrl(data.googleMapsUrl);
         if (mapsUrl) {
           const link = document.createElement('a');
           link.href = mapsUrl;
           link.target = '_blank';
           link.rel = 'noopener noreferrer';
-          link.textContent = 'Ver todas en Google';
+          link.textContent = 'Google Maps';\n          link.setAttribute('translate', 'no');
           Object.assign(link.style, { color: '#6B7A5E', marginLeft: '6px' });
           note.appendChild(link);
         }
